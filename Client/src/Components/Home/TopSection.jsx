@@ -15,7 +15,7 @@ const TopSection = () => {
     }, [topAnimes])
 
     return (
-        <section className="w-full md:h-[100svh] bg-gray-900 relative overflow-hidden flex items-center justify-center">
+  <section className="w-full md:h-[100svh] bg-gray-900 relative overflow-hidden flex items-center justify-center">
   {/* Background Image */}
   <img
     // src={image_1}

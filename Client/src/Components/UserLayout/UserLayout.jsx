@@ -6,7 +6,6 @@ const UserLayout = () => {
     const navigate = useNavigate()
   const path = window.location.pathname
 
-  console.log(path)
   return (
     <>
     <nav className='w-full fixed backdrop-blur z-99999 p-4 flex items-center gap-5'>
