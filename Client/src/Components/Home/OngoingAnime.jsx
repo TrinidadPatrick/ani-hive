@@ -71,7 +71,7 @@ const OngoingAnime = () => {
   return (
     <div className='w-full bg-[#141414] py-10'>
       <div className="w-[95%] md:w-[90%] mx-auto px-3">
-      <h1 className="text-2xl md:text-3xl font-bold text-white">Ongoing Animes</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-white">Ongoing Anime</h1>
       <div className='flex justify-between'>
           <p className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes streaming this season</p>
           <button className='text-sm md:text-base text-white'>See all</button>
@@ -85,10 +85,9 @@ const OngoingAnime = () => {
         ongoingAnime.map((anime, index, array) =>
         {
           if(array[index - 1]?.id != anime?.id){
-            console.log(anime)
             return (
               <div className="w-full h-fit rounded-lg bg-transparent relative overflow-hidden flex flex-col items-center justify-center">
-                <div className='absolute z-[999] top-1 left-1 bg-pink-500 px-1 py-0.5 rounded'>
+                <div className='absolute z-[999] top-1 left-1 bg-pink-600 px-1 py-0.5 rounded'>
                   <h2 className="text-gray-300 text-center w-full text-sm md:text-sm">
                       Ep {anime?.nextAiringEpisode?.episode + '/'}{anime?.episodes || '??'}
                   </h2>
@@ -97,7 +96,7 @@ const OngoingAnime = () => {
                 <img
                   src={anime?.coverImage?.large}
                   alt={anime?.title?.romaji}
-                  className=" w-full h-full object-cover rounded-lg brightness-70 aspect-[2/2.3]"
+                  className=" w-full h-full object-cover rounded-lg brightness-80 aspect-[2/2.3]"
                 />
 
                 {/* Info */}

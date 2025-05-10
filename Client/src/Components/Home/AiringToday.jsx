@@ -8,55 +8,68 @@ const AiringToday = () => {
   const [airingToday, setAiringToday] = useState(null)
   const weekday = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
   
-  const getAiringToday = async (page, retries = 1) => {
+  const getAiringToday = async (page, retries = 10) => {
     const now = new Date();
     const startOfDay = Math.floor(new Date(now.setHours(0, 0, 0, 0)).getTime() / 1000);
     const endOfDay = Math.floor(new Date(now.setHours(23, 59, 59, 999)).getTime() / 1000);
     const query = `
     query ($start: Int, $end: Int) {
-        Page(perPage: 50) {
-          airingSchedules(airingAt_greater: $start, airingAt_lesser: $end) {
-            airingAt
-            episode
-            media {
-              title {
-                romaji
-                english
-                native
-              }
-              coverImage {
-                large
-              }
-              siteUrl
-              genres
-              description(asHtml: false)
-              startDate {
-                year
-                month
-                day
-              }
-              endDate {
-                year
-                month
-                day
-              }
-              status
-              format
-              episodes
+      Page(perPage: 50) {
+        airingSchedules(airingAt_greater: $start, airingAt_lesser: $end) {
+          airingAt
+          episode
+          media {
+            isAdult
+            title {
+              romaji
+              english
+              native
             }
+            coverImage {
+              large
+            }
+            siteUrl
+            genres
+            description(asHtml: false)
+            startDate {
+              year
+              month
+              day
+            }
+            endDate {
+              year
+              month
+              day
+            }
+            status
+            format
+            episodes
           }
         }
       }
-    `;
-    const response = await axios.post('https://graphql.anilist.co', {
-    query,
-    variables: {
-      start: startOfDay,
-      end: endOfDay
     }
-  });
+    
+    `;
 
-  setAiringToday(response.data.data.Page.airingSchedules);
+    try {
+      const response = await axios.post('https://graphql.anilist.co', {
+        query,
+        variables: {
+          start: startOfDay,
+          end: endOfDay
+        }
+      });
+    
+      setAiringToday(response.data.data.Page.airingSchedules);
+    } catch (error) {
+      console.log(error)
+      if(retries > 0)
+      {
+        setTimeout(()=>{
+          getAiringToday(1, retries - 1)
+        }, 1000)
+      }
+    }
     // try {
     //     const result = await axios.get(`https://api.jikan.moe/v4/schedules/${weekday}`)
     //     if(result.status === 200) {
@@ -87,12 +100,12 @@ const AiringToday = () => {
         <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3">
             <h1 className="text-2xl md:text-3xl font-bold text-white">Airing Today</h1>
             <div className='flex justify-between'>
-                <p className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes currently airing today</p>
+                <p className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes currently or will be airing today</p>
             </div>
         </div>
         <div className='w-[90%] h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5 lg:gap-10 '>
             {airingToday?.length > 0 &&
-                airingToday.map((anime, index, array) =>
+                airingToday.filter((anim) => anim.media.isAdult === false).map((anime, index, array) =>
                 {
 
                     const startDate = `${anime.media.startDate.year}-${Number(anime.media.startDate.month) < 10 ? '0' : ''}${anime.media.startDate.month}-${Number(anime.media.startDate.day) < 10 ? '0' : ''}${anime.media.startDate.day}`
@@ -106,7 +119,7 @@ const AiringToday = () => {
                             <img
                                 src={anime?.media?.coverImage.large}
                                 alt={anime?.media?.title?.english || anime?.media?.title?.native}
-                                className="absolute aspect-video w-full rounded-lg h-full object-cover brightness-70 opacity-70"
+                                className="absolute aspect-video w-full rounded-lg h-full object-cover brightness-80 opacity-70"
                             />
                             </div>
 

@@ -101,7 +101,7 @@ const SeasonNowAnime = () => {
       
           {/* Right Side: Anime Trailer */}
             <div className="relative hidden md:block aspect-video rounded-lg overflow-hidden w-full md:w-fit md:h-[63svh] lg:h-[40vh]">
-                {/* <ReactPlayer
+                <ReactPlayer
                 url={`https://www.youtube.com/watch?v=${anime?.trailer.youtube_id}&?vq=hd720`}
                 width="100%"
                 height="100%"
@@ -110,7 +110,7 @@ const SeasonNowAnime = () => {
                 loop={true}
                 controls={false}
                 // className="absolute top-0 left-0"
-                /> */}
+                />
             </div>
         </div>
         </section>

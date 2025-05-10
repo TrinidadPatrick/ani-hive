@@ -19,10 +19,13 @@ const UserLayout = () => {
                     <button onClick={()=>{navigate('/')}} className={` ${path === '/' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Home</button>
                 </li>
                 <li>
+                    <button onClick={()=>{navigate('/schedule')}} className={` ${path === '/schedule' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Schedule</button>
+                </li>
+                <li>
                 <button onClick={()=>{navigate('/Genres')}} className={` ${path === '/genres' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Genres</button>
                 </li>
                 <li>
-                <button onClick={()=>{navigate('/streaming')}} className={` ${path === '/streaming' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Streaming</button>
+                <button onClick={()=>{navigate('/characters')}} className={` ${path === '/characters' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Characters</button>
                 </li>
                 <li>
                 <button onClick={()=>{navigate('/forum')}} className={` ${path === '/forum' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Forum</button>

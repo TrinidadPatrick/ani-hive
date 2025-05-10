@@ -105,7 +105,7 @@ const AnimeMovies = () => {
               <img
                 src={anime?.images?.webp.large_image_url}
                 alt={anime?.title}
-                className="w-full h-full object-cover brightness-70"
+                className="w-full h-full object-cover brightness-80"
               />
             </div>
 

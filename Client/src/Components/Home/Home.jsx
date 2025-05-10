@@ -9,6 +9,8 @@ import AnimeMovies from './AnimeMovies'
 import TopAnimeProvider from '../../Providers/TopAnimeProvider'
 import AiringToday from './AiringToday'
 import OngoingAnime from './OngoingAnime'
+import Footer from './Footer'
+
 
 const Home = () => {
   const {topAnimes} = TopAnimeProvider()
@@ -30,11 +32,12 @@ const Home = () => {
         <SeasonNowAnime />  
         <div className="absolute bottom-0 w-full h-7 bg-gradient-to-b from-transparent to-[#141414] pointer-events-none"></div>
         </div>
-        <UpcomingAnime />
         <OngoingAnime />
         <AiringToday />
+        <UpcomingAnime />
         <AnimeMovies />
-        {/* <AnimeRecommendation /> */}
+        <Footer />
+        
         
     </main>
   )
