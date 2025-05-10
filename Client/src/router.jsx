@@ -2,7 +2,7 @@ import {createBrowserRouter} from 'react-router-dom'
 import App from './App'
 import Home from './Components/Home/Home'
 import UserLayout from './Components/UserLayout/UserLayout'
-import Categories from './Components/Categories/Categories'
+import Genres from './Components/Genres/Genres'
 
 const router = createBrowserRouter([
     {
@@ -14,8 +14,8 @@ const router = createBrowserRouter([
                 element: <Home />
             },
             {
-                path: '/categories',
-                element: <Categories />
+                path: '/genres',
+                element: <Genres />
             },
         ]
     }

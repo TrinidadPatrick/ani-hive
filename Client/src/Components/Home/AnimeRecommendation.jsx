@@ -3,7 +3,9 @@ import AnimeRecommendationProvider from '../../Providers/AnimeRecommendationProv
 
 const AnimeRecommendation = () => {
 
-//   const {getAnimeRecommendation} = AnimeRecommendationProvider()
+  const {animeRecommendation} = AnimeRecommendationProvider()
+
+  console.log(animeRecommendation)
   return (
     <div>AnimeRecommendation</div>
   )

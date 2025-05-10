@@ -37,25 +37,27 @@ const SeasonNowAnime = () => {
       };
 
   return (
-    <div className='w-full h-[80svh] max-h-[80svh] bg-[#141414] relative'>
+    <div className='w-full sm:h-fit lg:h-[80svh] lg:max-h-[80svh] bg-red-100 flex items-center relative'>
         
         <Carousel
   swipeable={true}
   draggable={true}
   responsive={responsive}
-  infinite={false}
+  infinite={true}
   autoPlaySpeed={3000}
   keyBoardControl={true}
   customTransition="all 0.5s ease"
   transitionDuration={500}
   containerClass="carousel-container"
-  removeArrowOnDeviceType={["tablet", "mobile"]}
-  className="w-full mx-auto h-[80svh]"
+  removeArrowOnDeviceType={["tablet","semi_tablet", "mobile"]}
+  className="w-full mx-auto h-fit lg:h-[80svh]"
 >
   {SeasonNowAnime?.length > 0 &&
-    SeasonNowAnime.sort((a,b) => a.popularity - b.popularity).map((anime, index) => (
-        <section className="w-full md:h-[80svh] bg-gray-900 relative overflow-hidden flex items-center justify-center">
-        {/* Background Image */}
+    SeasonNowAnime.sort((a,b) => a.popularity - b.popularity).map((anime, index) => {
+      if(SeasonNowAnime[index - 1]?.mal_id != anime?.mal_id && anime.title){
+        return (
+          <section className="w-full h-full  lg:h-[80svh] bg-gray-900 relative overflow-hidden flex items-center justify-center">
+        {/* Background Image */}{index}
         <img
           src={anime?.images?.webp.large_image_url}
           alt={anime.title || "anime"}
@@ -64,13 +66,13 @@ const SeasonNowAnime = () => {
       
         {/* Overlay (blur + tint) */}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-xs" />
-        <div className="relative z-10 flex flex-col-reverse md:flex-row items-center gap-10 w-full max-w-7xl">
+        <div className="relative mx-3 sm:mx-10 xl:mx-0 z-10 flex flex-col-reverse lg:flex-row items-center gap-10 w-full max-w-7xl">
           
           {/* Left Side: Anime Info */}
           <div className="text-white flex-1 space-y-5 p-3 md:p-0">
             <div>
-            <p>Popular animes this season</p>
-            <h1 className="text-4xl md:text-5xl font-bold">{anime?.title}</h1>
+            <p className='text-sm text-gray-400 font-light'>Popular animes this season</p>
+            <h1 className="text-3xl md:text-4xl lg::text-5xl font-bold line-clamp-2">{anime?.title_english}</h1>
             </div>
             <p className="text-sm text-gray-300 max-w-prose">{anime?.synopsis.substring(0, showMore ? 100000 : 500)}
             {
@@ -98,8 +100,8 @@ const SeasonNowAnime = () => {
           </div>
       
           {/* Right Side: Anime Trailer */}
-            <div className="relative aspect-video rounded-lg overflow-hidden h-[40vh]">
-                <ReactPlayer
+            <div className="relative hidden md:block aspect-video rounded-lg overflow-hidden w-full md:w-fit md:h-[63svh] lg:h-[40vh]">
+                {/* <ReactPlayer
                 url={`https://www.youtube.com/watch?v=${anime?.trailer.youtube_id}&?vq=hd720`}
                 width="100%"
                 height="100%"
@@ -108,11 +110,13 @@ const SeasonNowAnime = () => {
                 loop={true}
                 controls={false}
                 // className="absolute top-0 left-0"
-                />
+                /> */}
             </div>
         </div>
-      </section>
-    ))}
+        </section>
+        )
+      }
+    })}
 </Carousel>
 
     </div>

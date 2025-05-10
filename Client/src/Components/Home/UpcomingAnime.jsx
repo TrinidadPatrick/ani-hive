@@ -11,16 +11,21 @@ const UpcomingAnime = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
-    const getUpcomingAnime = async (page) => {
+    const getUpcomingAnime = async (page, retries = 1) => {
         try {
             const result = await axios.get(`https://api.jikan.moe/v4/seasons/upcoming?page=${page || 1}`)
             if(result.status === 200) {
                 const animes = result.data
-                console.log(animes)
                 setUpcomingAnime(animes)
             }
         } catch (error) {
             console.log(error)
+            if(retries > 0)
+            {
+                setTimeout(()=>{
+                    getUpcomingAnime(1, retries - 1)
+                }, 1000)
+            }
         }
     }
 
@@ -29,8 +34,6 @@ const UpcomingAnime = () => {
             getUpcomingAnime()
         }
     }, [])
-
-    console.log(upcomingAnime)
 
   return (
     <div className="w-full h-[65svh] bg-[#141414] py-10">
@@ -93,7 +96,7 @@ const UpcomingAnime = () => {
     >
         {upcomingAnime?.data?.length > 0 &&
         upcomingAnime.data.map((anime, index, array) => {
-            if(array[index - 1]?.mal_id != anime?.mal_id){
+            if(array[index - 1]?.mal_id != anime?.mal_id && anime.title){
                 return (
                     <SwiperSlide
             key={index}

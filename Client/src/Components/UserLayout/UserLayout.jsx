@@ -19,7 +19,7 @@ const UserLayout = () => {
                     <button onClick={()=>{navigate('/')}} className={` ${path === '/' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Home</button>
                 </li>
                 <li>
-                <button onClick={()=>{navigate('/categories')}} className={` ${path === '/categories' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Categories</button>
+                <button onClick={()=>{navigate('/Genres')}} className={` ${path === '/genres' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Genres</button>
                 </li>
                 <li>
                 <button onClick={()=>{navigate('/streaming')}} className={` ${path === '/streaming' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Streaming</button>

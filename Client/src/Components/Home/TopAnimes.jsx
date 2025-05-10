@@ -9,14 +9,13 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import { FreeMode, Navigation } from 'swiper/modules';
 
-const TopAnimes = () => {
-    const {topAnimes} = TopAnimeProvider()
+const TopAnimes = ({topAnimes}) => {
     const prevRef = useRef(null);
     const nextRef = useRef(null);
 
 
   return (
-    <div className="w-full h-[65svh] bg-[#141414] py-10">
+    <div className="w-full h-full md:h-[65svh] bg-[#141414] py-10">
       <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3">
         <h1 className="text-2xl md:text-3xl font-bold text-white">Top Rated Anime</h1>
         <div className='flex justify-between'>
@@ -75,8 +74,11 @@ const TopAnimes = () => {
       className="w-[95%] md:w-[90%] mx-auto "
     >
       {topAnimes?.data?.length > 0 &&
-        topAnimes.data.map((anime, index) => (
-          <SwiperSlide
+        topAnimes.data.map((anime, index, array) =>
+        {
+          if(array[index - 1]?.mal_id != anime?.mal_id){
+            return (
+              <SwiperSlide
             key={index}
             style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
             className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
@@ -113,7 +115,7 @@ const TopAnimes = () => {
               <div className="w-full absolute px-3 py-1 bottom-0 bg-transparent backdrop-blur h-[20%] sm:h-[25%] md:h-[20%] rounded-b-lg flex">
                 <div className="flex flex-col items-start w-full h-full justify-around">
                   <h2 className="text-white text-sm md:text-base truncate w-full">
-                    {anime?.title_english?.replace(/;/g, ' ') || anime?.title?.replace(/;/g, ' ')}
+                    {anime?.title_english?.replace(/;/g, ' ') || anime?.title_english?.replace(/;/g, ' ')}
                   </h2>
                   <h2 className="text-gray-300 text-sm md:text-sm">
                     {anime?.year} {anime?.genres[0]?.name}
@@ -122,7 +124,10 @@ const TopAnimes = () => {
               </div>
             </div>
           </SwiperSlide>
-        ))}
+            )
+          }})
+        }
+        
     </Swiper>
       </div>
     </div>

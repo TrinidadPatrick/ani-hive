@@ -2,4 +2,25 @@
 *{
     font-family: "Source Sans 3", sans-serif;
 }
+
+.progress{
+    height: 10px
+}
+
+/* Chrome & Safari */
+.progress::-webkit-progress-bar {
+    background-color: #eee;
+    border-radius: 10px;
+  }
+
+  .progress::-webkit-progress-value {
+    background-color: #f6339a;
+    border-radius: 10px;
+  }
+
+  /* Firefox */
+  .progress::-moz-progress-bar {
+    background-color: #f6339a;
+    border-radius: 10px;
+  }
 @import "tailwindcss";

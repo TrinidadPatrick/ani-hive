@@ -3,9 +3,8 @@ import topAnimeStore from '../../Store/topAnimeStore'
 import TopAnimeProvider from '../../Providers/TopAnimeProvider'
 import image_1 from '../../Images/image_2.jpeg'
 
-const TopSection = () => {
+const TopSection = ({topAnimes}) => {
     const [topAnime, setTopAnime] = useState(null)
-    const {topAnimes} = TopAnimeProvider()
     const [showMore, setShowMore] = useState(false)
 
     useEffect(() => {
@@ -26,7 +25,7 @@ const TopSection = () => {
 
   {/* Overlay (blur + tint) */}
   <div className="absolute inset-0 bg-black/40 backdrop-blur-xs" />
-  <div className="relative z-10 flex flex-col-reverse md:flex-row items-center gap-10 w-full max-w-7xl">
+  <div className="relative mx-3 sm:mx-10 xl:mx-0 z-10 flex flex-col-reverse md:flex-row items-center gap-10 w-full max-w-7xl">
     
     {/* Left Side: Anime Info */}
     <div className="text-white flex-1 space-y-5 p-3 md:p-0">
