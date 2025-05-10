@@ -70,7 +70,16 @@ const OngoingAnime = () => {
     
   return (
     <div className='w-full bg-[#141414] py-10'>
-    <div className="w-[90%] mx-auto h-full gap-5 bg-[#141414] py-10 grid grid-cols-7">
+      <div className="w-[95%] md:w-[90%] mx-auto px-3">
+      <h1 className="text-2xl md:text-3xl font-bold text-white">Ongoing Animes</h1>
+      <div className='flex justify-between'>
+          <p className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes streaming this season</p>
+          <button className='text-sm md:text-base text-white'>See all</button>
+      </div>
+      
+    </div>
+    <div className="w-[90%] mx-auto h-full gap-5 bg-[#141414] grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+      
       {
         ongoingAnime?.length > 0 &&
         ongoingAnime.map((anime, index, array) =>

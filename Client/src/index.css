@@ -24,3 +24,8 @@
     border-radius: 10px;
   }
 @import "tailwindcss";
+
+@theme {
+  --breakpoint-xs: 30rem;
+  --breakpoint-xxs: 20rem;
+}
