@@ -1,10 +1,12 @@
 import React from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, matchPath, useLocation } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 
 const UserLayout = () => {
-    const navigate = useNavigate()
-  const path = window.location.pathname
+  const navigate = useNavigate()
+  const location = useLocation()
+  const path = location.pathname
+
 
   return (
     <>
@@ -16,7 +18,7 @@ const UserLayout = () => {
             
             <ul className='w-full hidden md:flex text-white justify-end gap-10 pe-10'>
                 <li>
-                    <button onClick={()=>{navigate('/')}} className={` ${path === '/' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Home</button>
+                    <button onClick={()=>{navigate('/')}} className={` ${path === '/' || path.startsWith('/anime/') ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Home</button>
                 </li>
                 <li>
                     <button onClick={()=>{navigate('/schedule')}} className={` ${path === '/schedule' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Schedule</button>

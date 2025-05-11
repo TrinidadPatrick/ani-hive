@@ -15,7 +15,7 @@ import Footer from './Footer'
 const Home = () => {
   const {topAnimes} = TopAnimeProvider()
   return (
-    <main className=' w-full h-full relative'>
+    <main className=' w-full h-full relative bg-[#141414]'>
         
         <div className='relative'>
         <TopSection topAnimes={topAnimes} />

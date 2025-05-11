@@ -126,7 +126,7 @@ const AnimeMovies = () => {
         }})
       }
       
-  </Swiper>
+    </Swiper>
     </div>
   </div>
   )

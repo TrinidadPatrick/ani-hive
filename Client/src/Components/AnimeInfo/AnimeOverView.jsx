@@ -1,0 +1,539 @@
+import axios from 'axios'
+import React, { useEffect, useRef, useState } from 'react'
+import { useParams, useSearchParams } from 'react-router'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import 'swiper/css/navigation';
+import { FreeMode, Navigation } from 'swiper/modules';
+
+const AnimeOverView = () => {
+    const {id} = useParams()
+    const [searchParams] = useSearchParams();
+    const name = searchParams.get('name');
+    const [animeInfo, setAnimeInfo] = useState(null)
+    const [characters, setCharacters] = useState(null)
+    const [animeRelations, setAnimeRelations] = useState([])
+
+    const prevRef = useRef(null);
+    const nextRef = useRef(null);
+
+    const getAnimeInfo = async (id, retries = 10) => {
+        if(name)
+        {
+            const malId = await fetchAnimeId(name)
+            try {
+                const result = await axios.get(`https://api.jikan.moe/v4/anime/${malId}/full`)
+                if(result.status === 200) {
+                    const anime = result.data.data
+                    setAnimeInfo(anime)
+                }
+            } catch (error) {
+                console.log(error)
+                if(retries > 0)
+                {
+                    setTimeout(()=>{
+                        getAnimeInfo(1, retries - 1)
+                    }, 1000)
+                }
+            }
+        }else{
+            try {
+                const result = await axios.get(`https://api.jikan.moe/v4/anime/${id}/full`)
+                if(result.status === 200) {
+                    const anime = result.data.data
+                    setAnimeInfo(anime)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    const getCharacters = async(id) => {
+        if(name){
+            const malId = await fetchAnimeId(name)
+            try {
+                const result = await axios.get(`https://api.jikan.moe/v4/anime/${malId}/characters`)
+                if(result.status === 200) {
+                    const characters = result.data.data
+                    const sortedCharacters = characters.sort((a,b) => b.favorites - a.favorites)
+                    setCharacters(sortedCharacters)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }else{
+            try {
+                const result = await axios.get(`https://api.jikan.moe/v4/anime/${id}/characters`)
+                if(result.status === 200) {
+                    const characters = result.data.data
+                    const sortedCharacters = characters.sort((a,b) => b.favorites - a.favorites)
+                    setCharacters(sortedCharacters)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    const fetchAnimeId = async (animeTitle) => {
+    try {
+        // Step 1: Get idMal from AniList
+        const anilistQuery = `
+        query ($search: String) {
+            Media(search: $search, type: ANIME) {
+            id
+            idMal
+            title {
+                romaji
+                english
+                native
+            }
+            }
+        }
+        `;
+
+        const response = await axios.post('https://graphql.anilist.co', {
+        query: anilistQuery,
+        variables: { search: animeTitle }
+        });
+
+        const idMal = response.data.data.Media.idMal;
+
+        if (!idMal) {
+        console.warn(`No MAL ID found for ${animeTitle}`);
+        return null;
+        }
+
+        return idMal
+
+        // Step 2: Use idMal with Jikan
+        // const jikanResponse = await axios.get(`https://api.jikan.moe/v4/anime/${idMal}/full`);
+        // setAnimeInfo(jikanResponse.data.data)
+
+    } catch (error) {
+        console.error('Error fetching anime details:', error);
+        return null;
+    }
+    };     
+
+    const getAnimeRelations = async (searchTerm) => {
+        try {
+            const query = `
+              query ($search: String) {
+                Media(search: $search, type: ANIME) {
+                  title {
+                    romaji
+                    english
+                  }
+                  relations {
+                    edges {
+                      relationType
+                      node {
+                        id
+                        type
+                        format
+                        title {
+                          romaji
+                          english
+                        }
+                        coverImage {
+                          large
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `;
+      
+            const variables = {
+              search: searchTerm,
+            };
+      
+            const response = await axios.post(
+              'https://graphql.anilist.co',
+              { query, variables },
+              { headers: { 'Content-Type': 'application/json' } }
+            );
+      
+            const data = response.data.data.Media;
+            setAnimeRelations(data.relations.edges)
+          } catch (error) {
+            console.error('Error fetching data:', error);
+            alert('Anime not found or error occurred.');
+          }
+    };
+      
+      
+
+    // console.log(animeRelations)
+
+    useEffect(() => {
+        if(id) {
+            getAnimeInfo(id)
+            getCharacters(id)
+        }
+    }, [id])
+
+    useEffect(() => {
+        if(animeInfo) {
+            getAnimeRelations(animeInfo?.title)
+        }
+    }, [animeInfo])
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
+
+    console.log(animeRelations)
+
+  return (
+  <main className='w-full grid grid-cols-12 h-fit bg-[#141414]'>
+    {
+        animeInfo ?
+        <div className='w-full col-span-10 h-fit bg-[#141414] py-20 px-5 flex flex-col gap-5'>
+            {/* Top Section */}
+            <div className=' flex-none flex gap-2'>
+                <div className='w-[200px]'>
+                    <img src={animeInfo?.images?.jpg.image_url} alt={animeInfo?.title} className='w-full h-full object-cover rounded-lg' />
+                </div>
+                <div className='flex-1 h-full flex flex-col gap-2 px-2'>
+                    <h1 className='text-white text-3xl font-bold'>{animeInfo?.title}</h1>
+                    <div className='w-full flex gap-2 my-1'>
+                        <div className='px-2 py-0.5 bg-pink-600 rounded'>
+                            <h1 className='text-white text-xs font-medium'>{animeInfo?.rating.split(' - ')[0]}</h1>
+                        </div>
+                        <div className='px-2 py-0.5 bg-pink-600 rounded'>
+                            <h1 className='text-white text-xs font-medium'>{animeInfo?.type}</h1>
+                        </div>
+                        <div className='px-2 py-0.5 bg-pink-600 rounded'>
+                            <h1 className='text-white text-xs font-medium'>#{animeInfo?.rank}</h1>
+                        </div>
+                    </div>
+                    {/* Other informations */}
+                    <div className='w-full h-full grid grid-cols-2'>
+                        <div className='h-full w-full'>
+                            <ul className='h-full flex flex-col justify-between'>
+                                <li className='flex gap-2'>
+                                    <h1 className='text-gray-400 w-[80px] font-medium'>Score: </h1>
+                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.score || 0}</h1>
+                                    <h1 className='text-gray-400 line-clamp-1'>By {animeInfo?.scored_by ? animeInfo?.scored_by.toLocaleString() : 0} users</h1>
+                                </li>
+                                <li className='flex gap-2'>
+                                    <h1 className='text-gray-400 w-[80px] font-medium'>Premiered: </h1>
+                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.season ? animeInfo?.season[0].toUpperCase()+animeInfo?.season.substring(1) : '???'} {animeInfo?.year || '???'}</h1>
+                                </li>
+                                <li className='flex gap-2'>
+                                    <h1 className='text-gray-400 w-[80px] font-medium'>Date Aired: </h1>
+                                    <h1 className='text-gray-200 line-clamp-1'>
+                                        {
+                                            new Date(animeInfo?.aired?.from || new Date()).toLocaleDateString('en-us', {
+                                                month: 'short',
+                                                day: 'numeric',
+                                                year: 'numeric'
+                                            }) + ' '
+                                        } 
+                                         to  
+                                        {
+                                            ' ' + new Date(animeInfo?.aired?.to || new Date()).toLocaleDateString('en-us', {
+                                                month: 'short',
+                                                day: 'numeric',
+                                                year: 'numeric'
+                                            })
+                                        }
+                                    </h1>
+                                </li>
+                                <li className='flex gap-2'>
+                                    <h1 className='text-gray-400 w-[80px] font-medium'>Status: </h1>
+                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.airing ? 'Ongoing' : 'Finished'}</h1>
+                                </li>
+                                <li className='flex gap-2'>
+                                    <h1 className='text-gray-400 w-[80px] font-medium'>Episodes: </h1>
+                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.episodes || '????'}</h1>
+                                </li>
+                                <li className='flex gap-2'>
+                                    <h1 className='text-gray-400 w-[80px] font-medium'>Duration: </h1>
+                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.duration}</h1>
+                                </li>
+                                <li className='flex gap-2'>
+                                    <h1 className='text-gray-400 w-[80px] font-medium'>Genre: </h1>
+                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.genres.map((genre)=> genre.name).join(', ')}</h1>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className='h-full w-full'>
+                            <ul className='h-full flex flex-col justify-start gap-2'>
+                                <li className='flex gap-2'>
+                                    <h1 className='text-gray-400 w-[80px] font-medium'>Studios: </h1>
+                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.studios.map((studio)=> studio.name).join(', ')}</h1>
+                                </li>
+                                <li className='flex gap-2'>
+                                    <h1 className='text-gray-400 w-[80px]  font-medium'>Producers: </h1>
+                                    <h1 className='text-gray-200 line-clamp-2 ps-2'>{animeInfo?.producers.map((producer)=> producer.name).join(', ')}</h1>
+                                </li>
+                                <li className='flex gap-2'>
+                                    <h1 className='text-gray-400 w-[80px] font-medium'>Source: </h1>
+                                    <h1 className='text-gray-200 line-clamp-1'>
+                                        {animeInfo?.source}
+                                    </h1>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <hr className='text-gray-600 mt-3'></hr>                               
+            {/* Synopsis */}
+            <div className='w-full h-full '>
+                <div className='w-full h-fit  py-0 px-0 flex flex-col'>
+                    <div className='flex-1 h-fit flex flex-col gap-2'>
+                        <h1 className='text-white text-2xl font-bold'>Synopsis</h1>
+                        <p className='text-white text-base'>{animeInfo?.synopsis.replace('[Written by MAL Rewrite]', '')}
+                        
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {/* Characters */}
+            <div className='w-full  h-fit flex flex-col gap-3'>
+                <div>
+                    <h1 className='text-white text-2xl font-bold'>Characters</h1>
+                </div>
+                <div className='relative'>
+                <Swiper
+                modules={[FreeMode, Navigation]}
+                freeMode={true}
+                spaceBetween={20}
+                slidesPerView={2}
+                slidesPerGroup={1}  grabCursor={true}
+                navigation={{
+                nextEl: nextRef.current,
+                prevEl: prevRef.current,
+                }}
+                onBeforeInit={(swiper) => {
+                swiper.params.navigation.prevEl = prevRef.current;
+                swiper.params.navigation.nextEl = nextRef.current;
+                }}
+                breakpoints={{
+                0: {
+                    slidesPerView: 2,
+                    slidesPerGroup: 2,
+                },
+                481: {
+                    slidesPerView: 3,
+                    slidesPerGroup: 3,
+                },
+                630: {
+                    slidesPerView: 4,
+                    slidesPerGroup: 4,
+                },
+                769: {
+                    slidesPerView: 4,
+                    slidesPerGroup: 4,
+                },
+                890: {
+                    slidesPerView: 5,
+                    slidesPerGroup: 5,
+                },
+                1280: {
+                    slidesPerView: 7,
+                    slidesPerGroup: 7,
+                },
+                }}
+                className="w-full h-fit mx-auto "
+                >
+                {characters?.length > 0 &&
+                characters.map((char, index, array) =>
+                {
+                    if(1 === 1){
+                    return (
+                        <SwiperSlide
+                    key={index}
+                    style={{ width: '195px', height: 'auto' }} // or use fixed or dynamic width based on screen
+                    className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
+                    >
+                    <div className="relative h-fit overflow-hidden rounded-lg">
+                    <div className="w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-1">
+                    <div className="w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>
+                    <p className="z-[9999] mt-[1px] text-sm">{char?.role}</p>
+                    </div>
+                        {/* Image */}
+                        <div className="w-full bg-red-100 h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
+                        <img
+                            src={char?.character?.images.webp.image_url}
+                            alt={char?.character?.name}
+                            className="w-full aspect-[2/2.8]  object-cover brightness-70"
+                        />
+                        </div>
+
+                        {/* Info */}
+                        <div className="w-full absolute px-3 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[20%] sm:h-[25%] md:h-[25%] rounded-b-lg flex">
+                        <div className="flex flex-col items-start w-full h-full justify-around">
+                            <h2 className="text-white text-sm md:text-base w-full line-clamp-1">
+                            {char?.character?.name}
+                            </h2>
+                            <h2 className="text-gray-300 text-sm md:text-sm line-clamp-1">
+                            {char?.voice_actors[0]?.person?.name}
+                            </h2>
+                        </div>
+                        </div>
+                    </div>
+                    </SwiperSlide>
+                    )
+                    }})
+                }
+                
+                </Swiper>          
+                </div>                       
+            </div>
+            {/* Related */}
+            <div className='w-full flex flex-col gap-3'>
+                <div>
+                    <h1 className='text-white text-2xl font-bold'>Related</h1>
+                </div>
+                <div className='relative'>
+                <Swiper
+                modules={[FreeMode, Navigation]}
+                freeMode={true}
+                spaceBetween={20}
+                slidesPerView={2}
+                slidesPerGroup={1}  grabCursor={true}
+                navigation={{
+                nextEl: nextRef.current,
+                prevEl: prevRef.current,
+                }}
+                onBeforeInit={(swiper) => {
+                swiper.params.navigation.prevEl = prevRef.current;
+                swiper.params.navigation.nextEl = nextRef.current;animeRelations
+                }}
+                breakpoints={{
+                0: {
+                    slidesPerView: 2,
+                    slidesPerGroup: 2,
+                },
+                481: {
+                    slidesPerView: 3,
+                    slidesPerGroup: 3,
+                },
+                630: {
+                    slidesPerView: 4,
+                    slidesPerGroup: 4,
+                },
+                769: {
+                    slidesPerView: 4,
+                    slidesPerGroup: 4,
+                },
+                890: {
+                    slidesPerView: 5,
+                    slidesPerGroup: 5,
+                },
+                1280: {
+                    slidesPerView: 7,
+                    slidesPerGroup: 7,
+                },
+                }}
+                className="w-full mx-auto "
+                >
+                {animeRelations.length > 0 &&
+                animeRelations.map((info, index, array) =>
+                {
+                    // console.log(info)
+                    if(1 === 1){
+                    return (
+                        <SwiperSlide
+                    key={index}
+                    style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
+                    className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
+                    >
+                    <div className="relative h-fit overflow-hidden rounded-lg">
+                    <div className="w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-1">
+                    <div className="w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>
+                    {/* <p className="z-[9999] mt-[1px] text-sm">{info?.name}</p> */}
+                    </div>
+                        {/* Image */}
+                        <div className="w-full bg-red-100 h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
+                        <img
+                            src={info?.node.coverImage.large}
+                            alt={info?.node.title.romaji || info?.node.title.english}
+                            className="w-full aspect-[2/2.8]  object-cover brightness-70"
+                        />
+                        </div>
+
+                        {/* Info */}
+                        <div className="w-full absolute px-3 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[20%] sm:h-[25%] md:h-[25%] rounded-b-lg flex">
+                        <div className="flex flex-col items-start w-full h-full justify-around">
+                            <h2 className="text-white text-sm md:text-base w-full line-clamp-1">
+                            {info?.node.title.romaji || info?.node.title.english}
+                            </h2>
+                            <h2 className="text-gray-300 text-sm md:text-sm line-clamp-1">
+                            {info?.node.format}
+                            </h2>
+                        </div>
+                        </div>
+                    </div>
+                    </SwiperSlide>
+                    )
+                    }})
+                }
+                
+                </Swiper>          
+                </div>                       
+            </div>
+        </div>
+        :
+        // Loader
+        <div className='w-full col-span-12 h-[100svh] bg-[#141414] mt-20'>
+            {/* Header */}
+            <div className="flex gap-6">
+                {/* Poster Skeleton */}
+                <div className="w-48 h-72 bg-gray-800 animate-pulse rounded"></div>
+
+                {/* Info Skeleton */}
+                <div className="flex-1 space-y-4">
+                <div className="h-6 w-3/4 bg-gray-800 animate-pulse rounded"></div>
+                <div className="h-4 w-1/3 bg-gray-700 animate-pulse rounded"></div>
+                <div className="grid grid-cols-2 gap-4">
+                    {Array(6).fill(0).map((_, idx) => (
+                    <div key={idx} className="h-4 w-full bg-gray-700 animate-pulse rounded"></div>
+                    ))}
+                </div>
+                </div>
+            </div>
+
+            {/* Divider */}
+            <div className="my-6 h-0.5 bg-gray-700"></div>
+
+            {/* Synopsis */}
+            <div>
+                <div className="h-6 w-32 bg-gray-800 animate-pulse rounded mb-4"></div>
+                <div className="space-y-2">
+                <div className="h-4 w-full bg-gray-700 animate-pulse rounded"></div>
+                <div className="h-4 w-5/6 bg-gray-700 animate-pulse rounded"></div>
+                </div>
+            </div>
+
+            {/* Characters */}
+            <div className="mt-10">
+        <div className="h-6 w-32 bg-gray-800 animate-pulse rounded mb-4"></div>
+        <div className="flex gap-4 flex-wrap">
+          {Array(6).fill(0).map((_, idx) => (
+            <div key={idx} className="w-28">
+              <div className="w-28 h-36 bg-gray-800 animate-pulse rounded mb-2"></div>
+              <div className="h-4 w-3/4 bg-gray-700 animate-pulse rounded mx-auto"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+        </div>
+    }
+        {/* Other anime list */}
+        <div className='col-span-2 hidden xl:block h-full bg-[#141414] pt-20'>
+                s
+        </div>
+  </main>
+  )
+}
+
+export default AnimeOverView

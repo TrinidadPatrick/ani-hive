@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import topAnimeStore from '../../Store/topAnimeStore'
 import TopAnimeProvider from '../../Providers/TopAnimeProvider'
 import image_1 from '../../Images/image_2.jpeg'
+import { useNavigate } from 'react-router'
 
 const TopSection = ({topAnimes}) => {
     const [topAnime, setTopAnime] = useState(null)
     const [showMore, setShowMore] = useState(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
         if(topAnimes !== null && topAnimes.data.length > 0) {
@@ -44,7 +46,7 @@ const TopSection = ({topAnimes}) => {
         <div><span className="font-semibold text-pink-400">Genre:</span> {topAnime?.genres.map((genre)=>genre.name).join(', ')}</div>
       </div>
 
-      <button className="mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
+      <button onClick={()=>{navigate(`/anime/${topAnime?.mal_id}`)}} className="mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
         Overview
         </button>
         <button className="ml-3 mt-4 cursor-pointer bg-transparent border text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">

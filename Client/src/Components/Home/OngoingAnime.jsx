@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router'
+import OngoingAnimeStore from '../../Store/OngoingAnimeStore'
 
 const OngoingAnime = () => {
-
-  const [ongoingAnime, setOngoingAnime] = useState(null)
+  const navigate = useNavigate()
+  const OngoingAnime = OngoingAnimeStore((state) => state.OngoingAnime)
+  const s_setOngoingAnime = OngoingAnimeStore((state) => state.s_setOngoingAnime)
 
   const getOngoingAnime = async (page, retries = 10) => {
     try {
@@ -47,7 +50,7 @@ const OngoingAnime = () => {
 
     if(response.status === 200) {
       const animes = response.data.data.Page.media
-      setOngoingAnime(animes)
+      s_setOngoingAnime(animes)
     }
   
   } catch (error) {
@@ -65,8 +68,6 @@ const OngoingAnime = () => {
   useEffect(() => {
     getOngoingAnime()
   }, [])
-
-  console.log(ongoingAnime)
     
   return (
     <div className='w-full bg-[#141414] py-10'>
@@ -81,23 +82,25 @@ const OngoingAnime = () => {
     <div className="w-[90%] mx-auto h-full gap-5 bg-[#141414] grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
       
       {
-        ongoingAnime?.length > 0 &&
-        ongoingAnime.map((anime, index, array) =>
+        OngoingAnime?.length > 0 &&
+        OngoingAnime.map((anime, index, array) =>
         {
           if(array[index - 1]?.id != anime?.id){
             return (
-              <div className="w-full h-fit rounded-lg bg-transparent relative overflow-hidden flex flex-col items-center justify-center">
+              <div key={index} onClick={()=> {navigate('/anime/'+anime?.id+'?name='+anime?.title?.romaji)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
                 <div className='absolute z-[999] top-1 left-1 bg-pink-600 px-1 py-0.5 rounded'>
                   <h2 className="text-gray-300 text-center w-full text-sm md:text-sm">
                       Ep {anime?.nextAiringEpisode?.episode + '/'}{anime?.episodes || '??'}
                   </h2>
                 </div>
                 {/* Image */}
+                <div className='rounded-lg overflow-hidden'>
                 <img
                   src={anime?.coverImage?.large}
                   alt={anime?.title?.romaji}
-                  className=" w-full h-full object-cover rounded-lg brightness-80 aspect-[2/2.3]"
+                  className=" w-full h-full hover:scale-105 object-cover rounded-lg brightness-80 aspect-[2/2.3]"
                 />
+                </div>
 
                 {/* Info */}
                 <div className="w-full px-3 py-1 bottom-0 bg-transparent sm:h-[25%] md:h-[20%] rounded-b-lg flex">

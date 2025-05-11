@@ -11,7 +11,7 @@ const UpcomingAnime = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
-    const getUpcomingAnime = async (page, retries = 1) => {
+    const getUpcomingAnime = async (page, retries = 10) => {
         try {
             const result = await axios.get(`https://api.jikan.moe/v4/seasons/upcoming?page=${page || 1}`)
             if(result.status === 200) {
