@@ -8,12 +8,19 @@ import 'swiper/css/navigation';
 import { FreeMode, Navigation } from 'swiper/modules';
 
 const AnimeOverView = () => {
+    const reactionEmojis = ["📊", "👍", "❤️", "😂", "🤔", "📘", "✍️", "🎨"];
     const {id} = useParams()
+    const textRef = useRef(null);
     const [searchParams] = useSearchParams();
     const name = searchParams.get('name');
     const [animeInfo, setAnimeInfo] = useState(null)
     const [characters, setCharacters] = useState(null)
     const [animeRelations, setAnimeRelations] = useState([])
+    const [recommendations, setRecommendations] = useState([]);
+    const [reviews, setReviews] = useState([]);
+    const [hovered, setHovered] = useState(-1)
+    const [indexSeeMore, setIndexSeeMore] = useState([])
+    const [indexSeeReview, setIndexSeeReview] = useState([])
 
     const prevRef = useRef(null);
     const nextRef = useRef(null);
@@ -162,13 +169,117 @@ const AnimeOverView = () => {
             setAnimeRelations(data.relations.edges)
           } catch (error) {
             console.error('Error fetching data:', error);
-            alert('Anime not found or error occurred.');
           }
     };
-      
-      
 
-    // console.log(animeRelations)
+    const getRecommendations = async (searchTerm) => {
+
+    const query = `
+      query ($search: String) {
+        Media(search: $search, type: ANIME) {
+          id
+          title {
+            romaji
+            english
+          }
+          recommendations(sort: RATING_DESC, perPage: 10) {
+            nodes {
+              mediaRecommendation {
+                id
+                title {
+                  romaji
+                  english
+                }
+                coverImage {
+                  large
+                }
+                type
+                format
+                startDate {
+                  year
+                }
+                nextAiringEpisode {
+                    episode
+                    airingAt
+                  }
+                  genres
+                episodes
+                duration     # average episode length, in minutes
+                status       # e.g. FINISHED, RELEASING
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const variables = { search: searchTerm };
+
+    try {
+        const { data } = await axios.post(
+          'https://graphql.anilist.co',
+          { query, variables },
+          { headers: { 'Content-Type': 'application/json' } }
+        );
+  
+        const media = data.data.Media;
+        setRecommendations(media.recommendations.nodes);
+      } catch (err) {
+        console.log(err);
+    }
+
+    }
+
+    const getUserReviews = async (id) => {
+        if(name){
+            const malId = await fetchAnimeId(name)
+            try {
+                const result = await axios.get(`https://api.jikan.moe/v4/anime/${malId}/reviews`)
+                if(result.status === 200) {
+                    const reviews = result.data.data
+                    const sortedReviews = reviews.sort((a,b) => new Date(b.date) - new Date(a.date))
+                    setReviews(sortedReviews)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }else{
+            try {
+                const result = await axios.get(`https://api.jikan.moe/v4/anime/${id}/reviews`)
+                if(result.status === 200) {
+                    const reviews = result.data.data
+                    const sortedReviews = reviews.sort((a,b) => new Date(b.date) - new Date(a.date))
+                    setReviews(sortedReviews)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    const handleSeeMore = (index) => {
+        const newIndex = indexSeeMore.findIndex((item) => item === index)
+        if(newIndex !== -1){
+            const newIndexSeeMore = [...indexSeeMore]
+            newIndexSeeMore.splice(newIndex, 1)
+            setIndexSeeMore(newIndexSeeMore)
+        }else{
+            const newIndexSeeMore = [...indexSeeMore, index]
+            setIndexSeeMore(newIndexSeeMore)
+        }
+    }
+
+    const handleSeeReview = (index) => {
+        const newIndex = indexSeeReview.findIndex((item) => item === index)
+        if(newIndex !== -1){
+            const newIndexSeeReview = [...indexSeeReview]
+            newIndexSeeReview.splice(newIndex, 1)
+            setIndexSeeReview(newIndexSeeReview)
+        }else{
+            const newIndexSeeReview = [...indexSeeReview, index]
+            setIndexSeeReview(newIndexSeeReview)
+        }
+    }
 
     useEffect(() => {
         if(id) {
@@ -178,29 +289,37 @@ const AnimeOverView = () => {
     }, [id])
 
     useEffect(() => {
-        if(animeInfo) {
+        if(animeInfo && (animeRelations.length == 0 || recommendations.length == 0)) {
             getAnimeRelations(animeInfo?.title)
+            getRecommendations(animeInfo?.title)
+            getUserReviews(id)
         }
     }, [animeInfo])
 
     useEffect(() => {
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
     }, [])
 
-    console.log(animeRelations)
+    // console.log(reviews)
 
   return (
-  <main className='w-full grid grid-cols-12 h-fit bg-[#141414]'>
+  <main className='w-full grid grid-cols-13 h-fit bg-[#141414]'>
     {
         animeInfo ?
-        <div className='w-full col-span-10 h-fit bg-[#141414] py-20 px-5 flex flex-col gap-5'>
+        <div className='w-full col-span-13 xl:col-span-10 h-fit bg-[#141414] py-20 px-5 flex flex-col gap-5'>
             {/* Top Section */}
             <div className=' flex-none flex gap-2'>
                 <div className='w-[200px]'>
-                    <img src={animeInfo?.images?.jpg.image_url} alt={animeInfo?.title} className='w-full h-full object-cover rounded-lg' />
+                    <img src={animeInfo?.images?.jpg.image_url} alt={animeInfo?.title_english || animeInfo?.title} className='w-full h-full object-cover rounded-lg' />
                 </div>
                 <div className='flex-1 h-full flex flex-col gap-2 px-2'>
-                    <h1 className='text-white text-3xl font-bold'>{animeInfo?.title}</h1>
+                    <div className='w-full flex justify-between'>
+                        <h1 className='text-white text-3xl font-bold'>{animeInfo?.title_english || animeInfo?.title}</h1>
+                        <div>
+                            <button onClick={()=>{window.open(animeInfo.trailer.url, '_blank').focus();}} className='text-white text-sm md:text-base px-3 py-2 bg-pink-600 rounded font-medium cursor-pointer hover:bg-pink-500'>Watch Trailer</button>
+                        </div>
+                    </div>
+                    
                     <div className='w-full flex gap-2 my-1'>
                         <div className='px-2 py-0.5 bg-pink-600 rounded'>
                             <h1 className='text-white text-xs font-medium'>{animeInfo?.rating.split(' - ')[0]}</h1>
@@ -318,24 +437,24 @@ const AnimeOverView = () => {
                 }}
                 breakpoints={{
                 0: {
-                    slidesPerView: 2,
-                    slidesPerGroup: 2,
-                },
-                481: {
                     slidesPerView: 3,
                     slidesPerGroup: 3,
+                },
+                481: {
+                    slidesPerView: 4,
+                    slidesPerGroup: 4,
                 },
                 630: {
                     slidesPerView: 4,
                     slidesPerGroup: 4,
                 },
                 769: {
-                    slidesPerView: 4,
-                    slidesPerGroup: 4,
-                },
-                890: {
                     slidesPerView: 5,
                     slidesPerGroup: 5,
+                },
+                890: {
+                    slidesPerView: 6,
+                    slidesPerGroup: 6,
                 },
                 1280: {
                     slidesPerView: 7,
@@ -347,42 +466,46 @@ const AnimeOverView = () => {
                 {characters?.length > 0 &&
                 characters.map((char, index, array) =>
                 {
-                    if(1 === 1){
                     return (
-                        <SwiperSlide
+                    <div className='relative'>
+                    <SwiperSlide
                     key={index}
+                    onMouseEnter={()=>{setTimeout(()=>{setHovered(index)}, 150)}}
+                    onMouseLeave={()=>{setTimeout(()=>{setHovered(-1)}, 150)}}
                     style={{ width: '195px', height: 'auto' }} // or use fixed or dynamic width based on screen
-                    className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
+                    className={`peer-hover:rotate-y-180 transform duration-300 ease-in-out delay-75 h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer`}
                     >
-                    <div className="relative h-fit overflow-hidden rounded-lg">
-                    <div className="w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-1">
-                    <div className="w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>
+                        <div className='w-full h-full top-0 absolute bg-transparent peer z-[9999999999999]'></div>
+                    <div className={`peer-hover:rotate-y-180 transform duration-300 ease-in-out delay-75 relative h-fit overflow-hidden rounded-lg`}>
+                    <div className={`${hovered == index ? 'rotate-y-180' : ''} w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-1`}>
+                    <div className=" w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>
                     <p className="z-[9999] mt-[1px] text-sm">{char?.role}</p>
                     </div>
                         {/* Image */}
                         <div className="w-full bg-red-100 h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
-                        <img
-                            src={char?.character?.images.webp.image_url}
-                            alt={char?.character?.name}
-                            className="w-full aspect-[2/2.8]  object-cover brightness-70"
-                        />
+                            <img
+                                src={hovered == index ? char?.voice_actors[0]?.person?.images.jpg.image_url : char?.character.images.jpg.image_url}
+                                alt={char?.character?.name}
+                                className="w-full aspect-[2/2.8] object-cover brightness-70"
+                            />
                         </div>
 
                         {/* Info */}
-                        <div className="w-full absolute px-3 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[20%] sm:h-[25%] md:h-[25%] rounded-b-lg flex">
+                        <div className={`${hovered == index ? 'rotate-y-180' : ''} w-full absolute px-1 md:px-3 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[30%] xs:h-[25%] md:h-[25%] rounded-b-lg flex`}>
                         <div className="flex flex-col items-start w-full h-full justify-around">
                             <h2 className="text-white text-sm md:text-base w-full line-clamp-1">
                             {char?.character?.name}
                             </h2>
-                            <h2 className="text-gray-300 text-sm md:text-sm line-clamp-1">
+                            <h2 className="text-gray-300 text-xs md:text-sm line-clamp-1">
                             {char?.voice_actors[0]?.person?.name}
                             </h2>
                         </div>
                         </div>
                     </div>
                     </SwiperSlide>
+                    </div>
                     )
-                    }})
+                    })
                 }
                 
                 </Swiper>          
@@ -410,24 +533,24 @@ const AnimeOverView = () => {
                 }}
                 breakpoints={{
                 0: {
-                    slidesPerView: 2,
-                    slidesPerGroup: 2,
-                },
-                481: {
                     slidesPerView: 3,
                     slidesPerGroup: 3,
+                },
+                481: {
+                    slidesPerView: 4,
+                    slidesPerGroup: 4,
                 },
                 630: {
                     slidesPerView: 4,
                     slidesPerGroup: 4,
                 },
                 769: {
-                    slidesPerView: 4,
-                    slidesPerGroup: 4,
-                },
-                890: {
                     slidesPerView: 5,
                     slidesPerGroup: 5,
+                },
+                890: {
+                    slidesPerView: 6,
+                    slidesPerGroup: 6,
                 },
                 1280: {
                     slidesPerView: 7,
@@ -448,9 +571,9 @@ const AnimeOverView = () => {
                     className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
                     >
                     <div className="relative h-fit overflow-hidden rounded-lg">
-                    <div className="w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-1">
-                    <div className="w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>
-                    {/* <p className="z-[9999] mt-[1px] text-sm">{info?.name}</p> */}
+                    <div className=' absolute top-1 left-2 z-[999999999999] px-2 py-0.5 rounded-lg flex items-center justify-center gap-1'>
+                        <div className='bg-black opacity-55 absolute w-full h-full rounded-lg'></div>
+                        <p className='text-white z-[9999999] text-sm'>{info?.node.format}</p>
                     </div>
                         {/* Image */}
                         <div className="w-full bg-red-100 h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
@@ -462,13 +585,10 @@ const AnimeOverView = () => {
                         </div>
 
                         {/* Info */}
-                        <div className="w-full absolute px-3 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[20%] sm:h-[25%] md:h-[25%] rounded-b-lg flex">
+                        <div className="w-full px-1 md:px-2 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[30%] xs:h-[25%] md:h-[30%] rounded-b-lg flex">
                         <div className="flex flex-col items-start w-full h-full justify-around">
-                            <h2 className="text-white text-sm md:text-base w-full line-clamp-1">
+                            <h2 className="text-white text-sm md:text-sm w-full line-clamp-3 text-center">
                             {info?.node.title.romaji || info?.node.title.english}
-                            </h2>
-                            <h2 className="text-gray-300 text-sm md:text-sm line-clamp-1">
-                            {info?.node.format}
                             </h2>
                         </div>
                         </div>
@@ -480,6 +600,103 @@ const AnimeOverView = () => {
                 
                 </Swiper>          
                 </div>                       
+            </div>
+            {/* Reviews */}
+            <div className='w-full flex flex-col gap-3'>
+                <div>
+                    <h1 className='text-white text-2xl font-bold'>Reviews</h1>
+                </div>
+                <div className='w-full h-full flex flex-col gap-2'>
+                    {
+                        reviews?.length > 0 &&
+                        reviews.map((review, index, array) =>
+                        {
+                            const textLength = review.review.length
+                            const date = new Date(review.date)
+                            const dateString = date.toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric'
+                            })
+                            console.log(review)
+                            return (
+                                <div key={index} className='w-full flex gap-2'>
+                                    
+                                    <div className='w-[50px] aspect-[2/2.3] flex-none'>
+                                        <img src={review?.user?.images?.jpg.image_url} alt={review?.author?.name} className='w-full aspect-square object-cover rounded-lg' />
+                                    </div>
+                                    <div className='flex flex-col justify-between py-0 items-start'>
+                                        <div className='flex flex-col gap-1'>
+                                        {/* Date and name */}
+                                        <div className='flex justify-between'>
+                                        <h2 className='text-white font-medium text-sm md:text-base line-clamp-2 '>{review?.user?.username}</h2>
+                                        <p className='text-gray-400 text-sm'>{dateString}</p>
+                                        </div>
+                                        {/* Tag */}
+                                        <div className='flex gap-3'>
+                                            {
+                                                review?.tags?.length > 0 &&
+                                                review?.tags.map((tag, index, array) =>
+                                                {
+                                                    return (
+                                                        <div key={index} className='px-2 py-0.5 bg-[#ff96d812] rounded'>
+                                                            <h1 className='text-pink-400 text-xs font-medium'>{tag}</h1>
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                        {/* Review Content */}
+                                        <div className='relative'>
+                                            {/* Spoiler Warning */}
+                                            {
+                                                !indexSeeReview.includes(index) &&  review?.is_spoiler &&
+                                                <div className='absolute w-full h-full backdrop-blur-xs rounded-lg z-[9999999] flex flex-col justify-center items-center'>
+                                                <h1 className='text-white text-lg font-bold'>Spoiler Warning</h1>
+                                                <p className='text-white text-sm'>This review contains spoilers</p>
+                                                <button onClick={()=>handleSeeReview(index)} className='text-white px-2 py-1 bg-pink-400 hover:bg-pink-500 rounded text-sm cursor-pointer hover:text-gray-200 w-fit'>See review</button>
+                                                </div>
+                                            }
+                                        {
+                                            textLength <= 1200 ?
+                                            <p className='text-gray-200 text-sm whitespace-pre-line'>{review?.review}</p>
+                                            :
+                                            <p
+                                            ref={textRef}
+                                            className={`text-gray-300 text-sm whitespace-pre-line transition-all duration-300 ease-in-out overflow-hidden ${
+                                                indexSeeMore.includes(index) ? 'max-h-[1000px]' : 'max-h-[8.5rem] line-clamp-6'
+                                            }`}
+                                            >
+                                            {review?.review}
+                                            </p>
+                                        }
+                                        {/* See More Button */}
+                                        {
+                                            textLength > 1200 &&
+                                            <button 
+                                            onClick={()=>{handleSeeMore(index)}}
+                                            className='text-white text-sm cursor-pointer hover:text-gray-200  w-fit'>{
+                                                indexSeeMore.includes(index) ? 'see less' : 'see more'
+                                            }</button>
+                                        }
+                                        </div>
+                                        <div className='flex gap-3 flex-wrap p-2 bg-[#34343438] rounded'>
+                                            {
+                                                Object.entries(review.reactions).map(([key, value], index)=>{
+                                                    const reaction = key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' ')
+                                                    return (
+                                                        <p className='text-white text-xs sm:text-sm font-light px-2 py-1 border rounded border-gray-400'>{reaction} {reactionEmojis[index]}: {value}</p>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
             </div>
         </div>
         :
@@ -529,8 +746,29 @@ const AnimeOverView = () => {
         </div>
     }
         {/* Other anime list */}
-        <div className='col-span-2 hidden xl:block h-full bg-[#141414] pt-20'>
-                s
+        <div className='recoList xl:col-span-3 hidden xl:flex h-fit pb-5 bg-[#141414] overflow-auto mt-20 flex-col gap-3'>
+            <div>
+            <h1 className='text-white text-2xl font-bold'>Recommendations</h1>
+            </div>
+            {
+                recommendations?.map((recommendation, index, array) =>
+                {
+                    return (
+                        <div key={index} className='w-full flex gap-2'>
+                            <div className='w-[90px] aspect-[2/2.3] flex-none'>
+                                <img src={recommendation?.mediaRecommendation?.coverImage?.large} alt={recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji} className='w-full h-full object-cover rounded-lg' />
+                            </div>
+                            <div className='flex flex-col justify-between py-1'>
+                                <div>
+                                <h2 className='text-white font-medium text-sm md:text-[0.9rem] line-clamp-2'>{recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji}</h2>
+                                <p className='text-gray-300 text-sm'>Ep {recommendation?.mediaRecommendation?.nextAiringEpisode?.episode || recommendation?.mediaRecommendation?.episodes }/{recommendation?.mediaRecommendation?.episodes}</p>
+                                </div>
+                                <p className='text-gray-300 text-sm'>{recommendation?.mediaRecommendation?.genres?.join(', ')}</p>
+                            </div>
+                        </div>
+                    )
+                })
+            }
         </div>
   </main>
   )
