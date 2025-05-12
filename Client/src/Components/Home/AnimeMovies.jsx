@@ -5,8 +5,10 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import { FreeMode, Navigation } from 'swiper/modules';
+import { useNavigate } from 'react-router';
 
 const AnimeMovies = () => {
+    const navigate = useNavigate()
     const {AnimeMovies} = AnimeMoviesProvider()
     const prevRef = useRef(null);
     const nextRef = useRef(null);
@@ -81,7 +83,7 @@ const AnimeMovies = () => {
           style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
           className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
         >
-          <div className="relative h-full overflow-hidden rounded-lg">
+          <div onClick={()=>{navigate(`/anime/${anime?.mal_id}`)}} className="relative h-full overflow-hidden rounded-lg cursor-pointer">
             {/* Rating */}
             <div className="w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-1">
               <div className="w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>

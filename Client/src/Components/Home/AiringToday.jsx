@@ -2,11 +2,12 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import AnimeMoviesStore from '../../Store/AnimeMoviesStore';
 import ProgressBar from "@ramonak/react-progress-bar";
+import { useNavigate } from 'react-router';
 
 const AiringToday = () => {
   const AnimeMovies = AnimeMoviesStore((state) => state.AnimeMovies)
   const [airingToday, setAiringToday] = useState(null)
-  const weekday = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+  const navigate = useNavigate()
   
   const getAiringToday = async (page, retries = 10) => {
     const now = new Date();
@@ -111,8 +112,9 @@ const AiringToday = () => {
                     const startDate = `${anime.media.startDate.year}-${Number(anime.media.startDate.month) < 10 ? '0' : ''}${anime.media.startDate.month}-${Number(anime.media.startDate.day) < 10 ? '0' : ''}${anime.media.startDate.day}`
                     const endDate = anime.media.endDate.year != null ? `${anime.media.endDate.year}-${Number(anime.media.endDate.month) < 10 ? '0' : ''}${anime.media.endDate.month}-${Number(anime.media.endDate.day) < 10 ? '0' : ''}${anime.media.endDate.day}` : '????-??-??'
                     if(1 == 1){
+                      console.log(anime)
                         return (
-                            <div className='flex' key={index}>
+                            <div onClick={()=>{navigate(`/anime/11111?name=${anime?.media?.title?.romaji}`)}} className='flex cursor-pointer' key={index}>
 
                             <div className="w-[200px] h-[100px] lg:w-full lg:h-full lg:aspect-video bg-gray-900 relative overflow-hidden flex items-center justify-center">
                             {/* Image */}
