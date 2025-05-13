@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router'
 import OngoingAnimeStore from '../../Store/OngoingAnimeStore'
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const OngoingAnime = () => {
   const navigate = useNavigate()
@@ -68,14 +70,38 @@ const OngoingAnime = () => {
   useEffect(() => {
     getOngoingAnime()
   }, [])
+
+  useEffect(()=>{
+    AOS.init();
+  }, [])
     
   return (
-    <div className='w-full bg-[#141414] py-10'>
+    <>
+    {
+      OngoingAnime == null ?
+      (
+        <section className="p-6">
+      <h2 className="text-3xl font-bold mb-4">Ongoing Anime</h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {Array.from({ length: 12 }).map((_, index) => (
+          <div key={index} className="animate-pulse bg-gray-800 rounded-lg overflow-hidden">
+            <div className="h-40 bg-gray-700"></div>
+            <div className="p-4">
+              <div className="h-4 bg-gray-600 rounded w-3/4 mb-2"></div>
+              <div className="h-3 bg-gray-600 rounded w-1/2"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+        </section>
+      )
+      :
+      (
+        <section className='w-full bg-[#141414] py-10'>
       <div className="w-[95%] md:w-[90%] mx-auto px-3">
-      <h1 className="text-2xl md:text-3xl font-bold text-white">Ongoing Anime</h1>
+      <h1 data-aos="fade-right" className="text-2xl md:text-3xl font-bold text-white">Ongoing Anime</h1>
       <div className='flex justify-between'>
-          <p className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes streaming this season</p>
-          <button className='text-sm md:text-base text-white'>See all</button>
+          <p data-aos="fade-right" className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes streaming this season</p>
       </div>
       
     </div>
@@ -87,7 +113,7 @@ const OngoingAnime = () => {
         {
           if(array[index - 1]?.id != anime?.id){
             return (
-              <div key={index} onClick={()=> {navigate('/anime/'+anime?.id+'?name='+anime?.title?.romaji)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
+              <div data-aos="fade-up" key={index} onClick={()=> {navigate('/anime/'+anime?.id+'?name='+anime?.title?.romaji)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
                 <div className='absolute z-[999] top-1 left-1 bg-pink-600 px-1 py-0.5 rounded'>
                   <h2 className="text-gray-300 text-center w-full text-sm md:text-sm">
                       Ep {anime?.nextAiringEpisode?.episode + '/'}{anime?.episodes || '??'}
@@ -118,7 +144,10 @@ const OngoingAnime = () => {
           }})
       }
     </div>
-    </div>
+    </section>
+      )
+    }
+    </>
   )
 }
 

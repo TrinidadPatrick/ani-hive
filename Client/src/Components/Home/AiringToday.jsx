@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import AnimeMoviesStore from '../../Store/AnimeMoviesStore';
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useNavigate } from 'react-router';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const AiringToday = () => {
   const AnimeMovies = AnimeMoviesStore((state) => state.AnimeMovies)
@@ -88,6 +90,10 @@ const AiringToday = () => {
     // }
   }
 
+  useEffect(()=>{
+    AOS.init();
+  }, [])
+
   useEffect(() => {
     if(airingToday === null && AnimeMovies != null) {
       setTimeout(()=>{
@@ -97,8 +103,31 @@ const AiringToday = () => {
   }, [AnimeMovies])
 
   return (
-    <div className="w-full h-fit flex flex-col items-center justify-center bg-[#141414] py-10">
-        <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3">
+    <>
+    {
+      AiringToday == null ?
+      (
+        <div className="p-6">
+      <h2 className="text-3xl font-bold mb-4 text-white">Airing Today</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <div key={index} className="flex animate-pulse gap-4 items-center">
+            <div className="w-36 h-24 bg-gray-700 rounded"></div>
+            <div className="flex-1">
+              <div className="h-4 bg-gray-600 rounded w-3/4 mb-2"></div>
+              <div className="h-3 bg-gray-600 rounded w-1/2 mb-1"></div>
+              <div className="h-2 bg-gray-600 rounded w-1/3 mb-2"></div>
+              <div className="h-2 bg-pink-500 rounded-full w-1/2"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+      </div>
+      )
+      :
+      (
+        <section className="w-full h-fit flex flex-col items-center justify-center bg-[#141414] py-10">
+        <div data-aos="fade-right" className="w-[95%] md:w-[90%] mx-auto mb-6 px-3">
             <h1 className="text-2xl md:text-3xl font-bold text-white">Airing Today</h1>
             <div className='flex justify-between'>
                 <p className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes currently or will be airing today</p>
@@ -112,9 +141,8 @@ const AiringToday = () => {
                     const startDate = `${anime.media.startDate.year}-${Number(anime.media.startDate.month) < 10 ? '0' : ''}${anime.media.startDate.month}-${Number(anime.media.startDate.day) < 10 ? '0' : ''}${anime.media.startDate.day}`
                     const endDate = anime.media.endDate.year != null ? `${anime.media.endDate.year}-${Number(anime.media.endDate.month) < 10 ? '0' : ''}${anime.media.endDate.month}-${Number(anime.media.endDate.day) < 10 ? '0' : ''}${anime.media.endDate.day}` : '????-??-??'
                     if(1 == 1){
-                      console.log(anime)
                         return (
-                            <div onClick={()=>{navigate(`/anime/11111?name=${anime?.media?.title?.romaji}`)}} className='flex cursor-pointer' key={index}>
+                            <div data-aos="fade-up" onClick={()=>{navigate(`/anime/11111?name=${anime?.media?.title?.romaji}`)}} className='flex cursor-pointer' key={index}>
 
                             <div className="w-[200px] h-[100px] lg:w-full lg:h-full lg:aspect-video bg-gray-900 relative overflow-hidden flex items-center justify-center">
                             {/* Image */}
@@ -152,7 +180,10 @@ const AiringToday = () => {
                 })}
 
         </div>
-    </div>
+        </section>
+      )
+    }
+  </>
   )
 }
 

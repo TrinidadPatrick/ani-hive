@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import TopSection from './TopSection'
 import { Link } from 'react-router-dom'
 import TopAnimes from './TopAnimes'
@@ -14,6 +14,9 @@ import Footer from './Footer'
 
 const Home = () => {
   const {topAnimes} = TopAnimeProvider()
+
+
+
   return (
     <main className=' w-full h-full relative bg-[#141414]'>
         

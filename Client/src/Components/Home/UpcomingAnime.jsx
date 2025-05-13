@@ -6,6 +6,8 @@ import 'swiper/css/navigation';
 import { FreeMode, Navigation } from 'swiper/modules';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const UpcomingAnime = () => {
   const navigate = useNavigate()
@@ -37,13 +39,45 @@ const UpcomingAnime = () => {
         }
     }, [])
 
+    useEffect(()=>{
+        AOS.init();
+    }, [])
+
   return (
-    <div className="w-full h-[65svh] bg-[#141414] py-10">
+    <>
+    {
+        UpcomingAnime == null ?
+        (
+            <section className="flex flex-col px-6 py-8 text-white animate-pulse">
+      {/* Title */}
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <div className="h-6 w-40 bg-gray-700 rounded" />
+          <div className="h-3 w-64 bg-gray-700 rounded mt-2" />
+        </div>
+        <div className="h-4 w-16 bg-gray-700 rounded" />
+      </div>
+
+      {/* Carousel skeleton */}
+      <div className="flex gap-4 overflow-x-auto mx-auto">
+        {Array.from({ length:9 }).map((_, idx) => (
+          <div key={idx} className="min-w-[150px] w-[150px] flex-shrink-0 space-y-2">
+            <div className="aspect-[2/3] bg-gray-700 rounded-lg" />
+            <div className="h-3 w-32 bg-gray-700 rounded" />
+            <div className="h-3 w-20 bg-gray-700 rounded" />
+          </div>
+        ))}
+      </div>
+            </section>
+        )
+        :
+        (
+            <section className="w-full h-[65svh] bg-[#141414] py-10">
         <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3">
-        <h1 className="text-2xl md:text-3xl font-bold text-white">Upcoming Anime</h1>
+        <h1 data-aos="fade-right" className="text-2xl md:text-3xl font-bold text-white">Upcoming Anime</h1>
         <div className='flex justify-between'>
-            <p className="text-gray-400 mt-1 text-sm md:text-basetext-white">Anticipated upcoming anime</p>
-            <button className='text-sm md:text-base text-white'>See all</button>
+            <p data-aos="fade-right" className="text-gray-400 mt-1 text-sm md:text-basetext-white">Anticipated upcoming anime</p>
+            <button data-aos="fade-left" className='text-sm md:text-base text-white'>See all</button>
         </div>
         
         </div>
@@ -101,6 +135,7 @@ const UpcomingAnime = () => {
             if(array[index - 1]?.mal_id != anime?.mal_id && anime.title){
                 return (
                     <SwiperSlide
+                    data-aos="fade-up"
             key={index}
             style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
             className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
@@ -133,7 +168,11 @@ const UpcomingAnime = () => {
         })}
         </Swiper>
         </div>
-    </div>
+            </section>
+        )
+    }
+    </>
+    
   )
 }
 
