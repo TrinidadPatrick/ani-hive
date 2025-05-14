@@ -4,8 +4,6 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import ReactPlayer from 'react-player';
 import { useNavigate } from 'react-router';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 const SeasonNowAnime = () => {
    const navigate = useNavigate()
@@ -40,9 +38,6 @@ const SeasonNowAnime = () => {
         }
       };
 
-      useEffect(()=>{
-        AOS.init();
-      }, [])
 
   return (
     <>

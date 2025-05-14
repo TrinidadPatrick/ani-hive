@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router'
 import OngoingAnimeStore from '../../Store/OngoingAnimeStore'
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 const OngoingAnime = () => {
   const navigate = useNavigate()
@@ -71,9 +69,6 @@ const OngoingAnime = () => {
     getOngoingAnime()
   }, [])
 
-  useEffect(()=>{
-    AOS.init();
-  }, [])
     
   return (
     <>

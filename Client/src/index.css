@@ -41,6 +41,24 @@
   .recoList::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+
+  .otherFilter::-webkit-scrollbar {
+    width: 8px; /* or height if horizontal */
+  }
+  
+  .otherFilter::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+  }
+  
+  .otherFilter::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+  
+  .otherFilter::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
   
 
   /* .recoList::-webkit-scrollbar-thumb */
@@ -48,6 +66,7 @@
 @import "tailwindcss";
 
 @theme {
+  /* --semiMd: 768px; */
   --breakpoint-xs: 30rem;
   --breakpoint-xxs: 20rem;
 }

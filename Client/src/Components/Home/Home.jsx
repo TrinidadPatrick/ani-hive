@@ -11,11 +11,19 @@ import AiringToday from './AiringToday'
 import OngoingAnime from './OngoingAnime'
 import Footer from './Footer'
 import chibi from '../../Images/chibi.gif'
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 
 const Home = () => {
   const {topAnimes} = TopAnimeProvider()
-
+  
+  useEffect(()=>{
+    AOS.init({
+      once: true,  
+      offset: 50,
+    });
+  }, [])
 
 
   return (

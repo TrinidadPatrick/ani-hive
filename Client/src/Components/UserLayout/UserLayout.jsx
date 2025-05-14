@@ -24,7 +24,7 @@ const UserLayout = () => {
                     <button onClick={()=>{navigate('/schedule')}} className={` ${path === '/schedule' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Schedule</button>
                 </li>
                 <li>
-                <button onClick={()=>{navigate('/Genres')}} className={` ${path === '/genres' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Genres</button>
+                <button onClick={()=>{navigate('/explore')}} className={` ${path === '/explore' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Explore</button>
                 </li>
                 <li>
                 <button onClick={()=>{navigate('/characters')}} className={` ${path === '/characters' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Characters</button>

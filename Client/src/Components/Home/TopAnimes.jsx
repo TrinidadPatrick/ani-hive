@@ -9,17 +9,17 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import { FreeMode, Navigation } from 'swiper/modules';
 import { useNavigate } from 'react-router';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+// import AOS from 'aos';
+// import 'aos/dist/aos.css';
 
 const TopAnimes = ({topAnimes}) => {
     const prevRef = useRef(null);
     const nextRef = useRef(null);
     const navigate = useNavigate()
 
-    useEffect(()=>{
-      AOS.init();
-    }, [])
+    // useEffect(()=>{
+    //   AOS.init();
+    // }, [])
 
 
   return (

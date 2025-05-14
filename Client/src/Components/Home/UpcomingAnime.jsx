@@ -6,8 +6,6 @@ import 'swiper/css/navigation';
 import { FreeMode, Navigation } from 'swiper/modules';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 const UpcomingAnime = () => {
   const navigate = useNavigate()
@@ -39,9 +37,6 @@ const UpcomingAnime = () => {
         }
     }, [])
 
-    useEffect(()=>{
-        AOS.init();
-    }, [])
 
   return (
     <>

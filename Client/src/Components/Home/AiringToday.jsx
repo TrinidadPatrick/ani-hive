@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react'
 import AnimeMoviesStore from '../../Store/AnimeMoviesStore';
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useNavigate } from 'react-router';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 const AiringToday = () => {
   const AnimeMovies = AnimeMoviesStore((state) => state.AnimeMovies)
@@ -89,10 +87,6 @@ const AiringToday = () => {
     //     }
     // }
   }
-
-  useEffect(()=>{
-    AOS.init();
-  }, [])
 
   useEffect(() => {
     if(airingToday === null && AnimeMovies != null) {
@@ -183,7 +177,7 @@ const AiringToday = () => {
         </section>
       )
     }
-  </>
+    </>
   )
 }
 
