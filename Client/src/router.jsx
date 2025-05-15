@@ -5,6 +5,7 @@ import UserLayout from './Components/UserLayout/UserLayout'
 import AnimeOverView from './Components/AnimeInfo/AnimeOverView'
 import Schedule from './Components/Schedule/Schedule'
 import Explore from './Components/Explore/Explore'
+import Characters from './Components/Characters/Characters'
 
 const router = createBrowserRouter([
     {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
             {
                 path: '/explore',
                 element: <Explore />
+            },
+            {
+                path: '/characters',
+                element: <Characters />
             },
             {
                 path: '/anime/:id',

@@ -48,7 +48,7 @@ const AnimeMovies = () => {
       <h1 data-aos="fade-right" className="text-2xl md:text-3xl font-bold text-white">Anime movies</h1>
       <div className='flex justify-between'>
           <p data-aos="fade-right" className="text-gray-400 mt-1 text-sm md:text-basetext-white">Popular movies you may like</p>
-          <button data-aos="fade-left" className='text-sm md:text-base text-white'>See all</button>
+          <button onClick={()=>navigate('/explore?type=Movie&page=1')} data-aos="fade-left" className='cursor-pointer hover:text-gray-200 text-sm md:text-base text-white'>See all</button>
       </div>
       
     </div>

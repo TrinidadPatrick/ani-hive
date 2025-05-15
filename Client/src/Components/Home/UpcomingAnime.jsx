@@ -72,7 +72,7 @@ const UpcomingAnime = () => {
         <h1 data-aos="fade-right" className="text-2xl md:text-3xl font-bold text-white">Upcoming Anime</h1>
         <div className='flex justify-between'>
             <p data-aos="fade-right" className="text-gray-400 mt-1 text-sm md:text-basetext-white">Anticipated upcoming anime</p>
-            <button data-aos="fade-left" className='text-sm md:text-base text-white'>See all</button>
+            <button data-aos="fade-left" onClick={()=>navigate('/explore?status=upcoming')} className='text-sm md:text-base text-white cursor-pointer hover:text-gray-300'>See all</button>
         </div>
         
         </div>

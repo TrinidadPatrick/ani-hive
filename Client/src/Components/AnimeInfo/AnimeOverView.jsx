@@ -316,13 +316,13 @@ const AnimeOverView = () => {
                     <div className='w-full flex justify-between'>
                         <h1 className='text-white text-3xl font-bold'>{animeInfo?.title_english || animeInfo?.title}</h1>
                         <div>
-                            <button onClick={()=>{window.open(animeInfo.trailer.url, '_blank').focus();}} className='text-white text-sm md:text-base px-3 py-2 bg-pink-600 rounded font-medium cursor-pointer hover:bg-pink-500'>Watch Trailer</button>
+                            <button onClick={()=>{window.open(animeInfo.trailer.url, '_blank').focus();}} className='text-white whitespace-nowrap text-sm md:text-base px-3 py-2 bg-pink-600 rounded font-medium cursor-pointer hover:bg-pink-500'>Watch Trailer</button>
                         </div>
                     </div>
                     
                     <div className='w-full flex gap-2 my-1'>
                         <div className='px-2 py-0.5 bg-pink-600 rounded'>
-                            <h1 className='text-white text-xs font-medium'>{animeInfo?.rating.split(' - ')[0]}</h1>
+                            <h1 className='text-white text-xs font-medium'>{animeInfo?.rating ? animeInfo?.rating.split(' - ')[0] : 'N/A'}</h1>
                         </div>
                         <div className='px-2 py-0.5 bg-pink-600 rounded'>
                             <h1 className='text-white text-xs font-medium'>{animeInfo?.type}</h1>
@@ -618,7 +618,7 @@ const AnimeOverView = () => {
                                 day: 'numeric',
                                 year: 'numeric'
                             })
-                            console.log(review)
+
                             return (
                                 <div key={index} className='w-full flex gap-2'>
                                     
