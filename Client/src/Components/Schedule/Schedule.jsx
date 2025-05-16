@@ -120,13 +120,13 @@ const Schedule = () => {
     getAnimeList(selectedDay)
   }, [selectedDay])
 
-  console.log(animeList)
+  // console.log(animeList)
 
   return (
-    <main className='w-full h-[100svh] bg-[#141414] flex flex-col gap-10 items-center pt-20'>
+    <main className='w-full h-[100svh] bg-[#141414] flex flex-col gap-5 md:gap-10 items-center pt-20'>
         <h1 className='text-white text-4xl font-bold'>Schedule</h1>
         {/* Header */}
-        <div className='w-[80%] justify-center flex gap-5'>
+        <div className='w-full md:w-[80%] justify-center flex flex-wrap gap-5'>
             {
                 days.map((day, index)=>{
                     return (
@@ -143,7 +143,7 @@ const Schedule = () => {
     {
       loading ?
       (
-        <div className="p-6">
+        <div className="p-6 w-full">
       <h2 className="text-3xl font-bold mb-4 text-white">Airing Today</h2>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {Array.from({ length: 9 }).map((_, index) => (
