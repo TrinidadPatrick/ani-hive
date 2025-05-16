@@ -11,7 +11,7 @@ const UserLayout = () => {
   return (
     <>
     <nav className='w-full fixed backdrop-blur z-99999 p-4 flex items-center gap-5'>
-            <div className='flex ps-5'>
+            <div onClick={()=>navigate('/')} className='flex ps-5 cursor-pointer'>
             <h1 className='text-white text-center text-4xl font-bold'>Ani</h1>
             <h1 className='text-pink-500 text-center text-4xl font-bold'>Hive</h1>
             </div>
@@ -29,9 +29,9 @@ const UserLayout = () => {
                 <li>
                 <button onClick={()=>{navigate('/characters')}} className={` ${path === '/characters' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Characters</button>
                 </li>
-                <li>
+                {/* <li>
                 <button onClick={()=>{navigate('/forum')}} className={` ${path === '/forum' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Forum</button>
-                </li>
+                </li> */}
             </ul>
         </nav>
         <Outlet />

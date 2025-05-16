@@ -3,10 +3,12 @@ import topAnimeStore from '../../Store/topAnimeStore'
 import TopAnimeProvider from '../../Providers/TopAnimeProvider'
 import image_1 from '../../Images/image_2.jpeg'
 import { useNavigate } from 'react-router'
+import ReactPlayer from 'react-player'
 
 const TopSection = ({topAnimes}) => {
     const [topAnime, setTopAnime] = useState(null)
     const [showMore, setShowMore] = useState(false)
+    const [showTrailer, setShowTrailer] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -14,6 +16,25 @@ const TopSection = ({topAnimes}) => {
             setTopAnime(topAnimes.data[0])
         }
     }, [topAnimes])
+
+    const TrailerPlayer = ({youtube_id}) => {
+      return (
+      <main  onClick={()=>setShowTrailer(false)} className='fixed w-[100svw] cursor-pointer h-[100svh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
+          <div data-aos="zoom-in" className='w-[80vw] h-[90svh] absolute z-[99999999999] top-10 left-1/2 transform -translate-x-1/2  bg-gray-900'>
+          <ReactPlayer 
+                    url={`https://www.youtube.com/watch?v=${youtube_id}&?vq=hd720`}
+                    width="100%"
+                    height="100%"
+                    playing={false}
+                    muted={false}
+                    loop={true}
+                    controls={false}
+                    // className="absolute top-0 left-0"
+                    />
+          </div>
+      </main>
+      )
+  }
 
     return (
       <>
@@ -55,6 +76,7 @@ const TopSection = ({topAnimes}) => {
           :
           (
             <section className="w-full md:h-[100svh] bg-gray-900 relative overflow-hidden flex items-center justify-center">
+              {showTrailer && <TrailerPlayer youtube_id={topAnime?.trailer.youtube_id} />}
         {/* Background Image */}
         <img
           // src={image_1}
@@ -87,7 +109,7 @@ const TopSection = ({topAnimes}) => {
             <button onClick={()=>{navigate(`/anime/${topAnime?.mal_id}`)}} className="mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
               Overview
               </button>
-              <button onClick={()=>{window.open(topAnime?.trailer.url, '_blank').focus();}} className=" hover:bg-gray-50/2 ml-3 mt-4 cursor-pointer bg-transparent border text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
+              <button onClick={()=>{setShowTrailer(true)}} className=" hover:bg-gray-50/2 ml-3 mt-4 cursor-pointer bg-transparent border text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
               Watch Trailer
             </button>
           </div>

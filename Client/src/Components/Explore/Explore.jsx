@@ -118,7 +118,7 @@ const Explore = () => {
       }
   }
 
-  const handleSearch = async (searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, pageNum , retires = 10) => {
+  const handleSearch = async (searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, pageNum , retries = 10) => {
     setSearching(true)
     // console.log(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, pageNum)
     const params = {};
@@ -153,7 +153,6 @@ const Explore = () => {
     selectedYear
     `https://api.jikan.moe/v4/anime?q=${searchValue}&genres=${selectedGenres}&status=${selectedStatus}&start_date=${selectedYear || 1400}-01-01&end_date=${selectedYear || 3010}-12-31&type=${selectedType}&order_by=score&sort=desc&sfw=true&page=${Number(pageNum)}`
     
-    console.log(url)
     try {
       const result = await axios.get(url)
       setAnimeList(result.data.data)
@@ -165,7 +164,7 @@ const Explore = () => {
       });
     } catch (error) {
       console.log(error)
-      if(retires > 0)
+      if(retries > 0)
       {
         setTimeout(()=>{
           handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, 1, retires - 1)

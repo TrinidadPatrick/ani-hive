@@ -1,13 +1,15 @@
 import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams, useSearchParams } from 'react-router'
+import { useNavigate, useParams, useSearchParams } from 'react-router'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import { FreeMode, Navigation } from 'swiper/modules';
+import ReactPlayer from 'react-player';
 
 const AnimeOverView = () => {
+    const navigate = useNavigate()
     const reactionEmojis = ["📊", "👍", "❤️", "😂", "🤔", "📘", "✍️", "🎨"];
     const {id} = useParams()
     const textRef = useRef(null);
@@ -21,19 +23,24 @@ const AnimeOverView = () => {
     const [hovered, setHovered] = useState(-1)
     const [indexSeeMore, setIndexSeeMore] = useState([])
     const [indexSeeReview, setIndexSeeReview] = useState([])
+    const [showTrailer, setShowTrailer] = useState(false)
 
     const prevRef = useRef(null);
     const nextRef = useRef(null);
 
-    const getAnimeInfo = async (id, retries = 10) => {
-        if(name)
+    const getAnimeInfo = async (id, option, retries = 10) => {
+        if(name && option == 1)
         {
             const malId = await fetchAnimeId(name)
             try {
                 const result = await axios.get(`https://api.jikan.moe/v4/anime/${malId}/full`)
                 if(result.status === 200) {
                     const anime = result.data.data
-                    setAnimeInfo(anime)
+                    if(option == 1){
+                        setAnimeInfo(anime)
+                    }else{
+                        return anime
+                    }
                 }
             } catch (error) {
                 console.log(error)
@@ -49,7 +56,11 @@ const AnimeOverView = () => {
                 const result = await axios.get(`https://api.jikan.moe/v4/anime/${id}/full`)
                 if(result.status === 200) {
                     const anime = result.data.data
-                    setAnimeInfo(anime)
+                    if(option == 1){
+                        setAnimeInfo(anime)
+                    }else{
+                        return anime
+                    }
                 }
             } catch (error) {
                 console.log(error)
@@ -125,51 +136,39 @@ const AnimeOverView = () => {
     }
     };     
 
-    const getAnimeRelations = async (searchTerm) => {
+    const getAnimeRelations = async (mal_id, retries = 10) => {
+
         try {
-            const query = `
-              query ($search: String) {
-                Media(search: $search, type: ANIME) {
-                  title {
-                    romaji
-                    english
-                  }
-                  relations {
-                    edges {
-                      relationType
-                      node {
-                        id
-                        type
-                        format
-                        title {
-                          romaji
-                          english
-                        }
-                        coverImage {
-                          large
-                        }
-                      }
-                    }
-                  }
+            const result = await axios.get(`https://api.jikan.moe/v4/anime/${mal_id}/relations?type=anime`)
+            const flattened = result.data.data.flatMap(item =>
+                item.entry.map(entryObj => ({
+                  relation: item.relation,
+                  ...entryObj
+                }))
+              );
+            const animes = flattened.filter((anime) => anime.type === 'anime')
+            const list = []
+            for(const anime of animes){
+                const info = await getAnimeInfo(anime.mal_id, 2)
+                info.type = anime.type
+                const isExist = list.findIndex((item) => item.mal_id == info.mal_id)
+                if(isExist == -1){
+                    list.push(info)
+                    setAnimeRelations(list)
                 }
-              }
-            `;
-      
-            const variables = {
-              search: searchTerm,
-            };
-      
-            const response = await axios.post(
-              'https://graphql.anilist.co',
-              { query, variables },
-              { headers: { 'Content-Type': 'application/json' } }
-            );
-      
-            const data = response.data.data.Media;
-            setAnimeRelations(data.relations.edges)
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
+                await new Promise(resolve => setTimeout(resolve, 550));
+            }
+        
+
+        } catch (error) {
+            console.log(error)
+            if(retries > 0)
+            {
+                setTimeout(()=>{
+                    getAnimeRelations(searchTerm, retries - 1)
+                }, 1000)
+            }
+        }
     };
 
     const getRecommendations = async (searchTerm) => {
@@ -282,41 +281,68 @@ const AnimeOverView = () => {
     }
 
     useEffect(() => {
-        if(id) {
-            getAnimeInfo(id)
-            getCharacters(id)
+        if (id) {
+          (async () => {
+            await getAnimeInfo(id, 1);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await getCharacters(id);
+          })();
         }
-    }, [id])
+      }, [id]);
 
     useEffect(() => {
-        if(animeInfo && (animeRelations.length == 0 || recommendations.length == 0)) {
-            getAnimeRelations(animeInfo?.title)
-            getRecommendations(animeInfo?.title)
-            getUserReviews(id)
+        if(animeInfo && characters && (animeRelations.length == 0 || recommendations.length == 0)) {
+            (async()=>{
+                getRecommendations(animeInfo?.title)
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                getAnimeRelations(animeInfo?.mal_id)
+                await new Promise(resolve => setTimeout(resolve, 1000))
+                getUserReviews(id)
+            })()
         }
-    }, [animeInfo])
+    }, [animeInfo, characters])
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [])
 
-    // console.log(reviews)
+    const TrailerPlayer = () => {
+        return (
+        <main onClick={()=>setShowTrailer(false)} className='fixed w-[100svw] cursor-pointer h-[100svh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
+            <div className='w-[80vw] h-[90svh] absolute z-[99999999999] top-10 left-1/2 transform -translate-x-1/2  bg-white'>
+            <ReactPlayer
+                      url={`https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720`}
+                      width="100%"
+                      height="100%"
+                      playing={false}
+                      muted={false}
+                      loop={true}
+                      controls={false}
+                      // className="absolute top-0 left-0"
+                      />
+            </div>
+        </main>
+        )
+    }
+
+    // console.log(animeRelations)
 
   return (
-  <main className='w-full grid grid-cols-13 h-fit bg-[#141414]'>
+  <main className='w-full grid grid-cols-13 h-fit bg-[#141414] relative overflow-x-hidden'>
+    {showTrailer && <TrailerPlayer />}
     {
         animeInfo ?
         <div className='w-full col-span-13 xl:col-span-10 h-fit bg-[#141414] py-20 px-5 flex flex-col gap-5'>
             {/* Top Section */}
-            <div className=' flex-none flex gap-2'>
+            <div className='flex-none h-full flex gap-2'>
                 <div className='w-[200px]'>
                     <img src={animeInfo?.images?.jpg.image_url} alt={animeInfo?.title_english || animeInfo?.title} className='w-full h-full object-cover rounded-lg' />
                 </div>
-                <div className='flex-1 h-full flex flex-col gap-2 px-2'>
+                <div className='flex-1 h-full  flex flex-col gap-2 px-2'>
                     <div className='w-full flex justify-between'>
                         <h1 className='text-white text-3xl font-bold'>{animeInfo?.title_english || animeInfo?.title}</h1>
                         <div>
-                            <button onClick={()=>{window.open(animeInfo.trailer.url, '_blank').focus();}} className='text-white whitespace-nowrap text-sm md:text-base px-3 py-2 bg-pink-600 rounded font-medium cursor-pointer hover:bg-pink-500'>Watch Trailer</button>
+                            <button onClick={()=>{setShowTrailer(true)}} className='text-white whitespace-nowrap text-sm md:text-base px-3 py-2 bg-pink-600 rounded font-medium cursor-pointer hover:bg-pink-500'>Watch Trailer</button>
                         </div>
                     </div>
                     
@@ -334,7 +360,7 @@ const AnimeOverView = () => {
                     {/* Other informations */}
                     <div className='w-full h-full grid grid-cols-2'>
                         <div className='h-full w-full'>
-                            <ul className='h-full flex flex-col justify-between'>
+                            <ul className='h-full gap-1 flex flex-col justify-between'>
                                 <li className='flex gap-2'>
                                     <h1 className='text-gray-400 w-[80px] font-medium'>Score: </h1>
                                     <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.score || 0}</h1>
@@ -383,7 +409,7 @@ const AnimeOverView = () => {
                             </ul>
                         </div>
                         <div className='h-full w-full'>
-                            <ul className='h-full flex flex-col justify-start gap-2'>
+                            <ul className='h-full flex flex-col gap-1 justify-start gap-2'>
                                 <li className='flex gap-2'>
                                     <h1 className='text-gray-400 w-[80px] font-medium'>Studios: </h1>
                                     <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.studios.map((studio)=> studio.name).join(', ')}</h1>
@@ -482,7 +508,7 @@ const AnimeOverView = () => {
                     <p className="z-[9999] mt-[1px] text-sm">{char?.role}</p>
                     </div>
                         {/* Image */}
-                        <div className="w-full bg-red-100 h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
+                        <div className="w-full  h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
                             <img
                                 src={hovered == index ? char?.voice_actors[0]?.person?.images.jpg.image_url : char?.character.images.jpg.image_url}
                                 alt={char?.character?.name}
@@ -516,6 +542,12 @@ const AnimeOverView = () => {
                 <div>
                     <h1 className='text-white text-2xl font-bold'>Related</h1>
                 </div>
+                {
+                    animeRelations.length == 0 &&
+                    <div className='w-full h-full flex justify-center items-center'>
+                        <h1 className='text-gray-500 text-2xl'>No Related Anime</h1>
+                    </div>
+                }
                 <div className='relative'>
                 <Swiper
                 modules={[FreeMode, Navigation]}
@@ -562,24 +594,24 @@ const AnimeOverView = () => {
                 {animeRelations.length > 0 &&
                 animeRelations.map((info, index, array) =>
                 {
-                    // console.log(info)
                     if(1 === 1){
                     return (
-                        <SwiperSlide
+                    <SwiperSlide
                     key={index}
+                    onClick={()=>{window.location.href = `/anime/${info.mal_id}`}}
                     style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
                     className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
                     >
                     <div className="relative h-fit overflow-hidden rounded-lg">
                     <div className=' absolute top-1 left-2 z-[999999999999] px-2 py-0.5 rounded-lg flex items-center justify-center gap-1'>
                         <div className='bg-black opacity-55 absolute w-full h-full rounded-lg'></div>
-                        <p className='text-white z-[9999999] text-sm'>{info?.node.format}</p>
+                        <p className='text-white z-[9999999] text-sm'>{info?.type}</p>
                     </div>
                         {/* Image */}
-                        <div className="w-full bg-red-100 h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
+                        <div className="w-full  h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
                         <img
-                            src={info?.node.coverImage.large}
-                            alt={info?.node.title.romaji || info?.node.title.english}
+                            src={info?.images?.webp?.large_image_url}
+                            alt={info?.title_english || info?.title}
                             className="w-full aspect-[2/2.8]  object-cover brightness-70"
                         />
                         </div>
@@ -588,7 +620,7 @@ const AnimeOverView = () => {
                         <div className="w-full px-1 md:px-2 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[30%] xs:h-[25%] md:h-[30%] rounded-b-lg flex">
                         <div className="flex flex-col items-start w-full h-full justify-around">
                             <h2 className="text-white text-sm md:text-sm w-full line-clamp-3 text-center">
-                            {info?.node.title.romaji || info?.node.title.english}
+                            {info?.title_english || info?.title}
                             </h2>
                         </div>
                         </div>
@@ -685,7 +717,7 @@ const AnimeOverView = () => {
                                                 Object.entries(review.reactions).map(([key, value], index)=>{
                                                     const reaction = key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' ')
                                                     return (
-                                                        <p className='text-white text-xs sm:text-sm font-light px-2 py-1 border rounded border-gray-400'>{reaction} {reactionEmojis[index]}: {value}</p>
+                                                        <p key={index} className='text-white text-xs sm:text-sm font-light px-2 py-1 border rounded border-gray-400'>{reaction} {reactionEmojis[index]}: {value}</p>
                                                     )
                                                 })
                                             }
@@ -754,7 +786,7 @@ const AnimeOverView = () => {
                 recommendations?.map((recommendation, index, array) =>
                 {
                     return (
-                        <div key={index} className='w-full flex gap-2'>
+                        <div onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.id}?name=${recommendation.mediaRecommendation.title.romaji}`} key={index} className='w-full flex gap-2 cursor-pointer'>
                             <div className='w-[90px] aspect-[2/2.3] flex-none'>
                                 <img src={recommendation?.mediaRecommendation?.coverImage?.large} alt={recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji} className='w-full h-full object-cover rounded-lg' />
                             </div>
