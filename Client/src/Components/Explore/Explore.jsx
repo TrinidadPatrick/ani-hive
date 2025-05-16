@@ -232,7 +232,10 @@ const Explore = () => {
 
   return (
     <main onClick={()=>setShowState(false)} className='w-full h-full bg-[#141414] flex flex-col gap-5 items-center pt-20'>
-      <h1 className='text-white text-4xl font-medium'>Explore</h1>
+      <div className='flex flex-col items-start gap-0  w-[95%] lg:w-[90%] mx-auto'>
+            <h1 className='text-white text-start text-3xl font-semibold'>Explore</h1>
+            <p className='text-gray-400 text-start text-sm'>Find anime that matches your preferences</p>
+        </div>
 
       {/* Navbar */}
       <div onClick={(e)=> e.stopPropagation()} className=" w-[95%]  lg:w-[90%] z-[999999] flex gap-y-7 gap-x-2 py-2 ">
@@ -344,9 +347,9 @@ const Explore = () => {
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
                     {
                       showState === filter.name &&
-                      <div id={filter.name} ref={(rel) => {otherRefs.current[index] = rel}} className=' w-full h-full absolute'>
+                      <div id={filter.name} ref={(rel) => {otherRefs.current[index] = rel}} className=' w-full h-full absolute z-[99999999999999999999999999999] '>
                       {/* <OtherFilterDropDown_V2 name={filter.name} options={filter.options} /> */}
-                      <div  className='otherFilter w-full max-h-[300px] overflow-auto gap-3 -left-2 absolute bg-gray-800 grid grid-cols-1 top-8 md:top-9 p-2 rounded-lg'>
+                      <div  className='otherFilter z-[9999999999999999999999999999999] w-full max-h-[300px] overflow-auto gap-3 -left-2 absolute bg-gray-800 grid grid-cols-1 top-8 md:top-9 p-2 rounded-lg'>
                         {
                         filter.options?.map((option, index) => {
                           const isSelected = filter.name === 'Season' ? selectedSeason == option : filter.name === 'Year' ? selectedYear == option : selectedType == option
@@ -369,7 +372,7 @@ const Explore = () => {
             }
             {/* Genre */}
           <div className='flex sm:hidden w-full items-center relative  rounded-lg '>
-            <button onClick={()=>{showState === 'genre_v2' ? setShowState( '') : setShowState('genre_v2')}} className='cursor-pointer z-[99999999999] rounded-lg relative p-1 flex bg-gray-800 hover:bg-gray-900 items-center w-full h-full '>
+            <button onClick={()=>{showState === 'genre_v2' ? setShowState( '') : setShowState('genre_v2')}} className='cursor-pointer z-[99999] rounded-lg relative p-1 flex bg-gray-800 hover:bg-gray-900 items-center w-full h-full '>
               <p className='ps-1 text-gray-400 text-sm md:text-base '>Genre</p>
               <div className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
@@ -398,7 +401,7 @@ const Explore = () => {
           </div>
           {/* Theme */}
           <div className='flex md:hidden w-full items-center relative bg-gray-800 hover:bg-gray-900 rounded-lg cursor-pointer'>
-            <button onClick={()=>{setShowState(showState === 'theme_v2' ? '' : 'theme_v2')}} className='cursor-pointer relative p-1 flex z-[999999999] items-center w-full h-full '>
+            <button onClick={()=>{setShowState(showState === 'theme_v2' ? '' : 'theme_v2')}} className='cursor-pointer relative p-1 flex z-[9999] items-center w-full h-full '>
               <p className='ps-1 text-gray-400 text-sm md:text-base '>Theme</p>
               <div className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
@@ -425,7 +428,7 @@ const Explore = () => {
           </div>
           {/* Status */}
           <div className='w-full flex lg:hidden items-center relative bg-gray-800 hover:bg-gray-900 rounded-lg cursor-pointer'>
-            <button onClick={()=>{setShowState(showState === 'status_v2' ? '' : 'status_v2')}} className='cursor-pointer relative p-1 flex z-[99999999999] items-center w-full h-full '>
+            <button onClick={()=>{setShowState(showState === 'status_v2' ? '' : 'status_v2')}} className='cursor-pointer relative p-1 flex z-[99999] items-center w-full h-full '>
               <p className='ps-1 text-gray-400 text-sm md:text-base '>{selectedStatus == '' ? 'Status' : selectedStatus}</p>
               <div className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
@@ -552,7 +555,7 @@ const Explore = () => {
   {page !== 1 && (
     <button
       onClick={() =>
-        handleSearch(
+        {window.scrollTo({top: 0, behavior: 'smooth'}); handleSearch(
           searchValue,
           selectedGenres,
           selectedStatus,
@@ -560,7 +563,7 @@ const Explore = () => {
           selectedYear,
           selectedType,
           page - 1
-        )
+        )}
       }
       className="text-white font-medium text-xs md:text-sm px-3 py-2 bg-[#4a4a4a39] hover:bg-pink-500 rounded cursor-pointer"
     >
@@ -587,7 +590,7 @@ const Explore = () => {
       pageNum <= pageInfo?.last_visible_page ? (
         <button
           key={index}
-          onClick={() => handlePaginate(pageNum)}
+          onClick={() => {window.scrollTo({top: 0, behavior: 'smooth'}); handlePaginate(pageNum)}}
           className={`text-white text-xs md:text-sm font-medium px-3 py-2 ${
             pageNum === page ? 'bg-pink-500' : 'bg-[#4a4a4a39]'
           } hover:bg-pink-500 rounded cursor-pointer`}
@@ -603,7 +606,7 @@ const Explore = () => {
         ...
       </button>
       <button
-        onClick={() => handlePaginate(pageInfo?.last_visible_page)}
+        onClick={() => { window.scrollTo({top: 0, behavior: 'smooth'}); handlePaginate(pageInfo?.last_visible_page)}} 
         className={`text-white text-xs md:text-sm font-medium px-3 py-2 ${
           pageInfo?.last_visible_page === page
             ? 'bg-pink-500'
