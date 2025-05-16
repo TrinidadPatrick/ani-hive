@@ -137,7 +137,6 @@ const AnimeOverView = () => {
     };     
 
     const getAnimeRelations = async (mal_id, retries = 10) => {
-
         try {
             const result = await axios.get(`https://api.jikan.moe/v4/anime/${mal_id}/relations?type=anime`)
             const flattened = result.data.data.flatMap(item =>
@@ -147,18 +146,20 @@ const AnimeOverView = () => {
                 }))
               );
             const animes = flattened.filter((anime) => anime.type === 'anime')
-            const list = []
+            // const list = []
             for(const anime of animes){
                 const info = await getAnimeInfo(anime.mal_id, 2)
                 info.type = anime.type
-                const isExist = list.findIndex((item) => item.mal_id == info.mal_id)
-                if(isExist == -1){
-                    list.push(info)
-                    setAnimeRelations(list)
-                }
+                setAnimeRelations(prev => {
+                    const isExist = prev.findIndex(item => item.mal_id === info.mal_id);
+                    if (isExist === -1) {
+                      return [...prev, info]; // create new array (immutable update)
+                    }
+                    return prev; // no change
+                  });
                 await new Promise(resolve => setTimeout(resolve, 550));
             }
-        
+            // setAnimeRelations(list)
 
         } catch (error) {
             console.log(error)
@@ -324,8 +325,6 @@ const AnimeOverView = () => {
         </main>
         )
     }
-
-    // console.log(animeRelations)
 
   return (
   <main className='w-full grid grid-cols-13 h-fit bg-[#141414] relative overflow-x-hidden'>
@@ -638,6 +637,12 @@ const AnimeOverView = () => {
                 <div>
                     <h1 className='text-white text-2xl font-bold'>Reviews</h1>
                 </div>
+                {
+                    reviews?.length == 0 &&
+                    <div className='w-full h-full flex justify-center items-center'>
+                        <h1 className='text-gray-500 text-2xl'>No Reviews</h1>
+                    </div>
+                }
                 <div className='w-full h-full flex flex-col gap-2'>
                     {
                         reviews?.length > 0 &&
@@ -786,7 +791,7 @@ const AnimeOverView = () => {
                 recommendations?.map((recommendation, index, array) =>
                 {
                     return (
-                        <div onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.id}?name=${recommendation.mediaRecommendation.title.romaji}`} key={index} className='w-full flex gap-2 cursor-pointer'>
+                        <div onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.id}?name=${recommendation.mediaRecommendation.title.romaji}`} key={index} className='w-full hover:bg-[#212121] flex gap-2 cursor-pointer'>
                             <div className='w-[90px] aspect-[2/2.3] flex-none'>
                                 <img src={recommendation?.mediaRecommendation?.coverImage?.large} alt={recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji} className='w-full h-full object-cover rounded-lg' />
                             </div>

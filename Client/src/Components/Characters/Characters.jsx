@@ -6,6 +6,7 @@ const Characters = () => {
     const [characters, setCharacters] = useState([])
     const [searching, setSearching] = useState(false)
     const [page, setPage] = useState(1)
+    const [searchValue, setSearchValue] = useState('')
     const observer = useRef();
 
 
@@ -42,13 +43,13 @@ const Characters = () => {
     //     }
     // }
 
-    const getCharacters = async (page, retries = 10) => {
+    const getCharacters = async (page,searchValue,option, retries = 10) => {
         // const pageCount = await getPageCount()
         setSearching(true)
         try {
-            const result = await axios.get(`https://api.jikan.moe/v4/top/characters?page=${page || 1}`)
-            console.log(result.data.data)
-            setCharacters((prevCharacters) => ([...prevCharacters, ...result.data.data]))
+            const result = await axios.get(`https://api.jikan.moe/v4/characters?q=${searchValue || ''}&page=${page || 1}&order_by=favorites&sort=desc`)
+            console.log(result.data)
+            option == 1 ? setCharacters((prevCharacters) => ([...prevCharacters, ...result.data.data])) : setCharacters(result.data.data)
         } catch (error) {
             console.log(error)
             if(retries > 0)
@@ -63,16 +64,22 @@ const Characters = () => {
     }
 
     useEffect(()=>{
-        getCharacters(page)
+        getCharacters(page, searchValue, 1)
     },[page])
-
-    console.log(characters)
 
   return (
     <main className='flex flex-col pt-20'>
-        <div className='flex flex-col items-start gap-0 w-[90%] mx-auto'>
+        <div className='flex flex-col sm:flex-row w-[90%] mx-auto'>
+        <div className='flex flex-col items-start gap-0 w-full mx-auto'>
             <h1 className='text-white w-full text-start text-3xl font-semibold'>Characters</h1>
             <p className='text-gray-400 text-start text-sm'>Popular characters in the anime industry</p>
+        </div>
+        <div className='flex w-full mt-3 sm:mt-0 sm:w-[340px] gap-3 items-center relative'>
+          <input onKeyDown={(e)=>{if(e.key === 'Enter'){getCharacters(1, e.target.value, 2)}}} value={searchValue} onChange={(e)=>{setSearchValue(e.target.value)}} type="text" className=" outline-0 w-full ps-2 h-10 bg-gray-800 rounded-lg text-white" placeholder="Search..." />
+          <button className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48"><g fill="none" stroke="lightGray" strokeLinejoin="round" strokeWidth="4"><path d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z"/><path strokeLinecap="round" d="M26.657 14.343A7.98 7.98 0 0 0 21 12a7.98 7.98 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485"/></g></svg>
+          </button>
+        </div>
         </div>
     <div className='w-[90%] relative mx-auto h-fit gap-5 bg-[#141414] grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7'>
         {

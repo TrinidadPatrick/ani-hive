@@ -22,7 +22,7 @@ const TopSection = ({topAnimes}) => {
       <main  onClick={()=>setShowTrailer(false)} className='fixed w-[100svw] cursor-pointer h-[100svh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
           <div data-aos="zoom-in" className='w-[80vw] h-[90svh] absolute z-[99999999999] top-10 left-1/2 transform -translate-x-1/2  bg-gray-900'>
           <ReactPlayer 
-                    url={`https://www.youtube.com/watch?v=${youtube_id}&?vq=hd720`}
+                    url={`https://www.youtube.com/watch?v=${youtube_id}&vq=hd720`}
                     width="100%"
                     height="100%"
                     playing={false}
