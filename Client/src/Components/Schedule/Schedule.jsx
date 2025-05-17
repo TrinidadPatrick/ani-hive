@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
+import Footer from '../Home/Footer'
 
 const Schedule = () => {
   const navigate = useNavigate()
@@ -215,6 +216,7 @@ const Schedule = () => {
       )
     }
     </>
+    <Footer />
     </main>
   )
 }

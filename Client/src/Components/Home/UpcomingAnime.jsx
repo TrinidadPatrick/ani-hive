@@ -69,10 +69,10 @@ const UpcomingAnime = () => {
         (
             <section className="w-full h-[65svh] bg-[#141414] py-10">
         <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3">
-        <h1 data-aos="fade-right" className="text-2xl md:text-3xl font-bold text-white">Upcoming Anime</h1>
+        <h1  className="text-2xl md:text-3xl font-bold text-white">Upcoming Anime</h1>
         <div className='flex justify-between'>
-            <p data-aos="fade-right" className="text-gray-400 mt-1 text-sm md:text-basetext-white">Anticipated upcoming anime</p>
-            <button data-aos="fade-left" onClick={()=>navigate('/explore?status=upcoming')} className='text-sm md:text-base text-white cursor-pointer hover:text-gray-300'>See all</button>
+            <p  className="text-gray-400 mt-1 text-sm md:text-basetext-white">Anticipated upcoming anime</p>
+            <button onClick={()=>navigate('/explore?status=upcoming')} className='text-sm md:text-base text-white cursor-pointer hover:text-gray-300'>See all</button>
         </div>
         
         </div>
@@ -130,7 +130,6 @@ const UpcomingAnime = () => {
             if(array[index - 1]?.mal_id != anime?.mal_id && anime.title){
                 return (
                     <SwiperSlide
-                    data-aos="fade-up"
             key={index}
             style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
             className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"

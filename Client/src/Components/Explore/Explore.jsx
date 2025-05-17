@@ -552,104 +552,76 @@ const Explore = () => {
 
       {/* Pagination */}
       <div className="w-full flex gap-3 justify-center">
-  {page !== 1 && (
-    <button
-      onClick={() =>
-        {window.scrollTo({top: 0, behavior: 'smooth'}); handleSearch(
-          searchValue,
-          selectedGenres,
-          selectedStatus,
-          selectedSeason,
-          selectedYear,
-          selectedType,
-          page - 1
+        {page !== 1 && (
+          <button
+            onClick={() =>
+              {window.scrollTo({top: 0, behavior: 'smooth'}); handleSearch(
+                searchValue,
+                selectedGenres,
+                selectedStatus,
+                selectedSeason,
+                selectedYear,
+                selectedType,
+                page - 9 <= 0 ? 1 : page - 9
+              )}
+            }
+            className="text-white font-medium text-xs md:text-sm px-3 py-2 bg-[#4a4a4a39] hover:bg-pink-500 rounded cursor-pointer"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M18.29 17.29a.996.996 0 0 0 0-1.41L14.42 12l3.88-3.88a.996.996 0 1 0-1.41-1.41L12.3 11.3a.996.996 0 0 0 0 1.41l4.59 4.59c.38.38 1.01.38 1.4-.01"/><path fill="currentColor" d="M11.7 17.29a.996.996 0 0 0 0-1.41L7.83 12l3.88-3.88a.996.996 0 1 0-1.41-1.41L5.71 11.3a.996.996 0 0 0 0 1.41l4.59 4.59c.38.38 1.01.38 1.4-.01"/></svg>
+          </button>
         )}
-      }
-      className="text-white font-medium text-xs md:text-sm px-3 py-2 bg-[#4a4a4a39] hover:bg-pink-500 rounded cursor-pointer"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="17"
-        height="17"
-        viewBox="0 0 512 512"
-      >
-        <path
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="48"
-          d="M328 112L184 256l144 144"
-        />
-      </svg>
-    </button>
-  )}
 
-  {pageList.length > 0 &&
-    pageList.map((pageNum, index) =>
-      pageNum <= pageInfo?.last_visible_page ? (
-        <button
-          key={index}
-          onClick={() => {window.scrollTo({top: 0, behavior: 'smooth'}); handlePaginate(pageNum)}}
-          className={`text-white text-xs md:text-sm font-medium px-3 py-2 ${
-            pageNum === page ? 'bg-pink-500' : 'bg-[#4a4a4a39]'
-          } hover:bg-pink-500 rounded cursor-pointer`}
-        >
-          {pageNum}
-        </button>
-      ) : null
-    )}
+        {pageList.length > 0 &&
+          pageList.map((pageNum, index) =>
+            pageNum <= pageInfo?.last_visible_page ? (
+              <button
+                key={index}
+                onClick={() => {window.scrollTo({top: 0, behavior: 'smooth'}); handlePaginate(pageNum)}}
+                className={`text-white text-xs md:text-sm font-medium px-3 py-2 ${
+                  pageNum === page ? 'bg-pink-500' : 'bg-[#4a4a4a39]'
+                } hover:bg-pink-500 rounded cursor-pointer`}
+              >
+                {pageNum}
+              </button>
+            ) : null
+          )}
 
-  {!pageList.includes(Number(pageInfo?.last_visible_page)) && (
-    <>
-      <button className="text-white font-medium px-3 py-2 rounded cursor-default">
-        ...
-      </button>
-      <button
-        onClick={() => { window.scrollTo({top: 0, behavior: 'smooth'}); handlePaginate(pageInfo?.last_visible_page)}} 
-        className={`text-white text-xs md:text-sm font-medium px-3 py-2 ${
-          pageInfo?.last_visible_page === page
-            ? 'bg-pink-500'
-            : 'bg-[#4a4a4a39]'
-        } hover:bg-pink-500 rounded cursor-pointer`}
-      >
-        {pageInfo?.last_visible_page}
-      </button>
-    </>
-  )}
+        {!pageList.includes(Number(pageInfo?.last_visible_page)) && (
+          <>
+            <button className="text-white font-medium px-3 py-2 rounded cursor-default">
+              ...
+            </button>
+            <button
+              onClick={() => { window.scrollTo({top: 0, behavior: 'smooth'}); handlePaginate(pageInfo?.last_visible_page)}} 
+              className={`text-white text-xs md:text-sm font-medium px-3 py-2 ${
+                pageInfo?.last_visible_page === page
+                  ? 'bg-pink-500'
+                  : 'bg-[#4a4a4a39]'
+              } hover:bg-pink-500 rounded cursor-pointer`}
+            >
+              {pageInfo?.last_visible_page}
+            </button>
+          </>
+        )}
 
-  {page !== pageInfo?.last_visible_page && (
-    <button
-      onClick={() =>
-        handleSearch(
-          searchValue,
-          selectedGenres,
-          selectedStatus,
-          selectedSeason,
-          selectedYear,
-          selectedType,
-          page + 1
-        )
-      }
-      className="text-white font-medium px-3 py-2 rotate-180 bg-[#4a4a4a39] hover:bg-pink-500 rounded cursor-pointer"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="17"
-        height="17"
-        viewBox="0 0 512 512"
-      >
-        <path
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="48"
-          d="M328 112L184 256l144 144"
-        />
-      </svg>
-    </button>
-  )}
+        {page !== pageInfo?.last_visible_page && (
+          <button
+            onClick={() =>
+              handleSearch(
+                searchValue,
+                selectedGenres,
+                selectedStatus,
+                selectedSeason,
+                selectedYear,
+                selectedType,
+                page + 9
+              )
+            }
+            className="text-white font-medium px-3 py-2 rotate-180 bg-[#4a4a4a39] hover:bg-pink-500 rounded cursor-pointer"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M18.29 17.29a.996.996 0 0 0 0-1.41L14.42 12l3.88-3.88a.996.996 0 1 0-1.41-1.41L12.3 11.3a.996.996 0 0 0 0 1.41l4.59 4.59c.38.38 1.01.38 1.4-.01"/><path fill="currentColor" d="M11.7 17.29a.996.996 0 0 0 0-1.41L7.83 12l3.88-3.88a.996.996 0 1 0-1.41-1.41L5.71 11.3a.996.996 0 0 0 0 1.41l4.59 4.59c.38.38 1.01.38 1.4-.01"/></svg>
+          </button>
+        )}
       </div>
 
 

@@ -53,9 +53,9 @@ const TopAnimes = ({topAnimes}) => {
         (
         <section className="w-full h-full md:h-[65svh] bg-[#141414] py-10">
         <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3">
-          <h1 data-aos="fade-right" className="text-2xl md:text-3xl font-bold text-white">Top Rated Anime</h1>
+          <h1  className="text-2xl md:text-3xl font-bold text-white">Top Rated Anime</h1>
           <div className='flex justify-between'>
-              <p data-aos="fade-right" className="text-gray-400 mt-1 text-sm md:text-basetext-white">Explore the highest-rated anime of all time</p>
+              <p  className="text-gray-400 mt-1 text-sm md:text-basetext-white">Explore the highest-rated anime of all time</p>
               <button data-aos="fade-left" onClick={()=>navigate('/explore?page=1')} className='text-sm md:text-base text-white cursor-pointer hover:text-gray-300'>See all</button>
           </div>
           
@@ -107,7 +107,6 @@ const TopAnimes = ({topAnimes}) => {
             slidesPerGroup: 7,
           },
         }}
-        data-aos="fade-up"
         className="w-[95%] md:w-[90%] mx-auto "
       >
         {topAnimes?.data?.length > 0 &&

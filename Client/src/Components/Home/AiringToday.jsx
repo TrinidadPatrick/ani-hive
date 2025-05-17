@@ -28,6 +28,7 @@ const AiringToday = () => {
             }
             coverImage {
               large
+              medium
             }
             siteUrl
             genres
@@ -121,7 +122,7 @@ const AiringToday = () => {
       :
       (
         <section className="w-full h-fit flex flex-col items-center justify-center bg-[#141414] py-10">
-        <div data-aos="fade-right" className="w-[95%] md:w-[90%] mx-auto mb-6 px-3">
+        <div  className="w-[95%] md:w-[90%] mx-auto mb-6 px-3">
             <h1 className="text-2xl md:text-3xl font-bold text-white">Airing Today</h1>
             <div className='flex justify-between'>
                 <p className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes currently or will be airing today</p>
@@ -136,7 +137,7 @@ const AiringToday = () => {
                     const endDate = anime.media.endDate.year != null ? `${anime.media.endDate.year}-${Number(anime.media.endDate.month) < 10 ? '0' : ''}${anime.media.endDate.month}-${Number(anime.media.endDate.day) < 10 ? '0' : ''}${anime.media.endDate.day}` : '????-??-??'
                     if(1 == 1){
                         return (
-                            <div data-aos="fade-up" onClick={()=>{navigate(`/anime/11111?name=${anime?.media?.title?.romaji}`)}} className='flex cursor-pointer' key={index}>
+                            <div onClick={()=>{navigate(`/anime/11111?name=${anime?.media?.title?.romaji}`)}} className='flex cursor-pointer' key={index}>
 
                             <div className="w-[200px] h-[100px] lg:w-full lg:h-full lg:aspect-video bg-gray-900 relative overflow-hidden flex items-center justify-center">
                             {/* Image */}

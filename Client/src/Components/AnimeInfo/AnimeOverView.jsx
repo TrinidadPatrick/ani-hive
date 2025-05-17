@@ -326,6 +326,13 @@ const AnimeOverView = () => {
         )
     }
 
+    const InfoRow = ({ label, children }) => (
+        <li className="flex justify-start gap-2">
+          <h1 className="text-gray-400 min-w-[80px] text-[0.8rem] lg:text-base font-medium ">{label}</h1>
+          <h1 className="text-gray-200 line-clamp-1 text-[0.8rem] lg:text-base">{children}</h1>
+        </li>
+      );
+
   return (
   <main className='w-full grid grid-cols-13 h-fit bg-[#141414] relative overflow-x-hidden'>
     {showTrailer && <TrailerPlayer />}
@@ -333,15 +340,15 @@ const AnimeOverView = () => {
         animeInfo ?
         <div className='w-full col-span-13 xl:col-span-10 h-fit bg-[#141414] py-20 px-5 flex flex-col gap-5'>
             {/* Top Section */}
-            <div className='flex-none h-full flex gap-2'>
-                <div className='w-[200px]'>
-                    <img src={animeInfo?.images?.jpg.image_url} alt={animeInfo?.title_english || animeInfo?.title} className='w-full h-full object-cover rounded-lg' />
+            <div className='flex-none h-full flex flex-col sm:flex-row gap-2'>
+                <div className='w-full aspect-video sm:aspect-auto sm:w-[200px]'>
+                    <img src={animeInfo?.images?.jpg.large_image_url} alt={animeInfo?.title_english || animeInfo?.title} className='w-full sm:h-full aspect-video object-cover rounded-lg' />
                 </div>
                 <div className='flex-1 h-full  flex flex-col gap-2 px-2'>
-                    <div className='w-full flex justify-between'>
-                        <h1 className='text-white text-3xl font-bold'>{animeInfo?.title_english || animeInfo?.title}</h1>
+                    <div className='w-full flex flex-col md:flex-row gap-2 md:gap-0 justify-between'>
+                        <h1 className='text-white text-2xl lg:text-3xl font-bold'>{animeInfo?.title_english || animeInfo?.title}</h1>
                         <div>
-                            <button onClick={()=>{setShowTrailer(true)}} className='text-white whitespace-nowrap text-sm md:text-base px-3 py-2 bg-pink-600 rounded font-medium cursor-pointer hover:bg-pink-500'>Watch Trailer</button>
+                            <button onClick={()=>{setShowTrailer(true)}} className='text-white whitespace-nowrap text-xs md:text-base px-3 py-2 bg-pink-600 rounded font-medium cursor-pointer hover:bg-pink-500'>Watch Trailer</button>
                         </div>
                     </div>
                     
@@ -357,73 +364,72 @@ const AnimeOverView = () => {
                         </div>
                     </div>
                     {/* Other informations */}
-                    <div className='w-full h-full grid grid-cols-2'>
+                    <div className='w-full h-full grid grid-cols-1 md:grid-cols-2'>
                         <div className='h-full w-full'>
-                            <ul className='h-full gap-1 flex flex-col justify-between'>
-                                <li className='flex gap-2'>
-                                    <h1 className='text-gray-400 w-[80px] font-medium'>Score: </h1>
-                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.score || 0}</h1>
-                                    <h1 className='text-gray-400 line-clamp-1'>By {animeInfo?.scored_by ? animeInfo?.scored_by.toLocaleString() : 0} users</h1>
-                                </li>
-                                <li className='flex gap-2'>
-                                    <h1 className='text-gray-400 w-[80px] font-medium'>Premiered: </h1>
-                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.season ? animeInfo?.season[0].toUpperCase()+animeInfo?.season.substring(1) : '???'} {animeInfo?.year || '???'}</h1>
-                                </li>
-                                <li className='flex gap-2'>
-                                    <h1 className='text-gray-400 w-[80px] font-medium'>Date Aired: </h1>
-                                    <h1 className='text-gray-200 line-clamp-1'>
-                                        {
-                                            new Date(animeInfo?.aired?.from || new Date()).toLocaleDateString('en-us', {
-                                                month: 'short',
-                                                day: 'numeric',
-                                                year: 'numeric'
-                                            }) + ' '
-                                        } 
-                                         to  
-                                        {
-                                            ' ' + new Date(animeInfo?.aired?.to || new Date()).toLocaleDateString('en-us', {
-                                                month: 'short',
-                                                day: 'numeric',
-                                                year: 'numeric'
-                                            })
-                                        }
-                                    </h1>
-                                </li>
-                                <li className='flex gap-2'>
-                                    <h1 className='text-gray-400 w-[80px] font-medium'>Status: </h1>
-                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.airing ? 'Ongoing' : 'Finished'}</h1>
-                                </li>
-                                <li className='flex gap-2'>
-                                    <h1 className='text-gray-400 w-[80px] font-medium'>Episodes: </h1>
-                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.episodes || '????'}</h1>
-                                </li>
-                                <li className='flex gap-2'>
-                                    <h1 className='text-gray-400 w-[80px] font-medium'>Duration: </h1>
-                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.duration}</h1>
-                                </li>
-                                <li className='flex gap-2'>
-                                    <h1 className='text-gray-400 w-[80px] font-medium'>Genre: </h1>
-                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.genres.map((genre)=> genre.name).join(', ')}</h1>
-                                </li>
-                            </ul>
+
+                        <ul className="h-full gap-1 flex flex-col justify-between">
+                            <InfoRow label="Score:">
+                                {animeInfo?.score || 0}
+                                <span className="text-gray-400 ml-2">
+                                By {animeInfo?.scored_by?.toLocaleString() || 0} users
+                                </span>
+                            </InfoRow>
+
+                            <InfoRow label="Premiered:">
+                                {animeInfo?.season
+                                ? animeInfo.season.charAt(0).toUpperCase() + animeInfo.season.slice(1)
+                                : '???'}{' '}
+                                {animeInfo?.year || '???'}
+                            </InfoRow>
+
+                            <InfoRow label="Date Aired:">
+                                {new Date(animeInfo?.aired?.from || '').toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                })}{' '}
+                                to{' '}
+                                {new Date(animeInfo?.aired?.to || '').toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                })}
+                            </InfoRow>
+
+                            <InfoRow label="Status:">
+                                {animeInfo?.airing ? 'Ongoing' : 'Finished'}
+                            </InfoRow>
+
+                            <InfoRow label="Episodes:">
+                                {animeInfo?.episodes || '????'}
+                            </InfoRow>
+
+                            <InfoRow label="Duration:">
+                                {animeInfo?.duration || '???'}
+                            </InfoRow>
+
+                            <InfoRow label="Genre:">
+                                {animeInfo?.genres?.map((genre) => genre.name).join(', ') || '???'}
+                            </InfoRow>
+                        </ul>
+
                         </div>
                         <div className='h-full w-full'>
-                            <ul className='h-full flex flex-col gap-1 justify-start gap-2'>
-                                <li className='flex gap-2'>
-                                    <h1 className='text-gray-400 w-[80px] font-medium'>Studios: </h1>
-                                    <h1 className='text-gray-200 line-clamp-1'>{animeInfo?.studios.map((studio)=> studio.name).join(', ')}</h1>
-                                </li>
-                                <li className='flex gap-2'>
-                                    <h1 className='text-gray-400 w-[80px]  font-medium'>Producers: </h1>
-                                    <h1 className='text-gray-200 line-clamp-2 ps-2'>{animeInfo?.producers.map((producer)=> producer.name).join(', ')}</h1>
-                                </li>
-                                <li className='flex gap-2'>
-                                    <h1 className='text-gray-400 w-[80px] font-medium'>Source: </h1>
-                                    <h1 className='text-gray-200 line-clamp-1'>
-                                        {animeInfo?.source}
-                                    </h1>
-                                </li>
-                            </ul>
+                        <ul className="h-full flex flex-col gap-2 justify-start">
+                            <InfoRow label="Studios:">
+                                {animeInfo?.studios?.map((studio) => studio.name).join(', ') || '???'}
+                            </InfoRow>
+
+                            <InfoRow label="Producers:">
+                                <span className="line-clamp-2 ps-0">
+                                {animeInfo?.producers?.map((producer) => producer.name).join(', ') || '???'}
+                                </span>
+                            </InfoRow>
+
+                            <InfoRow label="Source:">
+                                {animeInfo?.source || '???'}
+                            </InfoRow>
+                        </ul>
                         </div>
                     </div>
                 </div>
@@ -433,8 +439,8 @@ const AnimeOverView = () => {
             <div className='w-full h-full '>
                 <div className='w-full h-fit  py-0 px-0 flex flex-col'>
                     <div className='flex-1 h-fit flex flex-col gap-2'>
-                        <h1 className='text-white text-2xl font-bold'>Synopsis</h1>
-                        <p className='text-white text-base'>{animeInfo?.synopsis.replace('[Written by MAL Rewrite]', '')}
+                        <h1 className='text-white text-xl md:text-2xl font-bold'>Synopsis</h1>
+                        <p className='text-white text-[0.8rem] md:text-sm lg:text-base'>{animeInfo?.synopsis.replace('[Written by MAL Rewrite]', '')}
                         
                         </p>
                     </div>
@@ -443,7 +449,7 @@ const AnimeOverView = () => {
             {/* Characters */}
             <div className='w-full  h-fit flex flex-col gap-3'>
                 <div>
-                    <h1 className='text-white text-2xl font-bold'>Characters</h1>
+                    <h1 className='text-white text-xl md:text-2xl font-bold'>Characters</h1>
                 </div>
                 <div className='relative'>
                 <Swiper
@@ -539,7 +545,7 @@ const AnimeOverView = () => {
             {/* Related */}
             <div className='w-full flex flex-col gap-3'>
                 <div>
-                    <h1 className='text-white text-2xl font-bold'>Related</h1>
+                    <h1 className='text-white text-xl md:text-2xl font-bold'>Related</h1>
                 </div>
                 {
                     animeRelations.length == 0 &&
@@ -632,10 +638,106 @@ const AnimeOverView = () => {
                 </Swiper>          
                 </div>                       
             </div>
+            {/* Recommendations */}
+            <div className='w-full flex xl:hidden flex-col gap-3'>
+                <div>
+                    <h1 className='text-white text-xl md:text-2xl font-bold'>Recommendations</h1>
+                </div>
+                {
+                    recommendations.length == 0 &&
+                    <div className='w-full h-full flex justify-center items-center'>
+                        <h1 className='text-gray-500 text-2xl'>No Recommendations</h1>
+                    </div>
+                }
+                <div className='relative'>
+                <Swiper
+                modules={[FreeMode, Navigation]}
+                freeMode={true}
+                spaceBetween={20}
+                slidesPerView={2}
+                slidesPerGroup={1}  grabCursor={true}
+                navigation={{
+                nextEl: nextRef.current,
+                prevEl: prevRef.current,
+                }}
+                onBeforeInit={(swiper) => {
+                swiper.params.navigation.prevEl = prevRef.current;
+                swiper.params.navigation.nextEl = nextRef.current;animeRelations
+                }}
+                breakpoints={{
+                0: {
+                    slidesPerView: 3,
+                    slidesPerGroup: 3,
+                },
+                481: {
+                    slidesPerView: 4,
+                    slidesPerGroup: 4,
+                },
+                630: {
+                    slidesPerView: 4,
+                    slidesPerGroup: 4,
+                },
+                769: {
+                    slidesPerView: 5,
+                    slidesPerGroup: 5,
+                },
+                890: {
+                    slidesPerView: 6,
+                    slidesPerGroup: 6,
+                },
+                1280: {
+                    slidesPerView: 7,
+                    slidesPerGroup: 7,
+                },
+                }}
+                className="w-full mx-auto "
+                >
+                {recommendations.length > 0 &&
+                recommendations.map((recommendation, index, array) =>
+                {
+                    if(1 === 1){
+                    return (
+                    <SwiperSlide
+                    key={index}
+                    onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.id}?name=${recommendation.mediaRecommendation.title.romaji}`}
+                    style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
+                    className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
+                    >
+                    <div className="relative h-fit overflow-hidden rounded-lg">
+                    <div className=' absolute top-1 left-2 z-[999999999999] px-2 py-0.5 rounded-lg flex items-center justify-center gap-1'>
+                        <div className='bg-black opacity-55 absolute w-full h-full rounded-lg'></div>
+                        <p className='text-white z-[9999999] text-sm'>{recommendation?.mediaRecommendation?.nextAiringEpisode?.episode || recommendation?.mediaRecommendation?.episodes }/{recommendation?.mediaRecommendation?.episodes}</p>
+                    </div>
+                        {/* Image */}
+                        <div className="w-full  h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
+                        <img
+                            src={recommendation?.mediaRecommendation?.coverImage?.large}
+                            alt={recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji}
+                            className="w-full aspect-[2/2.8]  object-cover brightness-70"
+                        />
+                        </div>
+
+                        {/* Info */}
+                        <div className="w-full px-1 md:px-2 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[30%] xs:h-[25%] md:h-[30%] rounded-b-lg flex">
+                        <div className="flex flex-col items-start w-full h-full justify-around">
+                            <h2 className="text-white text-sm md:text-sm w-full line-clamp-3 text-center">
+                            {recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji}
+                            </h2>
+                        </div>
+                        </div>
+                    </div>
+                    </SwiperSlide>
+                    )
+                    }})
+                }
+                
+                </Swiper>          
+                </div>                       
+            </div>
             {/* Reviews */}
             <div className='w-full flex flex-col gap-3'>
                 <div>
-                    <h1 className='text-white text-2xl font-bold'>Reviews</h1>
+                    <h1 className='text-white text-xl md:text-2xl font-bold'>Reviews</h1>
                 </div>
                 {
                     reviews?.length == 0 &&

@@ -107,7 +107,7 @@ const SeasonNowAnime = () => {
               <div className="relative mx-3 sm:mx-10 xl:mx-0 z-10 flex flex-col-reverse lg:flex-row items-center gap-10 w-full max-w-7xl">
                 
                 {/* Left Side: Anime Info */}
-                <div data-aos="fade-right" className="text-white flex-1 space-y-5 p-3 md:p-0">
+                <div className="text-white flex-1 space-y-5 p-3 md:p-0">
                   <div>
                   <p className='text-sm text-gray-400 font-light'>Popular animes this season</p>
                   <h1 className="text-3xl md:text-4xl lg::text-5xl font-bold line-clamp-2">{anime?.title_english}</h1>
@@ -135,7 +135,7 @@ const SeasonNowAnime = () => {
                 </div>
             
                 {/* Right Side: Anime Trailer */}
-                  <div data-aos="fade-zoom-in" className="relative hidden md:block aspect-video rounded-lg overflow-hidden w-full md:w-fit md:h-[63svh] lg:h-[40vh]">
+                  <div className="relative hidden md:block aspect-video rounded-lg overflow-hidden w-full md:w-fit md:h-[63svh] lg:h-[40vh]">
                       <ReactPlayer
                       url={`https://www.youtube.com/watch?v=${anime?.trailer.youtube_id}&?vq=hd720`}
                       width="100%"

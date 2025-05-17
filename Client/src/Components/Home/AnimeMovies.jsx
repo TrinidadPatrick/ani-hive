@@ -45,9 +45,9 @@ const AnimeMovies = () => {
       (
         <section className="w-full h-full md:h-[65svh] bg-[#141414] py-10">
     <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3">
-      <h1 data-aos="fade-right" className="text-2xl md:text-3xl font-bold text-white">Anime movies</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-white">Anime movies</h1>
       <div className='flex justify-between'>
-          <p data-aos="fade-right" className="text-gray-400 mt-1 text-sm md:text-basetext-white">Popular movies you may like</p>
+          <p className="text-gray-400 mt-1 text-sm md:text-basetext-white">Popular movies you may like</p>
           <button onClick={()=>navigate('/explore?type=Movie&page=1')} data-aos="fade-left" className='cursor-pointer hover:text-gray-200 text-sm md:text-base text-white'>See all</button>
       </div>
       
@@ -108,7 +108,6 @@ const AnimeMovies = () => {
         if(array[index - 1]?.mal_id != anime?.mal_id){
           return (
             <SwiperSlide
-            data-aos="fade-up"
           key={index}
           style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
           className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"

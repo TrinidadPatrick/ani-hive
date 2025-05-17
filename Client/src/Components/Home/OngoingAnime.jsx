@@ -94,9 +94,9 @@ const OngoingAnime = () => {
       (
         <section className='w-full bg-[#141414] py-10'>
       <div className="w-[95%] md:w-[90%] mx-auto px-3">
-      <h1 data-aos="fade-right" className="text-2xl md:text-3xl font-bold text-white">Ongoing Anime</h1>
+      <h1  className="text-2xl md:text-3xl font-bold text-white">Ongoing Anime</h1>
       <div className='flex justify-between'>
-          <p data-aos="fade-right" className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes streaming this season</p>
+          <p  className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes streaming this season</p>
       </div>
       
     </div>
@@ -108,7 +108,7 @@ const OngoingAnime = () => {
         {
           if(array[index - 1]?.id != anime?.id){
             return (
-              <div data-aos="fade-up" key={index} onClick={()=> {navigate('/anime/'+anime?.id+'?name='+anime?.title?.romaji)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
+              <div  key={index} onClick={()=> {navigate('/anime/'+anime?.id+'?name='+anime?.title?.romaji)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
                 <div className='absolute z-[999] top-1 left-1 bg-pink-600 px-1 py-0.5 rounded'>
                   <h2 className="text-gray-300 text-center w-full text-sm md:text-sm">
                       Ep {anime?.nextAiringEpisode?.episode + '/'}{anime?.episodes || '??'}
