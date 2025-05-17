@@ -167,7 +167,7 @@ const Explore = () => {
       if(retries > 0)
       {
         setTimeout(()=>{
-          handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, 1, retires - 1)
+          handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, 1, retries - 1)
         }, 1000)
       }
     } finally{
@@ -203,6 +203,10 @@ const Explore = () => {
 
   useEffect(() => { 
     if(pageInfo){
+      if(page <= 0 || page > pageInfo?.last_visible_page){
+        window.location.href = `/explore?page=1`
+      }
+
       const total_pages = pageInfo?.last_visible_page;
 
       // Check if current page is in the last 8 pages

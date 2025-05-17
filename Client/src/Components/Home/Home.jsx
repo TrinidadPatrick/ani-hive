@@ -28,7 +28,6 @@ const Home = () => {
           <div className="relative bg-white text-black px-3 py-1 rounded-full shadow-lg">
             <button className="font-semibold whitespace-nowrap">Go to Top</button>
 
-            {/* Arrow pointing down */}
             <div className="absolute left-1/2 -bottom-2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-white"></div>
           </div>
         </div>

@@ -115,7 +115,7 @@ const TopSection = ({topAnimes}) => {
           </div>
 
           {/* Right Side: Anime Poster */}
-          <div className="flex-1 max-w-sm mt-20 md:mt-0 md:ml-10">
+          <div className="flex-1 w-full max-w-sm md:max-w-[300px] xl:max-w-[400px] mt-20 md:mt-0 md:ml-10">
             <img
               src={topAnime?.images?.webp.large_image_url}
               alt={topAnime?.title}
