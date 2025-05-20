@@ -12,10 +12,6 @@
 - 🌐 **Responsive Design** optimized for desktop and mobile  
 - ⚡ **Fast and Intuitive UI** using modern React features 
 
-## 📸 Screenshots
-
-> *(Add screenshots here to showcase your UI)*
-
 ## 🚀 Tech Stack
 
 - **Frontend:** React, React Router, Axios, Tailwind CSS
