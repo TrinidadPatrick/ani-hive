@@ -28,5 +28,5 @@ To run AniHive locally:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/anihive.git
+   [git clone https://github.com/yourusername/anihive.git](https://github.com/TrinidadPatrick/ani-hive.git)
    cd anihive
