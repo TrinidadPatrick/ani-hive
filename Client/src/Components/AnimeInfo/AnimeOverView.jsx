@@ -33,9 +33,22 @@ const AnimeOverView = () => {
     const [showTrailer, setShowTrailer] = useState(false)
 
     const [animeEpisodes, setAnimeEpisodes] = useState([])
+    const [epInfo, setEpInfo] = useState(null);
+    const [selectedQuality, setSelectedQuality] = useState(null)
+    const [showSettings, setShowSettings] = useState(false);
+    const [buttonRect, setButtonRect] = useState(null);
 
     const prevRef = useRef(null);
     const nextRef = useRef(null);
+
+    const buildUrl = (url) => {
+        const encodedUrl = encodeURIComponent(
+            url
+        );
+        const proxyUrl = `https://cosumet-api.vercel.app/anime/animepahe/proxy?url=${encodedUrl}`;
+
+        return proxyUrl
+    }
 
     const videoJsOptions = {
         autoplay: true,
@@ -53,12 +66,11 @@ const AnimeOverView = () => {
           },
         },
         sources: [{
-          src: epUrl, // must be a valid .m3u8 URL
+          src: epUrl, 
           type: 'application/x-mpegURL',
         }],
       };
       
-    
 
     const getAnimeInfo = async (id, option, retries = 10) => {
         if(name && option == 1)
@@ -355,6 +367,8 @@ const AnimeOverView = () => {
         try {
             setSelectedEp(ep)
             const res = await axios.get(`https://cosumet-api.vercel.app/anime/animepahe/watch?episodeId=${id}`)
+            const qualities = res.data.sources.filter((source) => source.isDub == false)
+            setEpInfo(qualities)
             const url = res.data.sources[1].url
             const encodedUrl = encodeURIComponent(
                 url
@@ -385,7 +399,29 @@ const AnimeOverView = () => {
         // player.on('dispose', () => {
         //   videojs.log('player will dispose');
         // });
-      };
+    };
+
+    const changeQuality = (quality) => {
+        const player = playerRef.current;
+        console.log(player)
+  if (player) {
+    const currentTime = player.currentTime();
+    const isPaused = player.paused()
+
+
+    player.src({ src: buildUrl(quality?.url)+`?v=${quality.quality}`
+    , type: 'application/x-mpegURL' });
+
+    player.one('loadedmetadata', () => {
+      player.currentTime(currentTime);
+      if (!isPaused) {
+        player.play();
+      }
+    });
+    setShowSettings(false); // optional
+    setSelectedQuality(quality)
+  }
+    }
 
     useEffect(() => {
         if (id) {
@@ -426,41 +462,48 @@ const AnimeOverView = () => {
             <div className={`w-full ${epUrl == '' ? 'h-[80svh]' : 'h-fit'} relative `}>
             {
                 epUrl == '' ?
-<div className="relative w-full h-full aspect-video bg-gray-300 rounded-lg overflow-hidden">
-                {/* Shimmer effect */}
-                <div className="absolute inset-0 bg-gradient-to-r bg-black animate-shimmer" />
-                {/* Play button placeholder */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="relative w-full h-full aspect-video bg-gray-300 rounded-lg overflow-hidden">
+                    {/* Shimmer effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r bg-black animate-shimmer" />
+                    {/* Play button placeholder */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                    </div>
                 </div>
-            </div>
                 :
-                 <VideoJS options={videoJsOptions} onReady={handlePlayerReady}/>
+                 <VideoJS changeQuality={changeQuality} setShowSettings={setShowSettings} setButtonRect={setButtonRect} options={videoJsOptions} onReady={handlePlayerReady}/>
             }
-            {/* <ReactPlayer
-                url={epUrl}
-                autoPlay={true}
-                muted={true}
-                width="100%"
-                height="100%"
-                playing={true}
-                // light={<img src={animeInfo?.images?.jpg.large_image_url} className='w-full h-full object-cover' alt={selectedEp.title} />}
-                controls={true}
-                config={{
-                    file: {
-                    forceHLS: true
-                    }
+            {showSettings && buttonRect && (
+                <div className="absolute bg-gray-900 border shadow-md w-[150px] rounded z-50"
+                style={{
+                    top: buttonRect.bottom - 245 + window.scrollY,
+                    left: buttonRect.left - 140 + window.scrollX,
                 }}
-            /> */}
+                >
+                <p className="font-bold mb-2 text-white p-1 bg-gray-700">Quality</p>
+                {
+                    epInfo?.length > 0 &&
+                    epInfo.map((ep, index, array) =>
+                    {
+                        return (
+                            <div onClick={()=>{changeQuality(ep.quality, false)}} key={index} className="flex cursor-pointer gap-2 items-center py-1 px-2">
+                                <div className="w-1 h-1 rounded-full bg-gray-500"></div>
+                                <p className="text-white text-sm">{ep.quality.split('·')[1]}</p>
+                            </div>
+                        )
+                    })
+                }
+                </div>
+            )}
             </div>
             {/* Episodes */}
-            <div className='w-full h-fit flex gap-3 flex-wrap '>
+            <div className='w-full h-fit gap-3 grid xxs:grid-cols-4 xs:grid-cols-8 sm:grid-cols-12 md:grid-cols-16 lg:grid-cols-20 xl:grid-cols-24'>
                 {
                     animeEpisodes.length > 0 &&
                     animeEpisodes.map((episode, index, array) =>
                     {
                         return (
-                            <div onClick={()=>handleSelectEp(episode.id, episode)} key={index} className={`w-[50px] h-fit flex flex-col gap-2 cursor-pointer ${selectedEp.number == episode.number ? 'bg-pink-500' : 'bg-gray-900'} hover:bg-pink-500 justify-center items-center rounded-sm px-3 py-1`}>
+                            <div onClick={()=>handleSelectEp(episode.id, episode)} key={index} className={` h-fit flex flex-col gap-2 cursor-pointer ${selectedEp.number == episode.number ? 'bg-pink-500' : 'bg-gray-900'} hover:bg-pink-500 justify-center items-center rounded-sm px-3 py-1`}>
                                     <h1 className='text-white text-sm md:text-base line-clamp-1'>{index + 1}</h1>
                             </div>
                         )
