@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@ramonak/react-progress-bar": "^5.4.0",
-    "react-player": "^2.16.0"
-  }
-}

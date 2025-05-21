@@ -7,9 +7,16 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import { FreeMode, Navigation } from 'swiper/modules';
 import ReactPlayer from 'react-player';
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
+import VideoJS from './Video';
 
 const AnimeOverView = () => {
-    const navigate = useNavigate()
+    const videoRef = useRef(null);
+    const playerRef = useRef(null);
+
+    const [epUrl, setEpUrl] = useState('')
+    const [selectedEp, setSelectedEp] = useState({})
     const reactionEmojis = ["📊", "👍", "❤️", "😂", "🤔", "📘", "✍️", "🎨"];
     const {id} = useParams()
     const textRef = useRef(null);
@@ -25,8 +32,30 @@ const AnimeOverView = () => {
     const [indexSeeReview, setIndexSeeReview] = useState([])
     const [showTrailer, setShowTrailer] = useState(false)
 
+    const [animeEpisodes, setAnimeEpisodes] = useState([])
+
     const prevRef = useRef(null);
     const nextRef = useRef(null);
+
+    const videoJsOptions = {
+        autoplay: true,
+        muted: true,
+        controls: false,
+        responsive: true,
+        fluid: true,
+        controlBar: {
+            skipButtons: {
+                forward: 10,
+              backward: 10,
+            }
+          },
+        sources: [{
+          src: epUrl,
+          type: 'application/x-mpegURL'
+        }
+    ]
+      };
+    
 
     const getAnimeInfo = async (id, option, retries = 10) => {
         if(name && option == 1)
@@ -281,31 +310,25 @@ const AnimeOverView = () => {
         }
     }
 
-    useEffect(() => {
-        if (id) {
-          (async () => {
-            await getAnimeInfo(id, 1);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            await getCharacters(id);
-          })();
+    const getAnimePaheInfo = async (title) => {
+        try {
+            const res = await axios.get(`http://192.168.100.70:3000/anime/animepahe/${encodeURIComponent(title)}`)
+            const data = res.data.results
+            if(data.length > 0){
+                for (const anime of data) {
+                    if((animeInfo.title.toLowerCase() == anime.title.toLowerCase() || animeInfo.title_english.toLowerCase() == anime.title.toLowerCase()) && (animeInfo.year == anime.releaseDate || animeInfo.score == anime.rating)){
+                        const res = await axios.get(`http://192.168.100.70:3000/anime/animepahe/info/${anime.id}`)
+                        const animeData = res.data
+                        setAnimeEpisodes(animeData.episodes)
+                        handleSelectEp(animeData.episodes[0].id, animeData.episodes[0])
+                        break;
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error)
         }
-      }, [id]);
-
-    useEffect(() => {
-        if(animeInfo && characters && (animeRelations.length == 0 || recommendations.length == 0)) {
-            (async()=>{
-                getRecommendations(animeInfo?.title)
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                getAnimeRelations(animeInfo?.mal_id)
-                await new Promise(resolve => setTimeout(resolve, 1000))
-                getUserReviews(id)
-            })()
-        }
-    }, [animeInfo, characters])
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [])
+    }
 
     const TrailerPlayer = () => {
         return (
@@ -326,19 +349,109 @@ const AnimeOverView = () => {
         )
     }
 
+    const handleSelectEp = async (id, ep) => {
+        try {
+            setSelectedEp(ep)
+            const res = await axios.get(`http://192.168.100.70:3000/anime/animepahe/watch?episodeId=${id}`)
+            const url = res.data.sources[1].url
+            const encodedUrl = encodeURIComponent(
+                url
+            );
+            const proxyUrl = `http://192.168.100.70:3000/anime/animepahe/proxy?url=${encodedUrl}`;
+            setEpUrl(proxyUrl)
+        } catch (error) {
+            console.log(error)
+        }
+        
+    }
+
     const InfoRow = ({ label, children }) => (
         <li className="flex justify-start gap-2">
           <h1 className="text-gray-400 min-w-[80px] text-[0.8rem] lg:text-base font-medium ">{label}</h1>
           <h1 className="text-gray-200 line-clamp-1 text-[0.8rem] lg:text-base">{children}</h1>
         </li>
-      );
+    );
+
+    const handlePlayerReady = (player) => {
+        playerRef.current = player;
+    
+        // You can handle player events here, for example:
+        player.on('waiting', () => {
+          videojs.log('player is waiting');
+        });
+    
+        player.on('dispose', () => {
+          videojs.log('player will dispose');
+        });
+      };
+
+    useEffect(() => {
+        if (id) {
+          (async () => {
+            await getAnimeInfo(id, 1);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await getCharacters(id);
+          })();
+        }
+      }, [id]);
+
+    useEffect(() => {
+        if(animeInfo && characters && (animeRelations.length == 0 || recommendations.length == 0)) {
+            (async()=>{
+                getAnimePaheInfo(animeInfo?.title)
+                getRecommendations(animeInfo?.title)
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                getAnimeRelations(animeInfo?.mal_id)
+                await new Promise(resolve => setTimeout(resolve, 1000))
+                getUserReviews(id)
+            })()
+        }
+    }, [animeInfo, characters])
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
+
 
   return (
   <main className='w-full grid grid-cols-13 h-fit bg-[#141414] relative overflow-x-hidden'>
     {showTrailer && <TrailerPlayer />}
+    
     {
         animeInfo ?
         <div className='w-full col-span-13 xl:col-span-10 h-fit bg-[#141414] py-20 px-5 flex flex-col gap-5'>
+            <div onClick={()=>playerRef.current.controls(true)} onMouseEnter={()=>playerRef.current.controls(true)} onMouseLeave={()=>playerRef.current.controls(false)} data-vjs-player className='w-full h-fit relative'>
+            <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
+            {/* <ReactPlayer
+                url={epUrl}
+                autoPlay={true}
+                muted={true}
+                width="100%"
+                height="100%"
+                playing={true}
+                // light={<img src={animeInfo?.images?.jpg.large_image_url} className='w-full h-full object-cover' alt={selectedEp.title} />}
+                controls={true}
+                config={{
+                    file: {
+                    forceHLS: true
+                    }
+                }}
+            /> */}
+            </div>
+            {/* Episodes */}
+            <div className='w-full h-fit flex gap-3 flex-wrap'>
+                {
+                    animeEpisodes.length > 0 &&
+                    animeEpisodes.map((episode, index, array) =>
+                    {
+                        return (
+                            <div onClick={()=>handleSelectEp(episode.id, episode)} key={index} className={`w-[50px] h-fit flex flex-col gap-2 cursor-pointer ${selectedEp.number == episode.number ? 'bg-pink-500' : 'bg-gray-900'} hover:bg-pink-500 justify-center items-center rounded-sm px-3 py-1`}>
+                                    <h1 className='text-white text-sm md:text-base line-clamp-1'>{episode.number}</h1>
+                            </div>
+                        )
+                    })
+                }
+            </div>
             {/* Top Section */}
             <div className='flex-none h-full flex flex-col sm:flex-row gap-2'>
                 <div className='w-full aspect-video sm:aspect-auto sm:w-[200px]'>
