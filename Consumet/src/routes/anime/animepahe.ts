@@ -1,7 +1,6 @@
 import { FastifyRequest, FastifyReply, FastifyInstance, RegisterOptions } from 'fastify';
 import { ANIME } from '@consumet/extensions';
 import axios from 'axios';
-import fastifyCors from '@fastify/cors';
 
 
 
@@ -34,7 +33,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
     try {
       const res = await animepahe
         .fetchAnimeInfo(id, episodePage)
-        .catch((err) => reply.status(404).send({ message: err }));
+        .catch((err : any) => reply.status(404).send({ message: err }));
 
       reply.status(200).send(res);
     } catch (err) {
@@ -95,7 +94,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
   //     return reply.status(500).send({ error: 'Failed to fetch stream' });
   //   }
   // });
-  fastify.get('/proxy', async (request, reply) => {
+  fastify.get('/proxy', async (request : FastifyRequest, reply : FastifyReply) => {
     const { url } = request.query as { url: string };
     if (!url) return reply.status(400).send({ error: 'URL required' });
   
@@ -114,7 +113,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
         let playlist = response.data;
   
         playlist = playlist.replace(/(https?:\/\/[^\s\n\r"]+)/g, (match : any) => {
-          return `http://localhost:3000/proxy?url=${encodeURIComponent(match)}`;
+          return `https://cosumet-api.vercel.app/proxy?url=${encodeURIComponent(match)}`;
         });
   
         reply.header('Content-Type', 'application/vnd.apple.mpegurl');

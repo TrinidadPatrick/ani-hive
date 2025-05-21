@@ -312,12 +312,12 @@ const AnimeOverView = () => {
 
     const getAnimePaheInfo = async (title) => {
         try {
-            const res = await axios.get(`http://192.168.100.70:3000/anime/animepahe/${encodeURIComponent(title)}`)
+            const res = await axios.get(`https://cosumet-api.vercel.app/anime/animepahe/${encodeURIComponent(title)}`)
             const data = res.data.results
             if(data.length > 0){
                 for (const anime of data) {
                     if((animeInfo.title.toLowerCase() == anime.title.toLowerCase() || animeInfo.title_english.toLowerCase() == anime.title.toLowerCase()) && (animeInfo.year == anime.releaseDate || animeInfo.score == anime.rating)){
-                        const res = await axios.get(`http://192.168.100.70:3000/anime/animepahe/info/${anime.id}`)
+                        const res = await axios.get(`https://cosumet-api.vercel.app/anime/animepahe/info/${anime.id}`)
                         const animeData = res.data
                         setAnimeEpisodes(animeData.episodes)
                         handleSelectEp(animeData.episodes[0].id, animeData.episodes[0])
@@ -352,12 +352,12 @@ const AnimeOverView = () => {
     const handleSelectEp = async (id, ep) => {
         try {
             setSelectedEp(ep)
-            const res = await axios.get(`http://192.168.100.70:3000/anime/animepahe/watch?episodeId=${id}`)
+            const res = await axios.get(`https://cosumet-api.vercel.app/anime/animepahe/watch?episodeId=${id}`)
             const url = res.data.sources[1].url
             const encodedUrl = encodeURIComponent(
                 url
             );
-            const proxyUrl = `http://192.168.100.70:3000/anime/animepahe/proxy?url=${encodedUrl}`;
+            const proxyUrl = `https://cosumet-api.vercel.app/anime/animepahe/proxy?url=${encodedUrl}`;
             setEpUrl(proxyUrl)
         } catch (error) {
             console.log(error)
@@ -411,6 +411,8 @@ const AnimeOverView = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [])
+
+    console.log(videoJsOptions)
 
 
   return (
