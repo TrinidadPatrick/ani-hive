@@ -2,18 +2,13 @@ import React from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 
-export const VideoJS = (props) => {
+export const VideoJS = ({ options, onReady }) => {
   const videoRef = React.useRef(null);
   const playerRef = React.useRef(null);
-  const {options, onReady} = props;
 
   React.useEffect(() => {
-
-    // Make sure Video.js player is only initialized once
     if (!playerRef.current) {
-      // The Video.js player needs to be _inside_ the component el for React 18 Strict Mode. 
       const videoElement = document.createElement("video-js");
-
       videoElement.classList.add('vjs-big-play-centered');
       videoRef.current.appendChild(videoElement);
 
@@ -22,31 +17,46 @@ export const VideoJS = (props) => {
         onReady && onReady(player);
       });
 
+      player.el().addEventListener('mouseenter', () => {
+        player.controls(true);
+      });
+      player.el().addEventListener('mouseleave', () => {
+        player.controls(false);
+      });
+      player.el().addEventListener('touchstart', () => {
+        player.controls(true);
+        clearTimeout(player._hideControlsTimeout);
+        player._hideControlsTimeout = setTimeout(() => {
+          player.controls(false);
+        }, 3000);
+      });
+
+      // Optional: debug
+      player.on('error', () => console.error('Error:', player.error()));
+      player.on('play', () => console.log('Playing...'));
     } else {
+      // If re-render, update source and autoplay if needed
       const player = playerRef.current;
-
-      player.autoplay(options.autoplay);
       player.src(options.sources);
+      player.autoplay(options.autoplay);
     }
-  }, [options, videoRef]);
+  }, [options, onReady]);
 
-  // Dispose the Video.js player when the functional component unmounts
   React.useEffect(() => {
     const player = playerRef.current;
-
     return () => {
       if (player && !player.isDisposed()) {
         player.dispose();
         playerRef.current = null;
       }
     };
-  }, [playerRef]);
+  }, [options]);
 
   return (
     <div data-vjs-player>
-      <div ref={videoRef} playsInline />
+      <div ref={videoRef} />
     </div>
   );
-}
+};
 
 export default VideoJS;

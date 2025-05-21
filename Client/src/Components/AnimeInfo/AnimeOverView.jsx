@@ -39,22 +39,25 @@ const AnimeOverView = () => {
 
     const videoJsOptions = {
         autoplay: true,
-        muted: true,
-        controls: false,
+        muted: true, // required for autoplay
+        controls: true, // ✅ let Video.js handle this
         responsive: true,
         fluid: true,
         controlBar: {
-            skipButtons: {
-                forward: 10,
-              backward: 10,
-            }
+          skipButtons: {
+            forward: 10,
+            backward: 10,
           },
+          volumePanel: {
+            inline: false,
+          },
+        },
         sources: [{
-          src: epUrl,
-          type: 'application/x-mpegURL'
-        }
-    ]
+          src: epUrl, // must be a valid .m3u8 URL
+          type: 'application/x-mpegURL',
+        }],
       };
+      
     
 
     const getAnimeInfo = async (id, option, retries = 10) => {
@@ -202,7 +205,6 @@ const AnimeOverView = () => {
     };
 
     const getRecommendations = async (searchTerm) => {
-
     const query = `
       query ($search: String) {
         Media(search: $search, type: ANIME) {
@@ -250,8 +252,8 @@ const AnimeOverView = () => {
           { query, variables },
           { headers: { 'Content-Type': 'application/json' } }
         );
-  
         const media = data.data.Media;
+        
         setRecommendations(media.recommendations.nodes);
       } catch (err) {
         console.log(err);
@@ -373,16 +375,16 @@ const AnimeOverView = () => {
     );
 
     const handlePlayerReady = (player) => {
-        playerRef.current = player;
+        // playerRef.current = player;
     
-        // You can handle player events here, for example:
-        player.on('waiting', () => {
-          videojs.log('player is waiting');
-        });
+        // // You can handle player events here, for example:
+        // player.on('waiting', () => {
+        //   videojs.log('player is waiting');
+        // });
     
-        player.on('dispose', () => {
-          videojs.log('player will dispose');
-        });
+        // player.on('dispose', () => {
+        //   videojs.log('player will dispose');
+        // });
       };
 
     useEffect(() => {
@@ -412,7 +414,6 @@ const AnimeOverView = () => {
         window.scrollTo(0, 0);
     }, [])
 
-    console.log(videoJsOptions)
 
 
   return (
@@ -422,8 +423,20 @@ const AnimeOverView = () => {
     {
         animeInfo ?
         <div className='w-full col-span-13 xl:col-span-10 h-fit bg-[#141414] py-20 px-5 flex flex-col gap-5'>
-            <div onClick={()=>playerRef.current.controls(true)} onMouseEnter={()=>playerRef.current.controls(true)} onMouseLeave={()=>playerRef.current.controls(false)} data-vjs-player className='w-full h-fit relative'>
-            <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
+            <div className={`w-full ${epUrl == '' ? 'h-[80svh]' : 'h-fit'} relative `}>
+            {
+                epUrl == '' ?
+<div className="relative w-full h-full aspect-video bg-gray-300 rounded-lg overflow-hidden">
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 bg-gradient-to-r bg-black animate-shimmer" />
+                {/* Play button placeholder */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            </div>
+                :
+                 <VideoJS options={videoJsOptions} onReady={handlePlayerReady}/>
+            }
             {/* <ReactPlayer
                 url={epUrl}
                 autoPlay={true}
@@ -441,14 +454,14 @@ const AnimeOverView = () => {
             /> */}
             </div>
             {/* Episodes */}
-            <div className='w-full h-fit flex gap-3 flex-wrap'>
+            <div className='w-full h-fit flex gap-3 flex-wrap '>
                 {
                     animeEpisodes.length > 0 &&
                     animeEpisodes.map((episode, index, array) =>
                     {
                         return (
                             <div onClick={()=>handleSelectEp(episode.id, episode)} key={index} className={`w-[50px] h-fit flex flex-col gap-2 cursor-pointer ${selectedEp.number == episode.number ? 'bg-pink-500' : 'bg-gray-900'} hover:bg-pink-500 justify-center items-center rounded-sm px-3 py-1`}>
-                                    <h1 className='text-white text-sm md:text-base line-clamp-1'>{episode.number}</h1>
+                                    <h1 className='text-white text-sm md:text-base line-clamp-1'>{index + 1}</h1>
                             </div>
                         )
                     })

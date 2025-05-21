@@ -60,6 +60,15 @@
     background: #555;
   }
   
+  .vjs-default-skin .vjs-control-bar {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Show controls on hover or focus */
+  .vjs-default-skin.vjs-has-started.vjs-user-active .vjs-control-bar {
+    opacity: 1;
+  }
 
   /* .recoList::-webkit-scrollbar-thumb */
 
