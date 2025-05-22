@@ -12,11 +12,9 @@ import 'video.js/dist/video-js.css';
 import VideoJS from './Video';
 
 const AnimeOverView = () => {
-    const videoRef = useRef(null);
     const playerRef = useRef(null);
+    const videoRef = useRef(null);
 
-    const [epUrl, setEpUrl] = useState('')
-    const [selectedEp, setSelectedEp] = useState({})
     const reactionEmojis = ["📊", "👍", "❤️", "😂", "🤔", "📘", "✍️", "🎨"];
     const {id} = useParams()
     const textRef = useRef(null);
@@ -32,6 +30,8 @@ const AnimeOverView = () => {
     const [indexSeeReview, setIndexSeeReview] = useState([])
     const [showTrailer, setShowTrailer] = useState(false)
 
+    const [epUrl, setEpUrl] = useState('')
+    const [selectedEp, setSelectedEp] = useState({})
     const [animeEpisodes, setAnimeEpisodes] = useState([])
     const [epInfo, setEpInfo] = useState(null);
     const [selectedQuality, setSelectedQuality] = useState(null)
@@ -50,7 +50,7 @@ const AnimeOverView = () => {
         return proxyUrl
     }
 
-    const videoJsOptions = {
+    let videoJsOptions = {
         autoplay: true,
         muted: true, // required for autoplay
         controls: true, // ✅ let Video.js handle this
@@ -69,7 +69,7 @@ const AnimeOverView = () => {
           src: epUrl, 
           type: 'application/x-mpegURL',
         }],
-      };
+    };
       
 
     const getAnimeInfo = async (id, option, retries = 10) => {
@@ -369,12 +369,8 @@ const AnimeOverView = () => {
             const res = await axios.get(`https://cosumet-api.vercel.app/anime/animepahe/watch?episodeId=${id}`)
             const qualities = res.data.sources.filter((source) => source.isDub == false)
             setEpInfo(qualities)
-            const url = res.data.sources[1].url
-            const encodedUrl = encodeURIComponent(
-                url
-            );
-            const proxyUrl = `https://cosumet-api.vercel.app/anime/animepahe/proxy?url=${encodedUrl}`;
-            setEpUrl(proxyUrl)
+            const url = buildUrl(res.data.sources[1].url)
+            setEpUrl(url)
         } catch (error) {
             console.log(error)
         }
@@ -403,24 +399,22 @@ const AnimeOverView = () => {
 
     const changeQuality = (quality) => {
         const player = playerRef.current;
-        console.log(player)
-  if (player) {
-    const currentTime = player.currentTime();
-    const isPaused = player.paused()
+        if (player) {
+            const currentTime = player.currentTime();
+            const isPaused = player.paused()
 
+            player.src({ src: buildUrl(quality?.url)
+            , type: 'application/x-mpegURL' });
 
-    player.src({ src: buildUrl(quality?.url)+`?v=${quality.quality}`
-    , type: 'application/x-mpegURL' });
-
-    player.one('loadedmetadata', () => {
-      player.currentTime(currentTime);
-      if (!isPaused) {
-        player.play();
-      }
-    });
-    setShowSettings(false); // optional
-    setSelectedQuality(quality)
-  }
+            player.one('loadedmetadata', () => {
+            player.currentTime(currentTime);
+            if (!isPaused) {
+                player.play();
+            }
+            });
+            setShowSettings(false);
+            setSelectedQuality(quality)
+        }
     }
 
     useEffect(() => {
@@ -450,8 +444,6 @@ const AnimeOverView = () => {
         window.scrollTo(0, 0);
     }, [])
 
-
-
   return (
   <main className='w-full grid grid-cols-13 h-fit bg-[#141414] relative overflow-x-hidden'>
     {showTrailer && <TrailerPlayer />}
@@ -471,7 +463,7 @@ const AnimeOverView = () => {
                     </div>
                 </div>
                 :
-                 <VideoJS changeQuality={changeQuality} setShowSettings={setShowSettings} setButtonRect={setButtonRect} options={videoJsOptions} onReady={handlePlayerReady}/>
+                 <VideoJS videoRef={videoRef} playerRef={playerRef} setShowSettings={setShowSettings} setButtonRect={setButtonRect} options={videoJsOptions} onReady={handlePlayerReady}/>
             }
             {showSettings && buttonRect && (
                 <div className="absolute bg-gray-900 border shadow-md w-[150px] rounded z-50"
@@ -486,7 +478,7 @@ const AnimeOverView = () => {
                     epInfo.map((ep, index, array) =>
                     {
                         return (
-                            <div onClick={()=>{changeQuality(ep.quality, false)}} key={index} className="flex cursor-pointer gap-2 items-center py-1 px-2">
+                            <div onClick={()=>{changeQuality(ep)}} key={index} className="flex cursor-pointer gap-2 items-center py-1 px-2">
                                 <div className="w-1 h-1 rounded-full bg-gray-500"></div>
                                 <p className="text-white text-sm">{ep.quality.split('·')[1]}</p>
                             </div>

@@ -3,9 +3,7 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import SettingsButton from './Settings';
 
-export const VideoJS = ({ options, onReady, setShowSettings, setButtonRect, changeQuality }) => {
-  const videoRef = React.useRef(null);
-  const playerRef = React.useRef(null);
+export const VideoJS = ({ options, onReady, setShowSettings, setButtonRect, playerRef, videoRef }) => {
 
   React.useEffect(() => {
     if (!playerRef.current) {
@@ -17,21 +15,21 @@ export const VideoJS = ({ options, onReady, setShowSettings, setButtonRect, chan
         onReady && onReady(player);
       });
 
-      // if (!videojs.getComponent('SettingsButton')) {
-      //   videojs.registerComponent('SettingsButton', SettingsButton);
-      // }
+      if (!videojs.getComponent('SettingsButton')) {
+        videojs.registerComponent('SettingsButton', SettingsButton);
+      }
   
-      // const settingsButton = player.controlBar.addChild('SettingsButton', {});
-      // player.controlBar.el().appendChild(settingsButton.el());
+      const settingsButton = player.controlBar.addChild('SettingsButton', {});
+      player.controlBar.el().appendChild(settingsButton.el());
 
-      // player.on('toggleSettingsMenu', ()=>{
-      //   const btnEl = document.querySelector('.custom-settings-button');
-      //   if (btnEl) {
-      //     const rect = btnEl.getBoundingClientRect();
-      //     setButtonRect(rect);
-      //   }
-      //   setShowSettings(prev => !prev);
-      // })
+      player.on('toggleSettingsMenu', ()=>{
+        const btnEl = document.querySelector('.custom-settings-button');
+        if (btnEl) {
+          const rect = btnEl.getBoundingClientRect();
+          setButtonRect(rect);
+        }
+        setShowSettings(prev => !prev);
+      })
 
       player.el().addEventListener('mouseenter', () => {
         player.controls(true);
