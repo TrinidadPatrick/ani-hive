@@ -60,7 +60,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
     },
   );
 
-  // fastify.get('/proxy', async (request : FastifyRequest, reply : FastifyReply) => {
+
   //   const { url } = request.query as { url: string };
   
   //   if (!url) {
@@ -96,7 +96,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
   // });
   fastify.get('/proxy', async (request : FastifyRequest, reply : FastifyReply) => {
     const { url } = request.query as { url: string };
-    if (!url) return reply.status(400).send({ error: 'URL required' });
+    if (!url) return reply.status(400).send({ error: 'URL not valid' })
   
     try {
       const decodedUrl = decodeURIComponent(url);
@@ -108,7 +108,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
         }
       });
   
-      // If it's a playlist, rewrite its contents
+
       if (decodedUrl.endsWith('.m3u8')) {
         let playlist = response.data;
   
@@ -121,7 +121,6 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
         return reply.send(playlist);
       }
   
-      // Otherwise just stream media (ts/key files)
       reply.header('Content-Type', response.headers['content-type']);
       reply.header('Access-Control-Allow-Origin', '*');
       return reply.send(response.data);
