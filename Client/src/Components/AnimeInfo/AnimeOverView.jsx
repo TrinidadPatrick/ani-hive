@@ -444,17 +444,21 @@ const AnimeOverView = () => {
         window.scrollTo(0, 0);
     }, [])
 
+    console.log(selectedQuality)
+
   return (
   <main className='w-full grid grid-cols-13 h-fit bg-[#141414] relative overflow-x-hidden'>
     {showTrailer && <TrailerPlayer />}
-    
     {
         animeInfo ?
         <div className='w-full col-span-13 xl:col-span-10 h-fit bg-[#141414] py-20 px-5 flex flex-col gap-5'>
-            <div className={`w-full ${epUrl == '' ? 'h-[80svh]' : 'h-fit'} relative `}>
+            <div className='w-full'>
+                <h1 className='text-white text-2xl lg:text-3xl font-bold'>{animeInfo?.title_english || animeInfo?.title}</h1>
+            </div>
+            <div className={`w-full ${epUrl == '' ? 'aspect-video' : 'h-fit'} relative `}>
             {
                 epUrl == '' ?
-                <div className="relative w-full h-full aspect-video bg-gray-300 rounded-lg overflow-hidden">
+                <div className="relative w-full aspect-video bg-gray-300 rounded-lg overflow-hidden">
                     {/* Shimmer effect */}
                     <div className="absolute inset-0 bg-gradient-to-r bg-black animate-shimmer" />
                     {/* Play button placeholder */}
@@ -463,12 +467,12 @@ const AnimeOverView = () => {
                     </div>
                 </div>
                 :
-                 <VideoJS videoRef={videoRef} playerRef={playerRef} setShowSettings={setShowSettings} setButtonRect={setButtonRect} options={videoJsOptions} onReady={handlePlayerReady}/>
+                <VideoJS videoRef={videoRef} playerRef={playerRef} setShowSettings={setShowSettings} setButtonRect={setButtonRect} options={videoJsOptions} onReady={handlePlayerReady}/>
             }
             {showSettings && buttonRect && (
                 <div className="absolute bg-gray-900 border shadow-md w-[150px] rounded z-50"
                 style={{
-                    top: buttonRect.bottom - 245 + window.scrollY,
+                    top: buttonRect.bottom - 295 + window.scrollY,
                     left: buttonRect.left - 140 + window.scrollX,
                 }}
                 >
@@ -479,7 +483,7 @@ const AnimeOverView = () => {
                     {
                         return (
                             <div onClick={()=>{changeQuality(ep)}} key={index} className="flex cursor-pointer gap-2 items-center py-1 px-2">
-                                <div className="w-1 h-1 rounded-full bg-gray-500"></div>
+                                <div className={`w-1 h-1 rounded-full ${selectedQuality?.quality == ep.quality ? 'bg-pink-500' : 'bg-gray-500'}`}></div>
                                 <p className="text-white text-sm">{ep.quality.split('·')[1]}</p>
                             </div>
                         )
@@ -489,7 +493,9 @@ const AnimeOverView = () => {
             )}
             </div>
             {/* Episodes */}
-            <div className='w-full h-fit gap-3 grid xxs:grid-cols-4 xs:grid-cols-8 sm:grid-cols-12 md:grid-cols-16 lg:grid-cols-20 xl:grid-cols-24'>
+            <div>
+            <h1 className='text-white text-xl mb-2 md:text-2xl font-bold'>Episodes</h1>
+            <div className='w-full h-fit gap-3 grid grid-cols-4 xxs:grid-cols-6 xs:grid-cols-8 sm:grid-cols-12 md:grid-cols-16 lg:grid-cols-20 xl:grid-cols-24'>
                 {
                     animeEpisodes.length > 0 &&
                     animeEpisodes.map((episode, index, array) =>
@@ -501,6 +507,7 @@ const AnimeOverView = () => {
                         )
                     })
                 }
+            </div>
             </div>
             {/* Top Section */}
             <div className='flex-none h-full flex flex-col sm:flex-row gap-2'>
@@ -1004,6 +1011,7 @@ const AnimeOverView = () => {
         :
         // Loader
         <div className='w-full col-span-12 h-[100svh] bg-[#141414] mt-20'>
+            
             {/* Header */}
             <div className="flex gap-6">
                 {/* Poster Skeleton */}
