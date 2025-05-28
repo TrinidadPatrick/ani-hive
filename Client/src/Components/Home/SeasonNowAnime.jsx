@@ -92,6 +92,7 @@ const SeasonNowAnime = () => {
 >
         {SeasonNowAnime?.length > 0 &&
           SeasonNowAnime.sort((a,b) => a.popularity - b.popularity).map((anime, index) => {
+            console.log(anime)
             if(SeasonNowAnime[index - 1]?.mal_id != anime?.mal_id && anime.title){
               return (
                 <section className="w-full h-full  lg:h-[80svh] bg-gray-900 relative overflow-hidden flex items-center justify-center">
@@ -107,10 +108,10 @@ const SeasonNowAnime = () => {
               <div className="relative mx-3 sm:mx-10 xl:mx-0 z-10 flex flex-col-reverse lg:flex-row items-center gap-10 w-full max-w-7xl">
                 
                 {/* Left Side: Anime Info */}
-                <div className="text-white flex-1 space-y-5 p-3 md:p-0">
+                <div className="text-white h-fit flex-1 space-y-5 p-3 md:p-0">
                   <div>
                   <p className='text-sm text-gray-400 font-light'>Popular animes this season</p>
-                  <h1 className="text-3xl md:text-4xl lg::text-5xl font-bold line-clamp-2">{anime?.title_english}</h1>
+                  <h1 className="text-3xl md:text-4xl lg::text-5xl font-bold line-clamp-2">{anime?.title_english || anime?.title}</h1>
                   </div>
                   <p className="text-sm text-gray-300 max-w-prose">{anime?.synopsis.substring(0, showMore ? 100000 : 500)}
                   {
