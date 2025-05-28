@@ -34,7 +34,7 @@ const SeasonNowAnime = () => {
         mobile: {
           breakpoint: { max: 480, min: 0 },
           items: 1,
-          slidesToSlide: 2,
+          slidesToSlide: 1,
         }
       };
 
@@ -79,20 +79,19 @@ const SeasonNowAnime = () => {
         
         <Carousel
         swipeable={true}
-  draggable={true}
-  responsive={responsive}
-  infinite={true}
-  autoPlaySpeed={3000}
-  keyBoardControl={true}
-  customTransition="all 0.5s ease"
-  transitionDuration={500}
-  containerClass="carousel-container"
-  removeArrowOnDeviceType={["tablet","semi_tablet", "mobile"]}
-  className="w-full mx-auto h-fit lg:h-[80svh]"
+        draggable={true}
+        responsive={responsive}
+        infinite={true}
+        autoPlaySpeed={3000}
+        keyBoardControl={true}
+        customTransition="all 0.5s ease"
+        transitionDuration={500}
+        containerClass="carousel-container"
+        removeArrowOnDeviceType={["tablet","semi_tablet", "mobile"]}
+        className="w-full mx-auto h-fit lg:h-[80svh]"
 >
         {SeasonNowAnime?.length > 0 &&
           SeasonNowAnime.sort((a,b) => a.popularity - b.popularity).map((anime, index) => {
-            console.log(anime)
             if(SeasonNowAnime[index - 1]?.mal_id != anime?.mal_id && anime.title){
               return (
                 <section className="w-full h-full  lg:h-[80svh] bg-gray-900 relative overflow-hidden flex items-center justify-center">
