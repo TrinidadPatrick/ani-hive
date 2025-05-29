@@ -121,8 +121,6 @@ const Schedule = () => {
     getAnimeList(selectedDay)
   }, [selectedDay])
 
-  console.log(animeList)
-
   return (
     <main className='w-full h-[100svh] bg-[#141414] flex flex-col gap-5 md:gap-10 items-center pt-20'>
         <h1 className='text-white text-4xl font-bold'>Schedule</h1>
