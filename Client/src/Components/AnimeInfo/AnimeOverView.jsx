@@ -491,12 +491,13 @@ const AnimeOverView = () => {
             )}
             </div>
             {/* Episodes */}
-            <div>
-            <h1 className='text-white text-xl mb-2 md:text-2xl font-bold'>Episodes</h1>
+            <div className='flex flex-col gap-2'>
+            <h1 className='text-white text-xl md:text-2xl font-bold'>Episodes</h1>
+            <span className=' text-red-500'>*Anime has been limited to 5 episodes only to avoid copyright issues</span>
             <div className='w-full h-fit gap-3 grid grid-cols-4 xxs:grid-cols-6 xs:grid-cols-8 sm:grid-cols-12 md:grid-cols-16 lg:grid-cols-20 xl:grid-cols-24'>
                 {
                     animeEpisodes.length > 0 &&
-                    animeEpisodes.map((episode, index, array) =>
+                    animeEpisodes.slice(0,5).map((episode, index, array) =>
                     {
                         return (
                             <div onClick={()=>handleSelectEp(episode.id, episode)} key={index} className={` h-fit flex flex-col gap-2 cursor-pointer ${selectedEp.number == episode.number ? 'bg-pink-500' : 'bg-gray-900'} hover:bg-pink-500 justify-center items-center rounded-sm px-3 py-1`}>
