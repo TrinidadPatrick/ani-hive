@@ -121,7 +121,7 @@ const Schedule = () => {
     getAnimeList(selectedDay)
   }, [selectedDay])
 
-  // console.log(animeList)
+  console.log(animeList)
 
   return (
     <main className='w-full h-[100svh] bg-[#141414] flex flex-col gap-5 md:gap-10 items-center pt-20'>
@@ -167,7 +167,7 @@ const Schedule = () => {
 
         <div className='w-[90%] h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5 lg:gap-10 '>
             {animeList?.length > 0 &&
-                animeList?.map((anime, index, array) =>
+                animeList?.filter((anime) => anime.media.isAdult === false)?.map((anime, index, array) =>
                 {
 
                     const startDate = `${anime.media.startDate.year}-${Number(anime.media.startDate.month) < 10 ? '0' : ''}${anime.media.startDate.month}-${Number(anime.media.startDate.day) < 10 ? '0' : ''}${anime.media.startDate.day}`
