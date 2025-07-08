@@ -231,7 +231,7 @@ const Explore = () => {
   }, [pageInfo, screenWidth])
 
   return (
-    <main onClick={()=>setShowState(false)} className='w-full h-full bg-[#141414] flex flex-col gap-5 items-center pt-20'>
+    <main onClick={()=>setShowState(false)} className='w-full h-[100dvh] bg-[#141414] flex flex-col gap-5 items-center pt-20'>
       <div className='flex flex-col items-start gap-0  w-[95%] lg:w-[90%] mx-auto'>
             <h1 className='text-white text-start text-3xl font-semibold'>Explore</h1>
             <p className='text-gray-400 text-start text-sm'>Find anime that matches your preferences</p>
