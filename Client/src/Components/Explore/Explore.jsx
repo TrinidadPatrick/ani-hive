@@ -120,7 +120,6 @@ const Explore = () => {
 
   const handleSearch = async (searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, pageNum , retries = 10) => {
     setSearching(true)
-    // console.log(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, pageNum)
     const params = {};
 
     const seasonDates = {
@@ -131,7 +130,6 @@ const Explore = () => {
     };
 
     const season = seasonDates[selectedSeason.toLowerCase()];
-    // console.log(season)
 
     if (searchValue) params.q = searchValue;
     if (selectedGenres.length > 0) params.genres = selectedGenres.join(',');
@@ -225,14 +223,12 @@ const Explore = () => {
         total_pages > 8
           ? isLastEightPages
             ? temp
-            : Array.from({ length: screenWidth < 600 ? 5 : 8 }, (_, index) => index + startPage)
+            : Array.from({ length: screenWidth < 600 ? 4 : 8 }, (_, index) => index + startPage)
           : Array.from({ length: total_pages }, (_, index) => index + 1);
 
       setPageList(pageLists);
     }
   }, [pageInfo, screenWidth])
-
-  // console.log(selectedStatus)
 
   return (
     <main onClick={()=>setShowState(false)} className='w-full h-full bg-[#141414] flex flex-col gap-5 items-center pt-20'>
@@ -366,7 +362,7 @@ const Explore = () => {
                           );
                         })
                         }
-                        {filter.name == 'Season' && selectedYear == '' && <p className='text-red-500 text-xs'>Select a year first</p>}
+                        {filter.name == 'Season' && selectedYear == '' && <p className='text-red-500 text-[0.65rem] sm:text-xs'>Select a year first</p>}
                       </div>
                     </div>
                     }
@@ -569,7 +565,7 @@ const Explore = () => {
                 page - 9 <= 0 ? 1 : page - 9
               )}
             }
-            className="text-white font-medium text-xs md:text-sm px-3 py-2 bg-[#4a4a4a39] hover:bg-pink-500 rounded cursor-pointer"
+            className="text-white font-medium text-[0.7rem] sm:text-xs md:text-sm px-2 sm:px-3 py-1 sm:py-2 bg-[#4a4a4a39] hover:bg-pink-500 rounded cursor-pointer"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M18.29 17.29a.996.996 0 0 0 0-1.41L14.42 12l3.88-3.88a.996.996 0 1 0-1.41-1.41L12.3 11.3a.996.996 0 0 0 0 1.41l4.59 4.59c.38.38 1.01.38 1.4-.01"/><path fill="currentColor" d="M11.7 17.29a.996.996 0 0 0 0-1.41L7.83 12l3.88-3.88a.996.996 0 1 0-1.41-1.41L5.71 11.3a.996.996 0 0 0 0 1.41l4.59 4.59c.38.38 1.01.38 1.4-.01"/></svg>
           </button>
@@ -581,7 +577,7 @@ const Explore = () => {
               <button
                 key={index}
                 onClick={() => {window.scrollTo({top: 0, behavior: 'smooth'}); handlePaginate(pageNum)}}
-                className={`text-white text-xs md:text-sm font-medium px-3 py-2 ${
+                className={`text-white text-[0.7rem] sm:text-xs md:text-sm font-medium px-4 sm:px-3 py-1 sm:py-2 ${
                   pageNum === page ? 'bg-pink-500' : 'bg-[#4a4a4a39]'
                 } hover:bg-pink-500 rounded cursor-pointer`}
               >
@@ -592,12 +588,12 @@ const Explore = () => {
 
         {!pageList.includes(Number(pageInfo?.last_visible_page)) && (
           <>
-            <button className="text-white font-medium px-3 py-2 rounded cursor-default">
+            {/* <button className="text-white font-medium px-2 sm:px-3 py-1 sm:py-2 rounded cursor-default">
               ...
-            </button>
+            </button> */}
             <button
               onClick={() => { window.scrollTo({top: 0, behavior: 'smooth'}); handlePaginate(pageInfo?.last_visible_page)}} 
-              className={`text-white text-xs md:text-sm font-medium px-3 py-2 ${
+              className={`text-white text-[0.7rem] sm:text-xs md:text-sm font-medium px-2 sm:px-3 py-1 sm:py-2 ${
                 pageInfo?.last_visible_page === page
                   ? 'bg-pink-500'
                   : 'bg-[#4a4a4a39]'
