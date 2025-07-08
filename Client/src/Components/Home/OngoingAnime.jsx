@@ -111,7 +111,7 @@ const OngoingAnime = () => {
               <div  key={index} onClick={()=> {navigate('/anime/'+anime?.id+'?name='+anime?.title?.romaji)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
                 <div className='absolute z-[999] top-1 left-1 bg-pink-600 px-1 py-0.5 rounded'>
                   <h2 className="text-gray-300 text-center w-full text-sm md:text-sm">
-                      Ep {anime?.nextAiringEpisode?.episode + '/'}{anime?.episodes || '??'}
+                      Ep {(anime?.nextAiringEpisode?.episode || '??') + '/'}{anime?.episodes || '??'}
                   </h2>
                 </div>
                 {/* Image */}

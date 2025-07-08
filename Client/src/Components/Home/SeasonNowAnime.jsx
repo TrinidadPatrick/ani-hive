@@ -3,12 +3,15 @@ import SeasonNowAnimeProvider from '../../Providers/SeasonNowAnimeProvider'
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import ReactPlayer from 'react-player';
+import Youtube from 'react-youtube'
 import { useNavigate } from 'react-router';
 
 const SeasonNowAnime = () => {
    const navigate = useNavigate()
     const {SeasonNowAnime} = SeasonNowAnimeProvider()
     const [showMore, setShowMore] = useState(false)
+    const [showTrailer, setShowTrailer] = useState(false)
+    const [youtubeId, setYoutubeId] = useState('')
 
     const responsive = {
         superLargeDesktop: {
@@ -37,6 +40,36 @@ const SeasonNowAnime = () => {
           slidesToSlide: 1,
         }
       };
+
+      const TrailerPlayer = () => {
+        return (
+        <main  onClick={()=>setShowTrailer(false)} className='fixed w-[100svw] min-h-screen cursor-pointer h-[100dvh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
+            <div data-aos="zoom-in" className='w-[90vw] aspect-video absolute z-[99999999999] top-1/2 -translate-y-1/2 left-1/2 transform -translate-x-1/2  bg-gray-900'>
+            {/* <ReactPlayer 
+                      url={`https://www.youtube.com/watch?v=${youtubeId}&vq=hd720`}
+                      width="100%"
+                      height="100%"
+                      playing={false}
+                      muted={false}
+                      loop={true}
+                      controls={true}
+                      // className="absolute top-0 left-0"
+                      /> */}
+            <Youtube
+                    videoId={youtubeId}
+                    opts={{
+                      width: '100%',
+                      height: '650px',
+                        playerVars: {
+                            rel: 0,
+                            controls: 0
+                        }
+                    }}
+                />
+            </div>
+        </main>
+        )
+    }
 
 
   return (
@@ -76,7 +109,7 @@ const SeasonNowAnime = () => {
       :
       (
         <section className='w-full sm:h-fit lg:h-[80svh] lg:max-h-[80svh] bg-red-100 flex items-center relative'>
-        
+          {showTrailer && <TrailerPlayer />}
         <Carousel
         swipeable={true}
         draggable={true}
@@ -94,7 +127,7 @@ const SeasonNowAnime = () => {
           SeasonNowAnime.sort((a,b) => a.popularity - b.popularity).map((anime, index) => {
             if(SeasonNowAnime[index - 1]?.mal_id != anime?.mal_id && anime.title){
               return (
-                <section className="w-full h-full  lg:h-[80svh] bg-gray-900 relative overflow-hidden flex items-center justify-center">
+                <section className="px-5 w-full h-full  lg:h-[80svh] bg-gray-900 relative overflow-hidden flex items-center justify-center">
               {/* Background Image */}{index}
               <img
                 src={anime?.images?.webp.large_image_url}
@@ -136,7 +169,11 @@ const SeasonNowAnime = () => {
             
                 {/* Right Side: Anime Trailer */}
                   <div className="relative hidden md:block aspect-video rounded-lg overflow-hidden w-full md:w-fit md:h-[63svh] lg:h-[40vh]">
-                      <ReactPlayer
+                      <img src={anime?.trailer?.images?.maximum_image_url} alt={anime?.title_english || anime?.title} className='w-full h-full object-cover relative z-10' />
+                      <button onClick={()=>{setShowTrailer(true);setYoutubeId(anime?.trailer?.youtube_id)}} className='absolute bg-red-500 text-white text-4xl px-6 py-2 rounded-xl hover:bg-red-400 cursor-pointer z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+                        ▶
+                      </button>
+                      {/* <ReactPlayer
                       url={`https://www.youtube.com/watch?v=${anime?.trailer.youtube_id}&?vq=hd720`}
                       width="100%"
                       height="100%"
@@ -145,7 +182,7 @@ const SeasonNowAnime = () => {
                       loop={true}
                       controls={false}
                       // className="absolute top-0 left-0"
-                      />
+                      /> */}
                   </div>
               </div>
               </section>

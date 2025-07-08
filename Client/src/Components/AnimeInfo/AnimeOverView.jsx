@@ -7,9 +7,9 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import { FreeMode, Navigation } from 'swiper/modules';
 import ReactPlayer from 'react-player';
-import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import VideoJS from './Video';
+import Youtube from 'react-youtube'
 
 const AnimeOverView = () => {
     const playerRef = useRef(null);
@@ -347,8 +347,17 @@ const AnimeOverView = () => {
     const TrailerPlayer = () => {
         return (
         <main onClick={()=>setShowTrailer(false)} className='fixed w-[100svw] cursor-pointer h-[100svh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
-            <div className='w-[80vw] h-[90svh] absolute z-[99999999999] top-10 left-1/2 transform -translate-x-1/2  bg-white'>
-            <ReactPlayer
+            <div className='w-fit h-fit absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-white'>
+                <Youtube
+                    videoId={animeInfo?.trailer.youtube_id}
+                    opts={{
+                        playerVars: {
+                            rel: 0,
+                            controls: 0
+                        }
+                    }}
+                />
+            {/* <ReactPlayer
                       url={`https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720`}
                       width="100%"
                       height="100%"
@@ -357,7 +366,7 @@ const AnimeOverView = () => {
                       loop={true}
                       controls={false}
                       // className="absolute top-0 left-0"
-                      />
+                      /> */}
             </div>
         </main>
         )
@@ -673,11 +682,11 @@ const AnimeOverView = () => {
                     onMouseEnter={()=>{setTimeout(()=>{setHovered(index)}, 150)}}
                     onMouseLeave={()=>{setTimeout(()=>{setHovered(-1)}, 150)}}
                     style={{ width: '195px', height: 'auto' }} // or use fixed or dynamic width based on screen
-                    className={`peer-hover:rotate-y-180 transform duration-300 ease-in-out delay-75 h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer`}
+                    className={`sm:peer-hover:rotate-y-180 transform duration-300 ease-in-out delay-75 h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer`}
                     >
                         <div className='w-full h-full top-0 absolute bg-transparent peer z-[9999999999999]'></div>
-                    <div className={`peer-hover:rotate-y-180 transform duration-300 ease-in-out delay-75 relative h-fit overflow-hidden rounded-lg`}>
-                    <div className={`${hovered == index ? 'rotate-y-180' : ''} w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-1`}>
+                    <div className={`sm:peer-hover:rotate-y-180 transform duration-300 ease-in-out delay-75 relative h-fit overflow-hidden rounded-lg`}>
+                    <div className={`${hovered == index ? 'sm:rotate-y-180' : ''} w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-1`}>
                     <div className=" w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>
                     <p className="z-[9999] mt-[1px] text-sm">{char?.role}</p>
                     </div>
@@ -691,7 +700,7 @@ const AnimeOverView = () => {
                         </div>
 
                         {/* Info */}
-                        <div className={`${hovered == index ? 'rotate-y-180' : ''} w-full absolute px-1 md:px-3 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[30%] xs:h-[25%] md:h-[25%] rounded-b-lg flex`}>
+                        <div className={`${hovered == index ? 'sm:rotate-y-180' : ''} w-full absolute px-1 md:px-3 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[30%] xs:h-[25%] md:h-[25%] rounded-b-lg flex`}>
                         <div className="flex flex-col items-start w-full h-full justify-around">
                             <h2 className="text-white text-sm md:text-base w-full line-clamp-1">
                             {char?.character?.name}
