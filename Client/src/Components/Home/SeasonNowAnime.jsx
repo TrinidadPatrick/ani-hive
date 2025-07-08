@@ -44,28 +44,17 @@ const SeasonNowAnime = () => {
       const TrailerPlayer = () => {
         return (
         <main  onClick={()=>setShowTrailer(false)} className='fixed w-[100svw] min-h-screen cursor-pointer h-[100dvh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
-            <div data-aos="zoom-in" className='w-[90vw] aspect-video absolute z-[99999999999] top-1/2 -translate-y-1/2 left-1/2 transform -translate-x-1/2  bg-gray-900'>
-            {/* <ReactPlayer 
+            <div data-aos="zoom-in" className='h-[90vh] aspect-video absolute z-[99999999999] top-1/2 -translate-y-1/2 left-1/2 transform -translate-x-1/2  bg-gray-900'>
+            <ReactPlayer 
                       url={`https://www.youtube.com/watch?v=${youtubeId}&vq=hd720`}
                       width="100%"
                       height="100%"
                       playing={false}
                       muted={false}
                       loop={true}
-                      controls={true}
+                      controls={false}
                       // className="absolute top-0 left-0"
-                      /> */}
-            <Youtube
-                    videoId={youtubeId}
-                    opts={{
-                      width: '100%',
-                      height: '650px',
-                        playerVars: {
-                            rel: 0,
-                            controls: 0
-                        }
-                    }}
-                />
+                      />
             </div>
         </main>
         )

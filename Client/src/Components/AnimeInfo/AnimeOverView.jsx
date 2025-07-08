@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -344,33 +344,24 @@ const AnimeOverView = () => {
         }
     }
 
-    const TrailerPlayer = () => {
+    const TrailerPlayer = useCallback(()=>{
         return (
-        <main onClick={()=>setShowTrailer(false)} className='fixed w-[100svw] cursor-pointer h-[100svh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
-            <div className='w-fit h-fit absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-white'>
-                <Youtube
-                    videoId={animeInfo?.trailer.youtube_id}
-                    opts={{
-                        playerVars: {
-                            rel: 0,
-                            controls: 0
-                        }
-                    }}
-                />
-            {/* <ReactPlayer
-                      url={`https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720`}
-                      width="100%"
-                      height="100%"
-                      playing={false}
-                      muted={false}
-                      loop={true}
-                      controls={false}
-                      // className="absolute top-0 left-0"
-                      /> */}
-            </div>
-        </main>
-        )
-    }
+            <main onClick={()=>setShowTrailer(false)} className='fixed w-[100svw] cursor-pointer h-[100svh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
+                <div className='h-[90vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-white'>
+                <ReactPlayer
+                          url={`https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720`}
+                          width="100%"
+                          height="100%"
+                          playing={false}
+                          muted={false}
+                          loop={true}
+                          controls={false}
+                          // className="absolute top-0 left-0"
+                          />
+                </div>
+            </main>
+            )
+    }, [animeInfo])
 
     const handleSelectEp = async (id, ep) => {
         try {
