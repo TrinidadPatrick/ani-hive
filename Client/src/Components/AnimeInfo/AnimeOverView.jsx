@@ -53,7 +53,7 @@ const AnimeOverView = () => {
     let videoJsOptions = {
         autoplay: true,
         muted: true, // required for autoplay
-        controls: true, // ✅ let Video.js handle this
+        controls: true, 
         responsive: true,
         fluid: true,
         controlBar: {
@@ -465,7 +465,7 @@ const AnimeOverView = () => {
                     </div>
                 </div>
                 :
-                <VideoJS videoRef={videoRef} playerRef={playerRef} setShowSettings={setShowSettings} setButtonRect={setButtonRect} options={videoJsOptions} onReady={handlePlayerReady}/>
+                <VideoJS epUrl={epUrl} videoRef={videoRef} playerRef={playerRef} setShowSettings={setShowSettings} setButtonRect={setButtonRect} options={videoJsOptions} onReady={handlePlayerReady}/>
             }
             {showSettings && buttonRect && (
                 <div className="absolute bg-gray-900 border shadow-md w-[150px] rounded z-50"
@@ -500,9 +500,9 @@ const AnimeOverView = () => {
                     animeEpisodes.slice(0,5).map((episode, index, array) =>
                     {
                         return (
-                            <div onClick={()=>handleSelectEp(episode.id, episode)} key={index} className={` h-fit flex flex-col gap-2 cursor-pointer ${selectedEp.number == episode.number ? 'bg-pink-500' : 'bg-gray-900'} hover:bg-pink-500 justify-center items-center rounded-sm px-3 py-1`}>
+                            <button onClick={()=>handleSelectEp(episode.id, episode)} key={index} className={` h-fit flex flex-col gap-2 cursor-pointer ${selectedEp.number == episode.number ? 'bg-pink-500' : 'bg-gray-900'} hover:bg-pink-500 justify-center items-center rounded-sm px-3 py-1`}>
                                     <h1 className='text-white text-sm md:text-base line-clamp-1'>{index + 1}</h1>
-                            </div>
+                            </button>
                         )
                     })
                 }

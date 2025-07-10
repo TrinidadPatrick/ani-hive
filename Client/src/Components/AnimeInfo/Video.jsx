@@ -3,7 +3,7 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import SettingsButton from './Settings';
 
-export const VideoJS = ({ options, onReady, setShowSettings, setButtonRect, playerRef, videoRef }) => {
+export const VideoJS = ({epUrl, options, onReady, setShowSettings, setButtonRect, playerRef, videoRef }) => {
 
   React.useEffect(() => {
     if (!playerRef.current) {
@@ -46,12 +46,13 @@ export const VideoJS = ({ options, onReady, setShowSettings, setButtonRect, play
       });
 
     } else {
+
       // If re-render, update source and autoplay if needed
       const player = playerRef.current;
       player.src(options.sources);
       player.autoplay(options.autoplay);
     }
-  }, []);
+  }, [epUrl]);
 
   React.useEffect(() => {
     const player = playerRef.current;
