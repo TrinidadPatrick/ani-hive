@@ -120,7 +120,7 @@ const SeasonNowAnime = () => {
               {/* Background Image */}{index}
               <img
                 src={anime?.images?.webp.large_image_url}
-                alt={anime.title || "anime"}
+                alt={anime?.title || "anime"}
                 className="absolute w-full h-full object-cover brightness-30 opacity-70"
               />
             
@@ -134,9 +134,9 @@ const SeasonNowAnime = () => {
                   <p className='text-sm text-gray-400 font-light'>Popular animes this season</p>
                   <h1 className="text-3xl md:text-4xl lg::text-5xl font-bold line-clamp-2">{anime?.title_english || anime?.title}</h1>
                   </div>
-                  <p className="text-sm text-gray-300 max-w-prose">{anime?.synopsis.substring(0, showMore ? 100000 : 500)}
+                  <p className="text-sm text-gray-300 max-w-prose">{anime?.synopsis?.substring(0, showMore ? 100000 : 500)}
                   {
-                      anime.synopsis.length > 500 &&
+                      anime?.synopsis?.length > 500 &&
                       <button onClick={()=>{setShowMore(!showMore)}} className='inline px-1 font-medium cursor-pointer'>{showMore ? '...see less' : '...see more'}</button>
                   }
                   </p>
