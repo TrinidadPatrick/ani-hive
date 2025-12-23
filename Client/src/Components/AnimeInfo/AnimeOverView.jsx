@@ -347,9 +347,9 @@ const AnimeOverView = () => {
     const TrailerPlayer = useCallback(()=>{
         return (
             <main onClick={()=>setShowTrailer(false)} className='fixed w-[100svw] cursor-pointer h-[100svh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
-                <div className='h-[90vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-white'>
+                <div className=' w-[95vw] md:h-[90vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-white'>
                 <ReactPlayer
-                          url={`https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720`}
+                          url={animeInfo?.trailer.youtube_id ? `https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720` : animeInfo?.trailer?.embed_url}
                           width="100%"
                           height="100%"
                           playing={false}
@@ -453,7 +453,8 @@ const AnimeOverView = () => {
             <div className='w-full'>
                 <h1 className='text-white text-2xl lg:text-3xl font-bold'>{animeInfo?.title_english || animeInfo?.title}</h1>
             </div>
-            <div className={`w-full ${epUrl == '' ? 'aspect-video' : 'h-fit'} relative `}>
+            {/* Player */}
+            <div className={`hidden w-full ${epUrl == '' ? 'aspect-video' : 'h-fit'} relative `}>
             {
                 epUrl == '' ?
                 <div className="relative w-full aspect-video bg-gray-300 rounded-lg overflow-hidden">
@@ -491,7 +492,7 @@ const AnimeOverView = () => {
             )}
             </div>
             {/* Episodes */}
-            <div className='flex flex-col gap-2'>
+            <div className='hidden flex-col gap-2'>
             <h1 className='text-white text-xl md:text-2xl font-bold'>Episodes</h1>
             <span className=' text-red-500'>*Anime has been limited to 5 episodes only to avoid copyright issues</span>
             <div className='w-full h-fit gap-3 grid grid-cols-4 xxs:grid-cols-6 xs:grid-cols-8 sm:grid-cols-12 md:grid-cols-16 lg:grid-cols-20 xl:grid-cols-24'>

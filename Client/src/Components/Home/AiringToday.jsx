@@ -153,7 +153,7 @@ const AiringToday = () => {
                                 <div>
                                 {/* Title */}
                                 <p className="text-white text-sm lg:text-[0.9rem] xl:text-base w-full line-clamp-2">
-                                    {anime?.media?.title?.english || anime?.media?.title?.native?.replace(/;/g, ' ') || anime?.media?.title?.english || anime?.media?.title?.native.replace(/;/g, ' ')}
+                                    {anime?.media?.title?.english || anime?.media?.title?.native?.replace(/;/g, ' ') || anime?.media?.title?.english || anime?.media?.title?.native?.replace(/;/g, ' ')}
                                 </p>
                                 {/* Year */}
                                 <h2 className="text-gray-300 text-[0.75rem] md:text-[0.8rem]">
