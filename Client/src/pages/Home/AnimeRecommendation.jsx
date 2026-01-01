@@ -1,5 +1,5 @@
 import React from 'react'
-import AnimeRecommendationProvider from '../../providers/AnimeRecommendationProvider'
+import AnimeRecommendationProvider from '../../providers_tmp/AnimeRecommendationProvider'
 
 const AnimeRecommendation = () => {
 

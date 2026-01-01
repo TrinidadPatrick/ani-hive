@@ -10,7 +10,7 @@ import AiringToday from './AiringToday'
 import OngoingAnime from './OngoingAnime'
 import Footer from './Footer'
 import chibi from '../../Images/chibi.gif'
-import TopAnimeProvider from '../../providers/TopAnimeProvider.js'
+import TopAnimeProvider from '../../providers_tmp/TopAnimeProvider.js'
 
 
 const Home = () => {
