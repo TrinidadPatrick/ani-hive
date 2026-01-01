@@ -1,11 +1,11 @@
 import {createBrowserRouter} from 'react-router-dom'
 import App from './App'
-import Home from './Components/Home/Home'
-import UserLayout from './Components/UserLayout/UserLayout'
-import AnimeOverView from './Components/AnimeInfo/AnimeOverView'
-import Schedule from './Components/Schedule/Schedule'
-import Explore from './Components/Explore/Explore'
-import Characters from './Components/Characters/Characters'
+import Home from './pages/Home/Home'
+import UserLayout from './pages/UserLayout/UserLayout'
+import AnimeOverView from './pages/AnimeInfo/AnimeOverView'
+import Schedule from './pages/Schedule/Schedule'
+import Explore from './pages/Explore/Explore'
+import Characters from './pages/Characters/Characters'
 
 const router = createBrowserRouter([
     {

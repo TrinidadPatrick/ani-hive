@@ -444,6 +444,8 @@ const AnimeOverView = () => {
         window.scrollTo(0, 0);
     }, [])
 
+    console.log(animeInfo)
+
   return (
   <main className='w-full grid grid-cols-13 h-fit bg-[#141414] relative overflow-x-hidden'>
     {showTrailer && <TrailerPlayer />}

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import topAnimeStore from '../Store/topAnimeStore'
+import topAnimeStore from '../stores/topAnimeStore'
 import axios from 'axios'
 
 const TopAnimeProvider = () => {

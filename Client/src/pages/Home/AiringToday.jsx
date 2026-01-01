@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import AnimeMoviesStore from '../../Store/AnimeMoviesStore';
+import AnimeMoviesStore from '../../stores/AnimeMoviesStore';
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useNavigate } from 'react-router';
 

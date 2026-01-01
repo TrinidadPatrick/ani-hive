@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
-import AnimeMoviesStore from '../Store/AnimeMoviesStore'
+import AnimeMoviesStore from '../stores/AnimeMoviesStore'
 import axios from 'axios'
-import SeasonNowAnimeStore from '../Store/SeasonNowAnimeStore'
+import SeasonNowAnimeStore from '../stores/SeasonNowAnimeStore'
 
 const AnimeMoviesProvider = () => {
     const SeasonNowAnime = SeasonNowAnimeStore((state) => state.SeasonNowAnime)

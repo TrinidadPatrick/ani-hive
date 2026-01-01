@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import TopAnimeProvider from '../../Providers/TopAnimeProvider'
+import TopAnimeProvider from '../../providers/TopAnimeProvider'
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
