@@ -269,9 +269,9 @@ const AnimeOverView = () => {
           { headers: { 'Content-Type': 'application/json' } }
         );
         const media = data.data.Media;
-        
         setRecommendations(media.recommendations.nodes);
       } catch (err) {
+        setRecommendations([])
         console.log(err);
     }
 
@@ -488,9 +488,9 @@ const AnimeOverView = () => {
     {
         animeInfo ?
         <div className='w-full col-span-13 xl:col-span-10 h-fit bg-[#141414] py-20 px-5 flex flex-col gap-5'>
-            <div className='w-full'>
+            {/* <div className='w-full'>
                 <h1 className='text-white text-2xl lg:text-3xl font-bold'>{animeInfo?.title_english || animeInfo?.title}</h1>
-            </div>
+            </div> */}
             {/* Player */}
             <div className={`hidden w-full ${epUrl == '' ? 'aspect-video' : 'h-fit'} relative `}>
             {
@@ -554,7 +554,9 @@ const AnimeOverView = () => {
                 </div>
                 <div className='flex-1 h-full  flex flex-col gap-2 px-2'>
                     <div className='w-full flex flex-col md:flex-row gap-2 md:gap-0 justify-between'>
-                        <h1 className='text-white text-2xl lg:text-3xl font-bold'>{animeInfo?.title_english || animeInfo?.title}</h1>
+                        <div className=''>
+                        <h1 className='text-white text-2xl lg:text-3xl font-bold line-clamp-2'>{animeInfo?.title_english || animeInfo?.title}</h1>
+                        </div>
                         <div>
                             <button onClick={()=>{setShowTrailer(true)}} className='text-white whitespace-nowrap text-xs md:text-base px-3 py-2 bg-pink-600 rounded font-medium cursor-pointer hover:bg-pink-500'>Watch Trailer</button>
                         </div>
@@ -597,11 +599,11 @@ const AnimeOverView = () => {
                                 year: 'numeric',
                                 })}{' '}
                                 to{' '}
-                                {new Date(animeInfo?.aired?.to || '').toLocaleDateString('en-US', {
+                                {animeInfo?.aired?.to ? new Date(animeInfo?.aired?.to || '').toLocaleDateString('en-US', {
                                 month: 'short',
                                 day: 'numeric',
                                 year: 'numeric',
-                                })}
+                                }): 'TBA'}
                             </InfoRow>
 
                             <InfoRow label="Status:">
@@ -880,8 +882,8 @@ const AnimeOverView = () => {
                 {
                     recommendations && recommendations?.length === 0 ?
                     (
-                    <div className='w-full h-full flex justify-center items-center'>
-                        <h1 className='text-gray-500 text-2xl'>No Recommendations</h1>
+                    <div className='w-full h-full flex justify-center items-center '>
+                        <h1 className='text-gray-400 text-2xl'>No Recommendations</h1>
                     </div>
                     )
                     :
@@ -1141,7 +1143,7 @@ const AnimeOverView = () => {
                     <AnimeRecommendationSkeleton />
                 )
                 :
-                recommendations && recommendations?.length !== 0 &&
+                recommendations && recommendations?.length !== 0 ?
                 recommendations?.map((recommendation, index, array) =>
                 {
                     return (
@@ -1159,6 +1161,13 @@ const AnimeOverView = () => {
                         </div>
                     )
                 })
+                :
+                recommendations && recommendations?.length === 0 &&
+                    (
+                    <div className='w-full h-full flex justify-center items-center '>
+                        <h1 className='text-gray-400 text-2xl'>No Recommendations</h1>
+                    </div>
+                    )
             }
         </div>
   </main>
