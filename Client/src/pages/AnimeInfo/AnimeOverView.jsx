@@ -12,6 +12,9 @@ import VideoJS from './Video';
 import Youtube from 'react-youtube'
 import NoTrailerAvailable from '../../components/NoTrailerAvailable.jsx';
 import useSmallScreen from '../../utils/useSmallScreen.js';
+import AnimeRecommendationSkeleton from './skeleton/AnimeRecommendationSkeleton.jsx';
+import AnimeRelatedSkeleton from './skeleton/AnimeRelatedSkeleton.jsx';
+import AnimeReviewsSkeleton from './skeleton/AnimeReviewsSkeleton.jsx';
 
 const AnimeOverView = () => {
     const playerRef = useRef(null);
@@ -25,9 +28,9 @@ const AnimeOverView = () => {
     const name = searchParams.get('name');
     const [animeInfo, setAnimeInfo] = useState(null)
     const [characters, setCharacters] = useState(null)
-    const [animeRelations, setAnimeRelations] = useState([])
-    const [recommendations, setRecommendations] = useState([]);
-    const [reviews, setReviews] = useState([]);
+    const [animeRelations, setAnimeRelations] = useState(null)
+    const [recommendations, setRecommendations] = useState(null);
+    const [reviews, setReviews] = useState(null);
     const [hovered, setHovered] = useState(-1)
     const [indexSeeMore, setIndexSeeMore] = useState([])
     const [indexSeeReview, setIndexSeeReview] = useState([])
@@ -193,20 +196,18 @@ const AnimeOverView = () => {
                 }))
               );
             const animes = flattened.filter((anime) => anime.type === 'anime')
-            // const list = []
             for(const anime of animes){
                 const info = await getAnimeInfo(anime.mal_id, 2)
                 info.type = anime.type
                 setAnimeRelations(prev => {
-                    const isExist = prev.findIndex(item => item.mal_id === info.mal_id);
+                    const isExist = prev?.findIndex(item => item.mal_id === info.mal_id) || -1;
                     if (isExist === -1) {
-                      return [...prev, info]; // create new array (immutable update)
+                      return prev ?[...prev, info] : [info]; // create new array (immutable update)
                     }
                     return prev; // no change
                   });
                 await new Promise(resolve => setTimeout(resolve, 550));
             }
-            // setAnimeRelations(list)
 
         } catch (error) {
             console.log(error)
@@ -347,8 +348,6 @@ const AnimeOverView = () => {
         }
     }
 
-    console.log(isSmallScreen)
-
     const TrailerPlayer = useCallback(()=>{
         return (
             <main className='fixed w-[100svw] cursor-pointer h-[100dvh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
@@ -467,9 +466,9 @@ const AnimeOverView = () => {
       }, [id]);
 
     useEffect(() => {
-        if(animeInfo && characters && (animeRelations.length == 0 || recommendations.length == 0)) {
+        if(animeInfo && characters && (( !animeRelations) || ( !recommendations))) {
             (async()=>{
-                getAnimePaheInfo(animeInfo?.title)
+                // getAnimePaheInfo(animeInfo?.title)
                 getRecommendations(animeInfo?.title)
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 getAnimeRelations(animeInfo?.mal_id)
@@ -767,94 +766,104 @@ const AnimeOverView = () => {
                     <h1 className='text-white text-xl md:text-2xl font-bold'>Related</h1>
                 </div>
                 {
-                    animeRelations.length == 0 &&
+                    animeRelations && animeRelations?.length == 0 &&
                     <div className='w-full h-full flex justify-center items-center'>
                         <h1 className='text-gray-500 text-2xl'>No Related Anime</h1>
                     </div>
                 }
                 <div className='relative'>
-                <Swiper
-                modules={[FreeMode, Navigation]}
-                freeMode={true}
-                spaceBetween={20}
-                slidesPerView={2}
-                slidesPerGroup={1}  grabCursor={true}
-                navigation={{
-                nextEl: nextRef.current,
-                prevEl: prevRef.current,
-                }}
-                onBeforeInit={(swiper) => {
-                swiper.params.navigation.prevEl = prevRef.current;
-                swiper.params.navigation.nextEl = nextRef.current;animeRelations
-                }}
-                breakpoints={{
-                0: {
-                    slidesPerView: 3,
-                    slidesPerGroup: 3,
-                },
-                481: {
-                    slidesPerView: 4,
-                    slidesPerGroup: 4,
-                },
-                630: {
-                    slidesPerView: 4,
-                    slidesPerGroup: 4,
-                },
-                769: {
-                    slidesPerView: 5,
-                    slidesPerGroup: 5,
-                },
-                890: {
-                    slidesPerView: 6,
-                    slidesPerGroup: 6,
-                },
-                1280: {
-                    slidesPerView: 7,
-                    slidesPerGroup: 7,
-                },
-                }}
-                className="w-full mx-auto "
-                >
-                {animeRelations.length > 0 &&
-                animeRelations.map((info, index, array) =>
                 {
-                    if(1 === 1){
-                    return (
-                    <SwiperSlide
-                    key={index}
-                    onClick={()=>{window.location.href = `/anime/${info.mal_id}`}}
-                    style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
-                    className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
-                    >
-                    <div className="relative h-fit overflow-hidden rounded-lg">
-                    <div className=' absolute top-1 left-2 z-[999999999999] px-2 py-0.5 rounded-lg flex items-center justify-center gap-1'>
-                        <div className='bg-black opacity-55 absolute w-full h-full rounded-lg'></div>
-                        <p className='text-white z-[9999999] text-sm'>{info?.type}</p>
-                    </div>
-                        {/* Image */}
-                        <div className="w-full  h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
-                        <img
-                            src={info?.images?.webp?.large_image_url}
-                            alt={info?.title_english || info?.title}
-                            className="w-full aspect-[2/2.8]  object-cover brightness-70"
-                        />
-                        </div>
-
-                        {/* Info */}
-                        <div className="w-full px-1 md:px-2 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[30%] xs:h-[25%] md:h-[30%] rounded-b-lg flex">
-                        <div className="flex flex-col items-start w-full h-full justify-around">
-                            <h2 className="text-white text-sm md:text-sm w-full line-clamp-3 text-center">
-                            {info?.title_english || info?.title}
-                            </h2>
-                        </div>
-                        </div>
-                    </div>
-                    </SwiperSlide>
+                    !animeRelations ?
+                    (
+                        <AnimeRelatedSkeleton />
                     )
-                    }})
-                }
-                
-                </Swiper>          
+                    :
+                    animeRelations && animeRelations?.length !== 0 &&
+                    (
+                        <Swiper
+                        modules={[FreeMode, Navigation]}
+                        freeMode={true}
+                        spaceBetween={20}
+                        slidesPerView={2}
+                        slidesPerGroup={1}  grabCursor={true}
+                        navigation={{
+                        nextEl: nextRef.current,
+                        prevEl: prevRef.current,
+                        }}
+                        onBeforeInit={(swiper) => {
+                        swiper.params.navigation.prevEl = prevRef.current;
+                        swiper.params.navigation.nextEl = nextRef.current;animeRelations
+                        }}
+                        breakpoints={{
+                        0: {
+                            slidesPerView: 3,
+                            slidesPerGroup: 3,
+                        },
+                        481: {
+                            slidesPerView: 4,
+                            slidesPerGroup: 4,
+                        },
+                        630: {
+                            slidesPerView: 4,
+                            slidesPerGroup: 4,
+                        },
+                        769: {
+                            slidesPerView: 5,
+                            slidesPerGroup: 5,
+                        },
+                        890: {
+                            slidesPerView: 6,
+                            slidesPerGroup: 6,
+                        },
+                        1280: {
+                            slidesPerView: 7,
+                            slidesPerGroup: 7,
+                        },
+                        }}
+                        className="w-full mx-auto "
+                        >
+                        {animeRelations && animeRelations?.length > 0 &&
+                        animeRelations.map((info, index, array) =>
+                        {
+                            if(1 === 1){
+                            return (
+                            <SwiperSlide
+                            key={index}
+                            onClick={()=>{window.location.href = `/anime/${info.mal_id}`}}
+                            style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
+                            className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
+                            >
+                            <div className="relative h-fit overflow-hidden rounded-lg">
+                            <div className=' absolute top-1 left-2 z-[999999999999] px-2 py-0.5 rounded-lg flex items-center justify-center gap-1'>
+                                <div className='bg-black opacity-55 absolute w-full h-full rounded-lg'></div>
+                                <p className='text-white z-[9999999] text-sm'>{info?.type}</p>
+                            </div>
+                                {/* Image */}
+                                <div className="w-full  h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
+                                <img
+                                    src={info?.images?.webp?.large_image_url}
+                                    alt={info?.title_english || info?.title}
+                                    className="w-full aspect-[2/2.8]  object-cover brightness-70"
+                                />
+                                </div>
+        
+                                {/* Info */}
+                                <div className="w-full px-1 md:px-2 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[30%] xs:h-[25%] md:h-[30%] rounded-b-lg flex">
+                                <div className="flex flex-col items-start w-full h-full justify-around">
+                                    <h2 className="text-white text-sm md:text-sm w-full line-clamp-3 text-center">
+                                    {info?.title_english || info?.title}
+                                    </h2>
+                                </div>
+                                </div>
+                            </div>
+                            </SwiperSlide>
+                            )
+                            }})
+                        }
+                        
+                        </Swiper>  
+                    )
+                }        
                 </div>                       
             </div>
             {/* Recommendations */}
@@ -863,95 +872,107 @@ const AnimeOverView = () => {
                     <h1 className='text-white text-xl md:text-2xl font-bold'>Recommendations</h1>
                 </div>
                 {
-                    recommendations.length == 0 &&
+                    recommendations === null &&
+                    (
+                        <AnimeRecommendationSkeleton />
+                    )
+                }
+                {
+                    recommendations && recommendations?.length === 0 ?
+                    (
                     <div className='w-full h-full flex justify-center items-center'>
                         <h1 className='text-gray-500 text-2xl'>No Recommendations</h1>
                     </div>
-                }
-                <div className='relative'>
-                <Swiper
-                modules={[FreeMode, Navigation]}
-                freeMode={true}
-                spaceBetween={20}
-                slidesPerView={2}
-                slidesPerGroup={1}  grabCursor={true}
-                navigation={{
-                nextEl: nextRef.current,
-                prevEl: prevRef.current,
-                }}
-                onBeforeInit={(swiper) => {
-                swiper.params.navigation.prevEl = prevRef.current;
-                swiper.params.navigation.nextEl = nextRef.current;animeRelations
-                }}
-                breakpoints={{
-                0: {
-                    slidesPerView: 3,
-                    slidesPerGroup: 3,
-                },
-                481: {
-                    slidesPerView: 4,
-                    slidesPerGroup: 4,
-                },
-                630: {
-                    slidesPerView: 4,
-                    slidesPerGroup: 4,
-                },
-                769: {
-                    slidesPerView: 5,
-                    slidesPerGroup: 5,
-                },
-                890: {
-                    slidesPerView: 6,
-                    slidesPerGroup: 6,
-                },
-                1280: {
-                    slidesPerView: 7,
-                    slidesPerGroup: 7,
-                },
-                }}
-                className="w-full mx-auto "
-                >
-                {recommendations.length > 0 &&
-                recommendations.map((recommendation, index, array) =>
-                {
-                    if(1 === 1){
-                    return (
-                    <SwiperSlide
-                    key={index}
-                    onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.id}?name=${recommendation.mediaRecommendation.title.romaji}`}
-                    style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
-                    className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
-                    >
-                    <div className="relative h-fit overflow-hidden rounded-lg">
-                    <div className=' absolute top-1 left-2 z-[999999999999] px-2 py-0.5 rounded-lg flex items-center justify-center gap-1'>
-                        <div className='bg-black opacity-55 absolute w-full h-full rounded-lg'></div>
-                        <p className='text-white z-[9999999] text-sm'>{recommendation?.mediaRecommendation?.nextAiringEpisode?.episode || recommendation?.mediaRecommendation?.episodes }/{recommendation?.mediaRecommendation?.episodes}</p>
-                    </div>
-                        {/* Image */}
-                        <div className="w-full  h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
-                        <img
-                            src={recommendation?.mediaRecommendation?.coverImage?.large}
-                            alt={recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji}
-                            className="w-full aspect-[2/2.8]  object-cover brightness-70"
-                        />
-                        </div>
-
-                        {/* Info */}
-                        <div className="w-full px-1 md:px-2 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[30%] xs:h-[25%] md:h-[30%] rounded-b-lg flex">
-                        <div className="flex flex-col items-start w-full h-full justify-around">
-                            <h2 className="text-white text-sm md:text-sm w-full line-clamp-3 text-center">
-                            {recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji}
-                            </h2>
-                        </div>
-                        </div>
-                    </div>
-                    </SwiperSlide>
                     )
-                    }})
-                }
-                
-                </Swiper>          
-                </div>                       
+                    :
+                    recommendations && recommendations?.length !== 0 &&
+                    (
+                    <div className='relative'>
+                    <Swiper
+                    modules={[FreeMode, Navigation]}
+                    freeMode={true}
+                    spaceBetween={20}
+                    slidesPerView={2}
+                    slidesPerGroup={1}  grabCursor={true}
+                    navigation={{
+                    nextEl: nextRef.current,
+                    prevEl: prevRef.current,
+                    }}
+                    onBeforeInit={(swiper) => {
+                    swiper.params.navigation.prevEl = prevRef.current;
+                    swiper.params.navigation.nextEl = nextRef.current;animeRelations
+                    }}
+                    breakpoints={{
+                    0: {
+                        slidesPerView: 3,
+                        slidesPerGroup: 3,
+                    },
+                    481: {
+                        slidesPerView: 4,
+                        slidesPerGroup: 4,
+                    },
+                    630: {
+                        slidesPerView: 4,
+                        slidesPerGroup: 4,
+                    },
+                    769: {
+                        slidesPerView: 5,
+                        slidesPerGroup: 5,
+                    },
+                    890: {
+                        slidesPerView: 6,
+                        slidesPerGroup: 6,
+                    },
+                    1280: {
+                        slidesPerView: 7,
+                        slidesPerGroup: 7,
+                    },
+                    }}
+                    className="w-full mx-auto "
+                    >
+                    {recommendations.length > 0 &&
+                    recommendations.map((recommendation, index, array) =>
+                    {
+                        if(1 === 1){
+                        return (
+                        <SwiperSlide
+                        key={index}
+                        onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.id}?name=${recommendation.mediaRecommendation.title.romaji}`}
+                        style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
+                        className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
+                        >
+                        <div className="relative h-fit overflow-hidden rounded-lg">
+                        <div className=' absolute top-1 left-2 z-[999999999999] px-2 py-0.5 rounded-lg flex items-center justify-center gap-1'>
+                            <div className='bg-black opacity-55 absolute w-full h-full rounded-lg'></div>
+                            <p className='text-white z-[9999999] text-sm'>{recommendation?.mediaRecommendation?.nextAiringEpisode?.episode || recommendation?.mediaRecommendation?.episodes }/{recommendation?.mediaRecommendation?.episodes}</p>
+                        </div>
+                            {/* Image */}
+                            <div className="w-full  h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
+                            <img
+                                src={recommendation?.mediaRecommendation?.coverImage?.large}
+                                alt={recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji}
+                                className="w-full aspect-[2/2.8]  object-cover brightness-70"
+                            />
+                            </div>
+
+                            {/* Info */}
+                            <div className="w-full px-1 md:px-2 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[30%] xs:h-[25%] md:h-[30%] rounded-b-lg flex">
+                            <div className="flex flex-col items-start w-full h-full justify-around">
+                                <h2 className="text-white text-sm md:text-sm w-full line-clamp-3 text-center">
+                                {recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji}
+                                </h2>
+                            </div>
+                            </div>
+                        </div>
+                        </SwiperSlide>
+                        )
+                        }})
+                    }
+                    
+                    </Swiper>          
+                    </div>   
+                    )
+                }                
             </div>
             {/* Reviews */}
             <div className='w-full flex flex-col gap-3'>
@@ -959,14 +980,14 @@ const AnimeOverView = () => {
                     <h1 className='text-white text-xl md:text-2xl font-bold'>Reviews</h1>
                 </div>
                 {
-                    reviews?.length == 0 &&
+                    reviews && reviews?.length == 0 &&
                     <div className='w-full h-full flex justify-center items-center'>
                         <h1 className='text-gray-500 text-2xl'>No Reviews</h1>
                     </div>
                 }
                 <div className='w-full h-full flex flex-col gap-2'>
                     {
-                        reviews?.length > 0 &&
+                        reviews && reviews?.length > 0 ?
                         reviews.map((review, index, array) =>
                         {
                             const textLength = review.review.length
@@ -1053,6 +1074,11 @@ const AnimeOverView = () => {
                                 </div>
                             )
                         })
+                        :
+                        !reviews &&
+                        (
+                            <AnimeReviewsSkeleton />
+                        )
                     }
                 </div>
             </div>
@@ -1110,6 +1136,12 @@ const AnimeOverView = () => {
             <h1 className='text-white text-2xl font-bold'>Recommendations</h1>
             </div>
             {
+                recommendations === null ? 
+                (
+                    <AnimeRecommendationSkeleton />
+                )
+                :
+                recommendations && recommendations?.length !== 0 &&
                 recommendations?.map((recommendation, index, array) =>
                 {
                     return (

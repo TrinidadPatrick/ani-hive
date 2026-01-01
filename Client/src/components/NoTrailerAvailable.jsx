@@ -3,8 +3,8 @@ import React from 'react'
 
 const NoTrailerAvailable = () => {
   return (
-    <div className="h-full bg-[#141414] flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
+    <div className="w-full h-full bg-[#141414] flex items-center justify-center">
+      <div className="w-full">
         <div className="bg-[#141414] rounded-2xl shadow-2xl p-8 border border-gray-800">
           <div className="flex flex-col items-center text-center space-y-6">
 
