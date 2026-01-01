@@ -16,12 +16,17 @@ const Explore = () => {
   const [selectedGenres, setSelectedGenres] = useState(
     searchParams.get('genres')?.split(',').map(Number) || []
   );
+  const [selectedSortItem, setSelectedSortItem] = useState({
+    order_by: searchParams.get('order_by') || '',
+    sort_by: searchParams.get('sort_by') || 'desc',
+  })
   const [selectedStatus, setSelectedStatus] = useState(searchParams.get('status') || '');
   const [selectedSeason, setSelectedSeason] = useState(searchParams.get('season') || '');
   const [selectedYear, setSelectedYear] = useState(searchParams.get('year') || '');
   const [selectedType, setSelectedType] = useState(searchParams.get('type') || '');
   const [showState, setShowState] = useState('')
   const [showOtherFilter, setShowOtherFilter] = useState(false)
+  const [showSort, setShowSort] = useState(false)
 
   const [animeList, setAnimeList] = useState(null)
   const [pageInfo, setPageInfo] = useState(null)
@@ -42,6 +47,15 @@ const Explore = () => {
       name: 'Type',
       options: ['TV', 'OVA', 'Movie', 'Special', 'ONA', 'Music']
     }
+  ]
+
+  const sortItems = [
+    {key: 'Title', value: 'title'},
+    {key: 'Start Date', value: 'start_date'},
+    {key: 'End Date', value: 'end_date'},
+    {key: 'Score', value: 'score'},
+    {key: 'Rank', value: 'rank'},
+    {key: 'Popularity', value: 'popularity'},
   ]
   const [searching, setSearching] = useState(false)
 
@@ -74,6 +88,14 @@ const Explore = () => {
         }, 1000)
       }
     }
+  }
+
+  const handleSelectedOrderBy = (orderBy) => {
+    setSelectedSortItem({...selectedSortItem, order_by: orderBy})
+  }
+
+  const handleSelectedSortBy = (sortBy) => {
+    setSelectedSortItem({...selectedSortItem, sort_by: sortBy})
   }
 
   const handleSelectGenre = (genre) => {
@@ -118,7 +140,7 @@ const Explore = () => {
       }
   }
 
-  const handleSearch = async (searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, pageNum , retries = 10) => {
+  const handleSearch = async (searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedOrderBy, selectedSortBy, pageNum , retries = 10) => {
     setSearching(true)
     const params = {};
 
@@ -138,21 +160,28 @@ const Explore = () => {
     if (selectedYear) params.year = selectedYear;
     if (selectedType) params.type = selectedType;
     if (pageNum) params.page = pageNum;
+    if (selectedOrderBy && selectedSortBy){
+      params.order_by = selectedOrderBy;
+      params.sort_by = selectedSortBy;
+    }
 
     setSearchParams(params);
 
+    const sortByParams = selectedOrderBy && selectedSortBy ? `&sort=${selectedSortBy}&order_by=${selectedOrderBy}` : ''
+
     const url = 
     selectedYear == '' ?
-    `https://api.jikan.moe/v4/anime?q=${searchValue}&genres=${selectedGenres}&status=${selectedStatus}&type=${selectedType}&order_by=score&sort=desc&sfw=true&page=${Number(pageNum)}`
+    `https://api.jikan.moe/v4/anime?q=${searchValue}&genres=${selectedGenres}&status=${selectedStatus}&type=${selectedType}&sfw=true&page=${Number(pageNum)}${sortByParams}&unapproved=false&min_score=1`
     :
     selectedSeason && selectedYear ? 
-    `https://api.jikan.moe/v4/anime?q=${searchValue}&genres=${selectedGenres}&status=${selectedStatus}&start_date=${season.start}&end_date=${season.end}&type=${selectedType}&order_by=score&sort=desc&sfw=true&page=${Number(pageNum)}`
+    `https://api.jikan.moe/v4/anime?q=${searchValue}&genres=${selectedGenres}&status=${selectedStatus}&start_date=${season.start}&end_date=${season.end}&type=${selectedType}&sfw=true&page=${Number(pageNum)}${sortByParams}&unapproved=false&min_score=1`
     :
     selectedYear
-    `https://api.jikan.moe/v4/anime?q=${searchValue}&genres=${selectedGenres}&status=${selectedStatus}&start_date=${selectedYear || 1400}-01-01&end_date=${selectedYear || 3010}-12-31&type=${selectedType}&order_by=score&sort=desc&sfw=true&page=${Number(pageNum)}`
+    `https://api.jikan.moe/v4/anime?q=${searchValue}&genres=${selectedGenres}&status=${selectedStatus}&start_date=${selectedYear || 1400}-01-01&end_date=${selectedYear || 3010}-12-31&type=${selectedType}&sfw=true&page=${Number(pageNum)}${sortByParams}&unapproved=false&min_score=1`
     
     try {
       const result = await axios.get(url)
+      console.log(result.data.data)
       setAnimeList(result.data.data)
       setPageInfo(result.data.pagination)
       setPage(result.data.pagination.current_page)
@@ -165,7 +194,7 @@ const Explore = () => {
       if(retries > 0)
       {
         setTimeout(()=>{
-          handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, 1, retries - 1)
+          handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedOrderBy, selectedSortBy, 1, retries - 1)
         }, 1000)
       }
     } finally{
@@ -175,15 +204,20 @@ const Explore = () => {
 
   const handlePaginate = (pageNum) => {
     setPage(pageNum)
-    handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, pageNum)
+    handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, pageNum)
   }
 
   const isClearFilterDisabled = () => {
-    return selectedGenres.length == 0 && selectedStatus == '' && selectedSeason == '' && selectedYear == '' && selectedType == ''
+    return selectedGenres.length == 0 && selectedStatus == '' && selectedSeason == '' && selectedYear == '' && selectedType == '' && selectedSortItem.order_by == ''
   }
 
   const handleClear = () => {
-    handleSearch(searchValue, [], '', '', '', '', 1);setShowState('')
+    handleSearch(searchValue, [], '', '', '', '','','', 1)
+    setShowState('')
+    setSelectedSortItem({
+      order_by: '',
+      sort_by: 'desc'
+    })
     setSelectedGenres([])
     setSelectedStatus('')
     setSelectedSeason('')
@@ -196,7 +230,7 @@ const Explore = () => {
   }, [])
 
   useEffect(() => {
-    handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, page)
+    handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, page)
   }, [])
 
   useEffect(() => { 
@@ -324,6 +358,45 @@ const Explore = () => {
           </div>
           {/* </OutsideClickHandler> */}
           </div>
+        </div>
+
+        {/* Sort */}
+        <div className='flex w-fit px-1 items-center relative bg-gray-800 hover:bg-gray-700 rounded-lg cursor-pointer'>
+          <div onClick={()=>{setShowSort(!showSort)}} className='cursor-pointer z-[99999999999] relative p-1 flex  items-center w-full h-full '>
+          <button className="text-white right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
+          {/* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="lightgray" strokeLinecap="round" strokeMiterlimit="10" strokeWidth="1.5" d="M21.25 12H8.895m-4.361 0H2.75m18.5 6.607h-5.748m-4.361 0H2.75m18.5-13.214h-3.105m-4.361 0H2.75m13.214 2.18a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm-9.25 6.607a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm6.607 6.608a2.18 2.18 0 1 0 0-4.361a2.18 2.18 0 0 0 0 4.36Z"/></svg> */}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="lightgray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 14H2m6-4H2m4-4H2m10 12H2m17 2V4m0 16l3-3m-3 3l-3-3m3-13l3 3m-3-3l-3 3"/></svg>
+          </button>
+          </div>
+          {
+            showSort &&
+          <div className=' w-full h-full absolute'>
+            <OutsideClickHandler onOutsideClick={()=>{setShowSort(false);}}>
+              <div className='flex flex-col w-[300px] xs:w-[350px] -right-20 xs:right-0 gap-3 absolute bg-gray-700 top-12 rounded-lg'>
+                <div className='w-full bg-gray-900 p-2 flex gap-3 items-center justify-between'>
+                  <span className='text-gray-400 text-sm uppercase'>Sort options</span>
+                    <div className='flex items-center gap-2'>
+                    <button onClick={()=>handleSelectedSortBy('asc')} className={`${selectedSortItem.sort_by === 'asc' ? 'bg-gray-600' : 'bg-gray-800' } cursor-pointer  px-2 py-1 text-gray-400 rounded text-sm`}>Asc </button>
+                    <button onClick={()=>handleSelectedSortBy('desc')} className={`${selectedSortItem.sort_by === 'desc' ? 'bg-gray-600' : 'bg-gray-800' } cursor-pointer  px-2 py-1 text-gray-400 rounded text-sm`}> Desc</button>
+                    </div>
+                </div>
+                <div className='grid grid-cols-3 w-full p-2 gap-3'>
+                {
+                  sortItems.map((item, index) => {
+                    // const isSelected = selectedStatus.includes(stat)
+                    return (
+                      <div onClick={()=>handleSelectedOrderBy(item.value)} key={index} className={`flex gap-1 z-[999999999] w-full items-center relative ${selectedSortItem.order_by === item.value ? 'bg-gray-900' : 'bg-gray-800'}  hover:bg-gray-900 py-1 px-2 rounded-lg cursor-pointer`}>
+                        <input type='checkbox' checked={selectedSortItem.order_by === item.value} />
+                        <p className='text-gray-400 text-sm md:text-base text-start w-full'>{item.key}</p>
+                      </div>
+                    );
+                  })
+                }
+                </div>
+              </div>
+            </OutsideClickHandler>
+          </div>
+          }
         </div>
 
         {/* Other Filter */}
@@ -460,7 +533,7 @@ const Explore = () => {
         </div>
 
         {/* Search button */}
-        <button onClick={()=>{handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, 1);setShowState('')}} 
+        <button onClick={()=>{handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1);setShowState('')}} 
         className='flex w-fit px-4 md:px-10 lg:w-fit text-center justify-center text-white items-center relative bg-pink-500 hover:bg-pink-400 rounded-lg cursor-pointer'>
           Search
         </button>
