@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import SeasonNowAnimeProvider from '../../providers/SeasonNowAnimeProvider'
+import SeasonNowAnimeProvider from '../../providers_tmp/SeasonNowAnimeProvider'
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import ReactPlayer from 'react-player';
