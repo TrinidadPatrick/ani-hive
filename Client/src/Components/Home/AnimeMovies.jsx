@@ -104,7 +104,7 @@ const AnimeMovies = () => {
     {AnimeMovies?.length > 0 &&
       AnimeMovies.map((anime, index, array) =>
       {
-        const year = anime.aired.from.split('-')[0]
+        const year = anime.aired.from ? anime.aired.from.split('-')[0] : '-----'
         if(array[index - 1]?.mal_id != anime?.mal_id){
           return (
             <SwiperSlide
