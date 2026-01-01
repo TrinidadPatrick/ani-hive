@@ -11,10 +11,12 @@ import 'video.js/dist/video-js.css';
 import VideoJS from './Video';
 import Youtube from 'react-youtube'
 import NoTrailerAvailable from '../../components/NoTrailerAvailable.jsx';
+import useSmallScreen from '../../utils/useSmallScreen.js';
 
 const AnimeOverView = () => {
     const playerRef = useRef(null);
     const videoRef = useRef(null);
+    const isSmallScreen = useSmallScreen()
 
     const reactionEmojis = ["📊", "👍", "❤️", "😂", "🤔", "📘", "✍️", "🎨"];
     const {id} = useParams()
@@ -345,29 +347,60 @@ const AnimeOverView = () => {
         }
     }
 
+    console.log(isSmallScreen)
+
     const TrailerPlayer = useCallback(()=>{
         return (
-            <main onClick={()=>setShowTrailer(false)} className='fixed w-[100svw] cursor-pointer h-[100svh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
+            <main className='fixed w-[100svw] cursor-pointer h-[100dvh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
+                
                 {
                     !animeInfo?.trailer.youtube_id && !animeInfo?.trailer?.embed_url ? (
+                        <>
+                        <button onClick={()=>setShowTrailer(false)} className='absolute text-white top-20 right-5 z-[99999999999999999]'>Close</button>
                         <NoTrailerAvailable />
+                        </>
                     )
                     :
-                    <div className=' w-[95vw] md:h-[90vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-white'>
-                        <ReactPlayer
-                                url={animeInfo?.trailer.youtube_id ? `https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720` : animeInfo?.trailer?.embed_url}
-                                width="100%"
-                                height="100%"
-                                playing={false}
-                                muted={false}
-                                loop={true}
-                                controls={false}
-                        />
-                </div>
+                    (
+                    <>
+                        {
+                            isSmallScreen ? 
+                            (
+                                <div className='flex flex-col justify-center w-[100vw] h-[100vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-black'>
+                                <button onClick={()=>setShowTrailer(false)} className='absolute text-white top-10 right-5 z-[99999999999999999]'>Close</button>
+                                <ReactPlayer
+                                            url={animeInfo?.trailer.youtube_id ? `https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720` : animeInfo?.trailer?.embed_url}
+                                            width="100%"
+                                            // height="100%"
+                                            playing={true}
+                                            muted={false}
+                                            loop={true}
+                                            controls={false}
+                                    />
+                                </div>
+                            )
+                            :
+                            (
+                                <div className=' flex items-center justify-center w-[100vw] md:h-[100vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-black'>
+                                    <button onClick={()=>setShowTrailer(false)} className='absolute text-white top-5 right-7 cursor-pointer z-[99999999999999999]'>Close</button>
+                                    <ReactPlayer
+                                            url={animeInfo?.trailer.youtube_id ? `https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720` : animeInfo?.trailer?.embed_url}
+                                            width="90%"
+                                            height="90%"
+                                            playing={false}
+                                            muted={false}
+                                            loop={true}
+                                            controls={false}
+                                    />
+                                </div>
+                            )
+                        }
+                    </>
+                    )
                 }
             </main>
             )
-    }, [animeInfo])
+    }, [animeInfo, isSmallScreen])
 
     const handleSelectEp = async (id, ep) => {
         try {
@@ -449,8 +482,6 @@ const AnimeOverView = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [])
-
-    console.log(animeInfo)
 
   return (
   <main className='w-full grid grid-cols-13 h-fit bg-[#141414] relative overflow-x-hidden'>
@@ -646,11 +677,11 @@ const AnimeOverView = () => {
                 }}
                 breakpoints={{
                 0: {
-                    slidesPerView: 3,
+                    slidesPerView: 2,
                     slidesPerGroup: 3,
                 },
                 481: {
-                    slidesPerView: 4,
+                    slidesPerView: 3,
                     slidesPerGroup: 4,
                 },
                 630: {
@@ -679,8 +710,9 @@ const AnimeOverView = () => {
                     <div className='relative'>
                     <SwiperSlide
                     key={index}
-                    onMouseEnter={()=>{setTimeout(()=>{setHovered(index)}, 150)}}
-                    onMouseLeave={()=>{setTimeout(()=>{setHovered(-1)}, 150)}}
+                    onMouseEnter={()=>{!isSmallScreen && setTimeout(()=>{setHovered(index)}, 150)}}
+                    onMouseLeave={()=>{!isSmallScreen && setTimeout(()=>{setHovered(-1)}, 150)}}
+                    onClick={()=>{isSmallScreen && setTimeout(()=>{hovered === index ? setHovered(-1) : setHovered(index)}, 150)}}
                     style={{ width: '195px', height: 'auto' }} // or use fixed or dynamic width based on screen
                     className={`sm:peer-hover:rotate-y-180 transform duration-300 ease-in-out delay-75 h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer`}
                     >
@@ -700,14 +732,23 @@ const AnimeOverView = () => {
                         </div>
 
                         {/* Info */}
-                        <div className={`${hovered == index ? 'sm:rotate-y-180' : ''} w-full absolute px-1 md:px-3 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[30%] xs:h-[25%] md:h-[25%] rounded-b-lg flex`}>
+                        <div className={`${hovered == index ? 'sm:rotate-y-180' : ''} w-full absolute px-1 md:px-3 py-1 bottom-0 bg-transparent backdrop-blur-xl rounded-b-lg flex`}>
                         <div className="flex flex-col items-start w-full h-full justify-around">
-                            <h2 className="text-white text-sm md:text-base w-full line-clamp-1">
-                            {char?.character?.name}
-                            </h2>
-                            <h2 className="text-gray-300 text-xs md:text-sm line-clamp-1">
-                            {char?.voice_actors[0]?.person?.name}
-                            </h2>
+                            {
+                                hovered == index ?
+                                (
+                                    <h2 className="text-gray-300 text-xs md:text-sm line-clamp-1">
+                                    {char?.voice_actors[0]?.person?.name}
+                                    </h2>
+                                )
+                                :
+                                (
+                                    <h2 className="text-white text-sm md:text-base w-full line-clamp-1">
+                                    {char?.character?.name}
+                                    </h2>
+                                )
+
+                            }
                         </div>
                         </div>
                     </div>
