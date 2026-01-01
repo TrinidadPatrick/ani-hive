@@ -9,7 +9,7 @@ import AnimeMovies from './AnimeMovies'
 import AiringToday from './AiringToday'
 import OngoingAnime from './OngoingAnime'
 import Footer from './Footer'
-import chibi from '../../Images/chibi.gif'
+import chibi from '../../images/chibi.gif'
 import TopAnimeProvider from '../../providers/TopAnimeProvider.js'
 
 
