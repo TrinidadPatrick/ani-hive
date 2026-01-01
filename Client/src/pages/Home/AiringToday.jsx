@@ -5,88 +5,30 @@ import ProgressBar from "@ramonak/react-progress-bar";
 import { useNavigate } from 'react-router';
 
 const AiringToday = () => {
+  const [hovered, setHovered] = useState(false);
   const AnimeMovies = AnimeMoviesStore((state) => state.AnimeMovies)
+  const today = new Date().toLocaleString('en-US', { weekday: 'long' })
   const [airingToday, setAiringToday] = useState(null)
   const navigate = useNavigate()
   
   const getAiringToday = async (page, retries = 10) => {
-    const now = new Date();
-    const startOfDay = Math.floor(new Date(now.setHours(0, 0, 0, 0)).getTime() / 1000);
-    const endOfDay = Math.floor(new Date(now.setHours(23, 59, 59, 999)).getTime() / 1000);
-    const query = `
-    query ($start: Int, $end: Int) {
-      Page(perPage: 50) {
-        airingSchedules(airingAt_greater: $start, airingAt_lesser: $end) {
-          airingAt
-          episode
-          media {
-            isAdult
-            title {
-              romaji
-              english
-              native
-            }
-            coverImage {
-              large
-              medium
-            }
-            siteUrl
-            genres
-            description(asHtml: false)
-            startDate {
-              year
-              month
-              day
-            }
-            endDate {
-              year
-              month
-              day
-            }
-            status
-            format
-            episodes
-          }
-        }
-      }
-    }
     
-    `;
-
     try {
-      const response = await axios.post('https://graphql.anilist.co', {
-        query,
-        variables: {
-          start: startOfDay,
-          end: endOfDay
+        const result = await axios.get(`https://api.jikan.moe/v4/schedules?filter=${today}&limit=20&sfw=true`)
+        if(result.status === 200) {
+            console.log(result.data.data)
+            const animes = result.data.data.filter((obj, index, self) => index === self.findIndex((t) => t.mal_id === obj.mal_id))
+            setAiringToday(animes)
         }
-      });
-    
-      setAiringToday(response.data.data.Page.airingSchedules);
     } catch (error) {
-      console.log(error)
-      if(retries > 0)
-      {
-        setTimeout(()=>{
-          getAiringToday(1, retries - 1)
-        }, 1000)
-      }
+        console.log(error)
+        if(retries > 0)
+        {
+            setTimeout(()=>{
+                getAiringToday(1, retries - 1)
+            }, 1000)
+        }
     }
-    // try {
-    //     const result = await axios.get(`https://api.jikan.moe/v4/schedules/${weekday}`)
-    //     if(result.status === 200) {
-    //         const animes = result.data.data
-    //         setAiringToday(animes)
-    //     }
-    // } catch (error) {
-    //     console.log(error)
-    //     if(retries > 0)
-    //     {
-    //         setTimeout(()=>{
-    //             getAiringToday(1, retries - 1)
-    //         }, 1000)
-    //     }
-    // }
   }
 
   useEffect(() => {
@@ -128,48 +70,51 @@ const AiringToday = () => {
                 <p className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes currently or will be airing today</p>
             </div>
         </div>
-        <div className='w-[90%] h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5 lg:gap-10 '>
+        <div className='w-[90%] h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 lg:gap-10 '>
             {airingToday?.length > 0 &&
-                airingToday.filter((anim) => anim.media.isAdult === false).map((anime, index, array) =>
+                airingToday?.map((anime, index, array) =>
                 {
-
-                    const startDate = `${anime.media.startDate.year}-${Number(anime.media.startDate.month) < 10 ? '0' : ''}${anime.media.startDate.month}-${Number(anime.media.startDate.day) < 10 ? '0' : ''}${anime.media.startDate.day}`
-                    const endDate = anime.media.endDate.year != null ? `${anime.media.endDate.year}-${Number(anime.media.endDate.month) < 10 ? '0' : ''}${anime.media.endDate.month}-${Number(anime.media.endDate.day) < 10 ? '0' : ''}${anime.media.endDate.day}` : '????-??-??'
                     if(1 == 1){
                         return (
-                            <div onClick={()=>{navigate(`/anime/11111?name=${anime?.media?.title?.romaji}`)}} className='flex cursor-pointer' key={index}>
-
-                            <div className="w-[200px] h-[100px] lg:w-full lg:h-full lg:aspect-video bg-gray-900 relative overflow-hidden flex items-center justify-center">
-                            {/* Image */}
-                            <img
-                                src={anime?.media?.coverImage.large}
-                                alt={anime?.media?.title?.english || anime?.media?.title?.native}
-                                className="absolute aspect-video w-full rounded-lg h-full object-cover brightness-80 opacity-70"
+                          <div 
+                          key={index}
+                          className="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                          onMouseEnter={() => setHovered(index)}
+                          onMouseLeave={() => setHovered(-1)}
+                        >
+                          <div className="aspect-[4/3] overflow-hidden">
+                            <img 
+                              src={anime?.images?.jpg?.large_image_url} 
+                              alt={anime?.title_english || anime?.title}
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             />
-                            </div>
-
-                            {/* Info */}
-                            <div className='h-full w-full px-2 py-1 flex flex-col justify-between'>
-                                <div>
-                                {/* Title */}
-                                <p className="text-white text-sm lg:text-[0.9rem] xl:text-base w-full line-clamp-2">
-                                    {anime?.media?.title?.english || anime?.media?.title?.native?.replace(/;/g, ' ') || anime?.media?.title?.english || anime?.media?.title?.native?.replace(/;/g, ' ')}
-                                </p>
-                                {/* Year */}
-                                <h2 className="text-gray-300 text-[0.75rem] md:text-[0.8rem]">
-                                    {startDate} - {endDate}
-                                    {/* {anime?.year || 'N/A'} {anime?.genres[0]?.name} */}
-                                </h2>
-                                </div>
-
-                                {/* Progress */}
-                                <div className='flex flex-col'>
-                                    <p className='text-white text-xs'>{anime.episode}/{anime.media.episodes || anime.episode}</p>
-                                    <progress value={anime.episode} max={anime.media.episodes || anime.episode} className='progress text-white' />
-                                </div>
+                            <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-300 ${hovered === index ? 'opacity-100' : 'opacity-70'}`} />
+                          </div>
+                          
+                          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                            <div className={`transition-all duration-300 ${hovered === index ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-90'}`}>
+                              <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-cyan-400 transition-colors">
+                                {anime?.title_english || anime?.title}
+                              </h3>
+                              <div className="flex items-center gap-2 text-sm text-gray-300">
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                                </svg>
+                                <span>{anime?.aired?.string || 'TBA'}</span>
+                              </div>
                             </div>
                             
-                            </div>
+                            {hovered === index && (
+                              <button onClick={()=>navigate(`/anime/${anime?.mal_id}`)} className="cursor-pointer mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105">
+                                View Details
+                              </button>
+                            )}
+                          </div>
+                          
+                          <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-white">
+                            {anime?.score || 'TBD'}
+                          </div>
+                        </div>
                         )
                     }
                 })}
