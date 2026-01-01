@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import topAnimeStore from '../../stores/topAnimeStore'
-import TopAnimeProvider from '../../providers_tmp/TopAnimeProvider'
+import TopAnimeProvider from '../../providers/TopAnimeProvider'
 import image_1 from '../../images/image_2.jpeg'
 import { useNavigate } from 'react-router'
 import ReactPlayer from 'react-player'
