@@ -102,7 +102,7 @@ const TopAnimes = ({topAnimes}) => {
           },
         }}
         className="w-[95%] md:w-[90%] mx-auto "
-      >
+        >
         {topAnimes?.data?.length > 0 &&
           topAnimes.data.map((anime, index, array) =>
           {
