@@ -185,7 +185,7 @@ const AnimeOverView = () => {
         return null;
     }
     };     
-
+    
     const getAnimeRelations = async (mal_id, retries = 10) => {
         try {
             const result = await axios.get(`https://api.jikan.moe/v4/anime/${mal_id}/relations?type=anime`)
@@ -196,16 +196,23 @@ const AnimeOverView = () => {
                 }))
               );
             const animes = flattened.filter((anime) => anime.type === 'anime')
+            if(animes?.length === 0){
+                setAnimeRelations([])
+            }
             for(const anime of animes){
                 const info = await getAnimeInfo(anime.mal_id, 2)
                 info.type = anime.type
-                setAnimeRelations(prev => {
+                if(animeRelations === null){
+                    setAnimeRelations([info]);
+                }else{
+                    setAnimeRelations(prev => {
                     const isExist = prev?.findIndex(item => item.mal_id === info.mal_id) || -1;
                     if (isExist === -1) {
                       return prev ?[...prev, info] : [info]; // create new array (immutable update)
                     }
                     return prev; // no change
                   });
+                }
                 await new Promise(resolve => setTimeout(resolve, 550));
             }
 

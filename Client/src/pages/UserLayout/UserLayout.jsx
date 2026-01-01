@@ -110,9 +110,9 @@ const UserLayout = () => {
             </ul>
 
             {/* Search input */}
-            <div className={`${window.location.pathname === '/explore' && 'hidden'} hidden w-full sm:flex justify-end`}>
-              <div className="w-full max-w-sm min-w-[200px]">
-              <div className="relative">
+            <div className={`hidden w-full justify-end sm:flex `}>
+              <div className={`w-full ${window.location.pathname === '/explore' ? 'hidden' : 'sm:flex' } max-w-sm min-w-[200px]`}>
+              <div className="relative w-full">
                 <input
                   onKeyDown={(e) => {if(e.key === "Enter" && searchinput?.length !== 0) {navigate(`/explore?page=1&q=${searchinput}`);setSearchInput('')}}}
                   value={searchinput}
