@@ -8,6 +8,7 @@ const UserLayout = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const path = location.pathname
+  const [searchinput, setSearchInput] = useState('')
   const [showSidebar, setShowSidebar] = useState(false)
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   
@@ -26,8 +27,6 @@ const UserLayout = () => {
     // Cleanup event listener on unmount
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-
   return (
     <>
     {/* sidebar */}
@@ -63,11 +62,39 @@ const UserLayout = () => {
     </div>
     }
     <nav className='w-full fixed backdrop-blur z-99999 p-4 flex justify-between items-center gap-5'>
-            <div onClick={()=>navigate('/')} className='flex ps-5 cursor-pointer'>
+            {/* Logo */}
+            <div onClick={()=>navigate('/')} className='w-full flex ps-5 cursor-pointer'>
             <h1 className='text-white text-center text-4xl font-bold'>Ani</h1>
             <h1 className='text-pink-500 text-center text-4xl font-bold'>Hive</h1>
             </div>
+
+            {/* Search input */}
+            <div className={`${window.location.pathname === '/explore' && 'hidden'} w-full flex justify-center`}>
+              <div className="w-full max-w-sm min-w-[200px]">
+              <div className="relative">
+                <input
+                  onKeyDown={(e) => {if(e.key === "Enter") {navigate(`/explore?page=1&q=${searchinput}`);setSearchInput('')}}}
+                  value={searchinput}
+                  onChange={(e)=> setSearchInput(e.target.value)}
+                  className="w-full bg-transparent placeholder:text-slate-400 text-gray-200 text-sm border border-slate-800 rounded-md pl-3 pr-28 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                  placeholder="Search anime" 
+                />
+                <button
+                  onClick={()=>{navigate(`http://localhost:5173/explore?page=1&q=${searchinput}`);setSearchInput('')}}
+                  className="absolute top-1 right-1 flex items-center rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                  type="button"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-2">
+                    <path fillRule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clipRule="evenodd" />
+                  </svg>
             
+                  Search
+                </button> 
+              </div>
+            </div>
+            </div>
+            
+            {/* Nav links */}
             <ul className='w-full hidden md:flex text-white justify-end gap-10 pe-10'>
                 <li>
                     <button onClick={()=>{navigate('/')}} className={` ${path === '/' || path.startsWith('/anime/') ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Home</button>

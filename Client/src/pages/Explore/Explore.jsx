@@ -181,7 +181,6 @@ const Explore = () => {
     
     try {
       const result = await axios.get(url)
-      console.log(result.data.data)
       setAnimeList(result.data.data)
       setPageInfo(result.data.pagination)
       setPage(result.data.pagination.current_page)
@@ -189,6 +188,7 @@ const Explore = () => {
         top: 0,
         behavior: 'smooth'
       });
+      setSearching(false)
     } catch (error) {
       console.log(error)
       if(retries > 0)
@@ -197,8 +197,6 @@ const Explore = () => {
           handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedOrderBy, selectedSortBy, 1, retries - 1)
         }, 1000)
       }
-    } finally{
-      setSearching(false)
     }
   }
 
@@ -263,7 +261,6 @@ const Explore = () => {
       setPageList(pageLists);
     }
   }, [pageInfo, screenWidth])
-
   return (
     <main onClick={()=>setShowState(false)} className='w-full h-[100dvh] bg-[#141414] flex flex-col gap-5 items-center pt-20'>
       <div className='flex flex-col items-start gap-0  w-[95%] lg:w-[90%] mx-auto'>
@@ -365,7 +362,7 @@ const Explore = () => {
           <div onClick={()=>{setShowSort(!showSort)}} className='cursor-pointer z-[99999999999] relative p-1 flex  items-center w-full h-full '>
           <button className="text-white right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
           {/* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="lightgray" strokeLinecap="round" strokeMiterlimit="10" strokeWidth="1.5" d="M21.25 12H8.895m-4.361 0H2.75m18.5 6.607h-5.748m-4.361 0H2.75m18.5-13.214h-3.105m-4.361 0H2.75m13.214 2.18a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm-9.25 6.607a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm6.607 6.608a2.18 2.18 0 1 0 0-4.361a2.18 2.18 0 0 0 0 4.36Z"/></svg> */}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="lightgray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 14H2m6-4H2m4-4H2m10 12H2m17 2V4m0 16l3-3m-3 3l-3-3m3-13l3 3m-3-3l-3 3"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="lightgray" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10 14H2m6-4H2m4-4H2m10 12H2m17 2V4m0 16l3-3m-3 3l-3-3m3-13l3 3m-3-3l-3 3"/></svg>
           </button>
           </div>
           {

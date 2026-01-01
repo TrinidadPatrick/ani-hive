@@ -120,7 +120,6 @@ const Schedule = () => {
   const getAiringAnime = async (day, retries = 10) => {
     try {
       const response = await axios.get(`https://api.jikan.moe/v4/schedules?filter=${day}&limit=20&sfw=true`)
-      console.log(response.data.data)
       const uniqueAnimes = response.data.data.filter((obj, index, self) => index === self.findIndex((t) => t.mal_id === obj.mal_id))
       setAnimeList(uniqueAnimes)
     } catch (error) {

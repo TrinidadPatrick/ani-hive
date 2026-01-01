@@ -16,7 +16,6 @@ const AiringToday = () => {
     try {
         const result = await axios.get(`https://api.jikan.moe/v4/schedules?filter=${today}&limit=20&sfw=true`)
         if(result.status === 200) {
-            console.log(result.data.data)
             const animes = result.data.data.filter((obj, index, self) => index === self.findIndex((t) => t.mal_id === obj.mal_id))
             setAiringToday(animes)
         }
