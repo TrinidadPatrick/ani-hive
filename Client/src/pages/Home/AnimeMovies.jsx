@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import AnimeMoviesProvider from '../../providers_tmp/AnimeMoviesProvider'
+import AnimeMoviesProvider from '../../providers/AnimeMoviesProvider'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/free-mode';
