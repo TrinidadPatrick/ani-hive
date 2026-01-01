@@ -6,11 +6,11 @@ import AnimeRecommendation from './AnimeRecommendation'
 import SeasonNowAnime from './SeasonNowAnime'
 import UpcomingAnime from './UpcomingAnime'
 import AnimeMovies from './AnimeMovies'
-import TopAnimeProvider from '../../providers/TopAnimeProvider'
 import AiringToday from './AiringToday'
 import OngoingAnime from './OngoingAnime'
 import Footer from './Footer'
 import chibi from '../../Images/chibi.gif'
+import TopAnimeProvider from '../../providers/TopAnimeProvider.js'
 
 
 const Home = () => {

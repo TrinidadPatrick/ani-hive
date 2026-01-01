@@ -10,6 +10,7 @@ import ReactPlayer from 'react-player';
 import 'video.js/dist/video-js.css';
 import VideoJS from './Video';
 import Youtube from 'react-youtube'
+import NoTrailerAvailable from '../../components/NoTrailerAvailable.jsx';
 
 const AnimeOverView = () => {
     const playerRef = useRef(null);
@@ -347,18 +348,23 @@ const AnimeOverView = () => {
     const TrailerPlayer = useCallback(()=>{
         return (
             <main onClick={()=>setShowTrailer(false)} className='fixed w-[100svw] cursor-pointer h-[100svh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
-                <div className=' w-[95vw] md:h-[90vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-white'>
-                <ReactPlayer
-                          url={animeInfo?.trailer.youtube_id ? `https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720` : animeInfo?.trailer?.embed_url}
-                          width="100%"
-                          height="100%"
-                          playing={false}
-                          muted={false}
-                          loop={true}
-                          controls={false}
-                          // className="absolute top-0 left-0"
-                          />
+                {
+                    !animeInfo?.trailer.youtube_id && !animeInfo?.trailer?.embed_url ? (
+                        <NoTrailerAvailable />
+                    )
+                    :
+                    <div className=' w-[95vw] md:h-[90vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-white'>
+                        <ReactPlayer
+                                url={animeInfo?.trailer.youtube_id ? `https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720` : animeInfo?.trailer?.embed_url}
+                                width="100%"
+                                height="100%"
+                                playing={false}
+                                muted={false}
+                                loop={true}
+                                controls={false}
+                        />
                 </div>
+                }
             </main>
             )
     }, [animeInfo])
