@@ -408,127 +408,132 @@ const Explore = () => {
           {
             showOtherFilter &&
             <div className=' w-full h-full absolute'>
-          <OutsideClickHandler onOutsideClick={()=>{setShowOtherFilter(false);['status_v2','genre_v2','theme_v2', 'Season', 'Year', 'Type'].includes(showState) ? setShowState('') : ''}}>
-          <div className='w-[300px] xs:w-[350px] -right-20 xs:right-0 gap-3 absolute bg-gray-700 grid grid-cols-3 top-12 p-2 rounded-lg'>
-            {
-              otherFilters.map((filter, index) => {
-                // const isSelected = selectedStatus.includes(stat)
-                return (
-                  <div key={index} onClick={()=>{setShowState(filter.name == showState ? '' : filter.name)}} className='flex z-[999999999] w-full items-center relative bg-gray-800 hover:bg-gray-900 py-1 px-2 rounded-lg cursor-pointer'>
-                    <p className='text-gray-400 text-sm md:text-base text-start w-full'>{filter.name}</p>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
-                    {
-                      showState === filter.name &&
-                      <div id={filter.name} ref={(rel) => {otherRefs.current[index] = rel}} className=' w-full h-full absolute z-[99999999999999999999999999999] '>
-                      {/* <OtherFilterDropDown_V2 name={filter.name} options={filter.options} /> */}
-                      <div  className='otherFilter z-[9999999999999999999999999999999] w-full max-h-[300px] overflow-auto gap-3 -left-2 absolute bg-gray-800 grid grid-cols-1 top-8 md:top-9 p-2 rounded-lg'>
+              <OutsideClickHandler onOutsideClick={()=>{setShowOtherFilter(false);['status_v2','genre_v2','theme_v2', 'Season', 'Year', 'Type'].includes(showState) ? setShowState('') : ''}}>
+              <div className='w-[300px] xs:w-[350px] -right-20 xs:right-0 gap-3 absolute bg-gray-700 grid grid-cols-3 top-12 p-2 rounded-lg'>
+                {
+                  otherFilters.map((filter, index) => {
+                    // const isSelected = selectedStatus.includes(stat)
+                    return (
+                      <div key={index} onClick={()=>{setShowState(filter.name == showState ? '' : filter.name)}} className='flex z-[999999999] w-full items-center relative bg-gray-800 hover:bg-gray-900 py-1 px-2 rounded-lg cursor-pointer'>
+                        <p className='text-gray-400 text-sm md:text-base text-start w-full'>{filter.name}</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
                         {
-                        filter.options?.map((option, index) => {
-                          const isSelected = filter.name === 'Season' ? selectedSeason == option : filter.name === 'Year' ? selectedYear == option : selectedType == option
-                          // filter.name == 'Season' && console.log( selectedSeason.includes(option), option)
+                          showState === filter.name &&
+                          <div id={filter.name} ref={(rel) => {otherRefs.current[index] = rel}} className=' w-full h-full absolute z-[99999999999999999999999999999] '>
+                          {/* <OtherFilterDropDown_V2 name={filter.name} options={filter.options} /> */}
+                          <div  className='otherFilter z-[9999999999999999999999999999999] w-full max-h-[300px] overflow-auto gap-3 -left-2 absolute bg-gray-800 grid grid-cols-1 top-8 md:top-9 p-2 rounded-lg'>
+                            {
+                            filter.options?.map((option, index) => {
+                              const isSelected = filter.name === 'Season' ? selectedSeason == option : filter.name === 'Year' ? selectedYear == option : selectedType == option
+                              // filter.name == 'Season' && console.log( selectedSeason.includes(option), option)
+                              return (
+                                <button disabled={filter.name === 'Season' && selectedYear == ''} onClick={(e)=>{filter.name === 'Season' ? handleSelectSeason(option) : filter.name === 'Year' ? handleSelectYear(option) : handleSelectType(option); e.stopPropagation()}} key={index} className="text-white text-start text-[0.8rem] cursor-pointer justify-start flex items-center gap-3 hover:text-gray-200">
+                                  <input disabled={filter.name === 'Season' && selectedYear == ''} type="checkbox" onChange={()=>{}} checked={isSelected} value={option} className='border-0 cursor-pointer'  name="status" id="" />
+                                  {option}
+                                </button>
+                              );
+                            })
+                            }
+                            {filter.name == 'Season' && selectedYear == '' && <p className='text-red-500 text-[0.65rem] sm:text-xs'>Select a year first</p>}
+                          </div>
+                        </div>
+                        }
+                      </div>
+                    );
+                  })
+                  
+                }
+                {/* Genre */}
+              <div className='flex sm:hidden w-full items-center relative  rounded-lg '>
+                <button onClick={()=>{showState === 'genre_v2' ? setShowState( '') : setShowState('genre_v2')}} className='cursor-pointer z-[99999] rounded-lg relative p-1 flex bg-gray-800 hover:bg-gray-900 items-center w-full h-full '>
+                  <p className='ps-1 text-gray-400 text-sm md:text-base '>Genre</p>
+                  <div className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
+                  </div>
+                </button>
+                {
+                  showState === 'genre_v2' &&
+                  <div className={` w-[290px] bg-transparent  h-full absolute`}>
+                  {/* <OutsideClickHandler onOutsideClick={showState === 'genre_v2' ? ()=>{setShowState('')} : ()=>{}}> */}
+                    <div className='w-full md:w-[500px] overflow-auto lg:w-[500px] max-h-[400px] gap-3 absolute bg-gray-800 grid grid-cols-2 md:grid-cols-4 left-0 top-8 p-2 rounded-lg'>
+                      {
+                        genres.slice(0,18).map((genre, index) => {
+                          const isSelected = selectedGenres.includes(genre?.mal_id)
                           return (
-                            <button disabled={filter.name === 'Season' && selectedYear == ''} onClick={(e)=>{filter.name === 'Season' ? handleSelectSeason(option) : filter.name === 'Year' ? handleSelectYear(option) : handleSelectType(option); e.stopPropagation()}} key={index} className="text-white text-start text-[0.8rem] cursor-pointer justify-start flex items-center gap-3 hover:text-gray-200">
-                              <input disabled={filter.name === 'Season' && selectedYear == ''} type="checkbox" onChange={()=>{}} checked={isSelected} value={option} className='border-0 cursor-pointer'  name="status" id="" />
-                              {option}
+                            <button onClick={()=>{handleSelectGenre(genre)}} key={index} className="text-white text-start text-[0.8rem] cursor-pointer justify-start flex items-center gap-3 hover:text-gray-200">
+                              <input type="checkbox" onChange={()=>{}} className='border-0 cursor-pointer' checked={isSelected} name="genre" id="" />
+                              {genre?.name}
                             </button>
                           );
                         })
-                        }
-                        {filter.name == 'Season' && selectedYear == '' && <p className='text-red-500 text-[0.65rem] sm:text-xs'>Select a year first</p>}
-                      </div>
+                      }
                     </div>
-                    }
-                  </div>
-                );
-              })
-            }
-            {/* Genre */}
-          <div className='flex sm:hidden w-full items-center relative  rounded-lg '>
-            <button onClick={()=>{showState === 'genre_v2' ? setShowState( '') : setShowState('genre_v2')}} className='cursor-pointer z-[99999] rounded-lg relative p-1 flex bg-gray-800 hover:bg-gray-900 items-center w-full h-full '>
-              <p className='ps-1 text-gray-400 text-sm md:text-base '>Genre</p>
-              <div className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
-              </div>
-            </button>
-            {
-              showState === 'genre_v2' &&
-              <div className={` w-[290px] bg-transparent  h-full absolute`}>
-              {/* <OutsideClickHandler onOutsideClick={showState === 'genre_v2' ? ()=>{setShowState('')} : ()=>{}}> */}
-                <div className='w-full md:w-[500px] overflow-auto lg:w-[500px] max-h-[400px] gap-3 absolute bg-gray-800 grid grid-cols-2 md:grid-cols-4 left-0 top-8 p-2 rounded-lg'>
-                  {
-                    genres.slice(0,18).map((genre, index) => {
-                      const isSelected = selectedGenres.includes(genre?.mal_id)
-                      return (
-                        <button onClick={()=>{handleSelectGenre(genre)}} key={index} className="text-white text-start text-[0.8rem] cursor-pointer justify-start flex items-center gap-3 hover:text-gray-200">
-                          <input type="checkbox" onChange={()=>{}} className='border-0 cursor-pointer' checked={isSelected} name="genre" id="" />
-                          {genre?.name}
-                        </button>
-                      );
-                    })
-                  }
+                  {/* </OutsideClickHandler> */}
                 </div>
-              {/* </OutsideClickHandler> */}
-            </div>
-            }
-          </div>
-          {/* Theme */}
-          <div className='flex md:hidden w-full items-center relative bg-gray-800 hover:bg-gray-900 rounded-lg cursor-pointer'>
-            <button onClick={()=>{setShowState(showState === 'theme_v2' ? '' : 'theme_v2')}} className='cursor-pointer relative p-1 flex z-[9999] items-center w-full h-full '>
-              <p className='ps-1 text-gray-400 text-sm md:text-base '>Theme</p>
-              <div className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
-              </div>
-            </button>
-            {
-              showState === 'theme_v2' &&
-              <div className={`w-[290px] h-full absolute`}>
-                <div className='w-full md:w-[500px] overflow-auto lg:w-[500px] max-h-[300px] gap-3 absolute bg-gray-800 grid grid-cols-2 md:grid-cols-3 -left-24 lg:left-0 top-8 p-2 rounded-lg'>
-                {
-                  themes.map((genre, index) => {
-                    const isSelected = selectedGenres.includes(genre?.mal_id)
-                    return (
-                      <button onClick={()=>{handleSelectGenre(genre)}} key={index} className="text-white text-start text-[0.8rem] cursor-pointer justify-start flex items-center gap-3 hover:text-gray-200">
-                        <input onChange={()=>{}} value={genre.mal_id} type="checkbox" className='border-0 cursor-pointer' checked={isSelected} name="genre" id="" />
-                        {genre?.name}
-                      </button>
-                    );
-                  })
                 }
-                </div>
-            </div>
-            }
-          </div>
-          {/* Status */}
-          <div className='w-full flex lg:hidden items-center relative bg-gray-800 hover:bg-gray-900 rounded-lg cursor-pointer'>
-            <button onClick={()=>{setShowState(showState === 'status_v2' ? '' : 'status_v2')}} className='cursor-pointer relative p-1 flex z-[99999] items-center w-full h-full '>
-              <p className='ps-1 text-gray-400 text-sm md:text-base '>{selectedStatus == '' ? 'Status' : selectedStatus}</p>
-              <div className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
               </div>
-            </button>
-            {
-              showState === 'status_v2' &&
-              <div className={` w-[100px] h-full absolute`}>
-                <div className='w-full left-0 gap-3 absolute bg-gray-800 grid grid-cols-1 top-8 md:top-9 p-2 rounded-lg'>
-                  {
-                    status.map((stat, index) => {
-                      const isSelected = selectedStatus.toLowerCase() == stat.toLowerCase()
-                      return (
-                        <button onClick={()=>{handleSelectStatus(stat)}} key={index} className="text-white text-start text-[0.8rem] cursor-pointer justify-start flex items-center gap-3 hover:text-gray-200">
-                          <input type="checkbox" onChange={()=>{}} value={stat} className='border-0 cursor-pointer' checked={isSelected} name="status" id="" />
-                          {stat}
-                        </button>
-                      );
-                    })
-                  }
+              {/* Theme */}
+              <div className='flex md:hidden w-full items-center relative bg-gray-800 hover:bg-gray-900 rounded-lg cursor-pointer'>
+                <button onClick={()=>{setShowState(showState === 'theme_v2' ? '' : 'theme_v2')}} className='cursor-pointer relative p-1 flex z-[9999] items-center w-full h-full '>
+                  <p className='ps-1 text-gray-400 text-sm md:text-base '>Theme</p>
+                  <div className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
+                  </div>
+                </button>
+                {
+                  showState === 'theme_v2' &&
+                  <div className={`w-[290px] h-full absolute`}>
+                    <div className='w-full md:w-[500px] overflow-auto lg:w-[500px] max-h-[300px] gap-3 absolute bg-gray-800 grid grid-cols-2 md:grid-cols-3 -left-24 lg:left-0 top-8 p-2 rounded-lg'>
+                    {
+                      themes.map((genre, index) => {
+                        const isSelected = selectedGenres.includes(genre?.mal_id)
+                        return (
+                          <button onClick={()=>{handleSelectGenre(genre)}} key={index} className="text-white text-start text-[0.8rem] cursor-pointer justify-start flex items-center gap-3 hover:text-gray-200">
+                            <input onChange={()=>{}} value={genre.mal_id} type="checkbox" className='border-0 cursor-pointer' checked={isSelected} name="genre" id="" />
+                            {genre?.name}
+                          </button>
+                        );
+                      })
+                    }
+                    </div>
                 </div>
+                }
+              </div>
+              {/* Status */}
+              <div className='w-full flex lg:hidden items-center relative bg-gray-800 hover:bg-gray-900 rounded-lg cursor-pointer'>
+                <button onClick={()=>{setShowState(showState === 'status_v2' ? '' : 'status_v2')}} className='cursor-pointer relative p-1 flex z-[99999] items-center w-full h-full '>
+                  <p className='ps-1 text-gray-400 text-sm md:text-base '>{selectedStatus == '' ? 'Status' : selectedStatus}</p>
+                  <div className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
+                  </div>
+                </button>
+                {
+                  showState === 'status_v2' &&
+                  <div className={` w-[100px] h-full absolute`}>
+                    <div className='w-full left-0 gap-3 absolute bg-gray-800 grid grid-cols-1 top-8 md:top-9 p-2 rounded-lg'>
+                      {
+                        status.map((stat, index) => {
+                          const isSelected = selectedStatus.toLowerCase() == stat.toLowerCase()
+                          return (
+                            <button onClick={()=>{handleSelectStatus(stat)}} key={index} className="text-white text-start text-[0.8rem] cursor-pointer justify-start flex items-center gap-3 hover:text-gray-200">
+                              <input type="checkbox" onChange={()=>{}} value={stat} className='border-0 cursor-pointer' checked={isSelected} name="status" id="" />
+                              {stat}
+                            </button>
+                          );
+                        })
+                      }
+                    </div>
+                </div>
+                }
+              </div>
+              <div onClick={handleClear} className=' sm:hidden col-span-3  flex justify-end border-t pt-2 border-gray-600'>
+                <button className='text-sm text-gray-400 cursor-pointer'>Clear filter</button>
+              </div>
+              </div>
+              </OutsideClickHandler>
             </div>
-            }
-          </div>
-          </div>
-          </OutsideClickHandler>
-          </div>
           }
+          
         </div>
 
         {/* Search button */}
@@ -538,18 +543,20 @@ const Explore = () => {
         </button>
         {/* Clear Filter button */}
         <button disabled={isClearFilterDisabled()} onClick={()=>{handleClear()}} 
-        className='flex w-fit px-3 md:px-5 lg:w-fit disabled:bg-gray-400 disabled:cursor-default whitespace-nowrap text-center justify-center text-gray-500 items-center relative bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer'>
+        className='hidden sm:flex w-fit px-3 md:px-5 lg:w-fit disabled:bg-gray-400 disabled:cursor-default whitespace-nowrap text-center justify-center text-gray-500 items-center relative bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer'>
           {
             screenWidth > 600 ? 'Clear filter' :
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 2048 2048"><path fill="currentColor" d="M0 128h2048v219l-768 768v805H768v-805L0 347zm1920 165v-37H128v37l768 768v731h256v-731zm37 987l91 91l-230 229l230 229l-91 91l-229-230l-229 230l-91-91l230-229l-230-229l91-91l229 230z"/></svg>
           }
-          {/* Clear filter */}
         </button>
       </div>
       {/* List */}
       <div className="w-[90%] relative mx-auto h-fit gap-5 bg-[#141414] grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
-              {/* Results */}
-      <p className='absolute right-0 text-gray-200 text-sm -top-1'>Results: {pageInfo?.items?.total}</p>
+      
+      {/* Results and clear filter for mobile */}
+      <div className='absolute right-0 -top-1 flex w-full justify-end'>
+        <p className=' text-gray-200 text-sm'>Results: {pageInfo?.items?.total}</p>
+      </div>
           {
             searching ? (
             Array.from({ length: 20 }, (_, index) => index + pageInfo?.current_page).map((page, index) => {
