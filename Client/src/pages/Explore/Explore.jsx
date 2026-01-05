@@ -635,7 +635,7 @@ const Explore = () => {
                 page - 9 <= 0 ? 1 : page - 9
               )}
             }
-            className="text-white font-medium text-[0.7rem] sm:text-xs md:text-sm px-2 sm:px-3 py-1 sm:py-2 bg-[#4a4a4a39] hover:bg-pink-500 rounded cursor-pointer"
+            className="text-white font-medium text-[0.7rem] sm:text-xs md:text-sm px-2 sm:px-3 py-1 sm:py-2 bg-[#4a4a4a39] md:hover:bg-pink-500 rounded cursor-pointer"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M18.29 17.29a.996.996 0 0 0 0-1.41L14.42 12l3.88-3.88a.996.996 0 1 0-1.41-1.41L12.3 11.3a.996.996 0 0 0 0 1.41l4.59 4.59c.38.38 1.01.38 1.4-.01"/><path fill="currentColor" d="M11.7 17.29a.996.996 0 0 0 0-1.41L7.83 12l3.88-3.88a.996.996 0 1 0-1.41-1.41L5.71 11.3a.996.996 0 0 0 0 1.41l4.59 4.59c.38.38 1.01.38 1.4-.01"/></svg>
           </button>
@@ -649,7 +649,7 @@ const Explore = () => {
                 onClick={() => {window.scrollTo({top: 0, behavior: 'smooth'}); handlePaginate(pageNum)}}
                 className={`text-white text-[0.7rem] sm:text-xs md:text-sm font-medium px-4 sm:px-3 py-1 sm:py-2 ${
                   pageNum === page ? 'bg-pink-500' : 'bg-[#4a4a4a39]'
-                } hover:bg-pink-500 rounded cursor-pointer`}
+                } md:hover:bg-pink-500 rounded cursor-pointer`}
               >
                 {pageNum}
               </button>
@@ -667,7 +667,7 @@ const Explore = () => {
                 pageInfo?.last_visible_page === page
                   ? 'bg-pink-500'
                   : 'bg-[#4a4a4a39]'
-              } hover:bg-pink-500 rounded cursor-pointer`}
+              } md:hover:bg-pink-500 rounded cursor-pointer`}
             >
               {pageInfo?.last_visible_page}
             </button>
@@ -687,7 +687,7 @@ const Explore = () => {
                 page + 9
               )
             }
-            className="text-white font-medium px-3 py-2 rotate-180 bg-[#4a4a4a39] hover:bg-pink-500 rounded cursor-pointer"
+            className="text-white font-medium px-3 py-2 rotate-180 bg-[#4a4a4a39] md:hover:bg-pink-500 rounded cursor-pointer"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M18.29 17.29a.996.996 0 0 0 0-1.41L14.42 12l3.88-3.88a.996.996 0 1 0-1.41-1.41L12.3 11.3a.996.996 0 0 0 0 1.41l4.59 4.59c.38.38 1.01.38 1.4-.01"/><path fill="currentColor" d="M11.7 17.29a.996.996 0 0 0 0-1.41L7.83 12l3.88-3.88a.996.996 0 1 0-1.41-1.41L5.71 11.3a.996.996 0 0 0 0 1.41l4.59 4.59c.38.38 1.01.38 1.4-.01"/></svg>
           </button>
