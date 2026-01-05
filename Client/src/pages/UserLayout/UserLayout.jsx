@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import ImageSearch from '../../components/ImageSearch.jsx';
+import { ToastContainer } from 'react-toastify';
 
 const UserLayout = () => {
   const navigate = useNavigate()
@@ -59,7 +60,7 @@ const UserLayout = () => {
             />
             <button
               onClick={()=>{if(searchinput?.length !== 0){navigate(`http://localhost:5173/explore?page=1&q=${searchinput}`);setSearchInput('')}}}
-              className="absolute top-1 right-1 flex items-center rounded bg-slate-800 py-1.5 lg:py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="absolute top-1 right-1 flex items-center rounded  py-1.5 lg:py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm bg-pink-500 hover:bg-pink-400"
               type="button"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 lg:mr-2">
@@ -125,7 +126,7 @@ const UserLayout = () => {
                 />
                 <button
                   onClick={()=>{if(searchinput?.length !== 0){navigate(`http://localhost:5173/explore?page=1&q=${searchinput}`);setSearchInput('')}}}
-                  className="absolute top-1 right-1 flex items-center rounded bg-slate-800 py-1.5 lg:py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                  className="absolute top-1 right-1 flex items-center rounded py-1.5 lg:py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow bg-pink-500 hover:bg-pink-400"
                   type="button"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 lg:mr-2">
@@ -142,8 +143,9 @@ const UserLayout = () => {
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 16 16"><path fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5"/></svg>
             </button>
 
-            
+          
         </nav>
+        <ToastContainer />
         <Outlet />
     </>
   )

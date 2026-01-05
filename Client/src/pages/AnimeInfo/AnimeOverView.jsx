@@ -147,7 +147,6 @@ const AnimeOverView = () => {
 
     const fetchAnimeId = async (animeTitle) => {
     try {
-        // Step 1: Get idMal from AniList
         const anilistQuery = `
         query ($search: String) {
             Media(search: $search, type: ANIME) {
@@ -175,10 +174,6 @@ const AnimeOverView = () => {
         }
 
         return idMal
-
-        // Step 2: Use idMal with Jikan
-        // const jikanResponse = await axios.get(`https://api.jikan.moe/v4/anime/${idMal}/full`);
-        // setAnimeInfo(jikanResponse.data.data)
 
     } catch (error) {
         console.error('Error fetching anime details:', error);
