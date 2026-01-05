@@ -261,6 +261,8 @@ const Explore = () => {
       setPageList(pageLists);
     }
   }, [pageInfo, screenWidth])
+
+  
   return (
     <main onClick={()=>setShowState(false)} className='w-full h-[100dvh] bg-[#141414] flex flex-col gap-5 items-center pt-20'>
       <div className='flex flex-col items-start gap-0  w-[95%] lg:w-[90%] mx-auto'>
@@ -632,6 +634,8 @@ const Explore = () => {
                 selectedSeason,
                 selectedYear,
                 selectedType,
+                selectedSortItem.order_by,
+                selectedSortItem.sort_by,
                 page - 9 <= 0 ? 1 : page - 9
               )}
             }
@@ -684,6 +688,8 @@ const Explore = () => {
                 selectedSeason,
                 selectedYear,
                 selectedType,
+                selectedSortItem.order_by,
+                selectedSortItem.sort_by,
                 page + 9
               )
             }
