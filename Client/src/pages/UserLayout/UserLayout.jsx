@@ -3,6 +3,7 @@ import { Link, Outlet, matchPath, useLocation } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import ImageSearch from '../../components/ImageSearch.jsx';
 
 const UserLayout = () => {
   const navigate = useNavigate()
@@ -113,6 +114,7 @@ const UserLayout = () => {
             {/* Search input */}
             <div className={`hidden w-full justify-end sm:flex `}>
               <div className={`w-full ${window.location.pathname === '/explore' ? 'hidden' : 'sm:flex' } max-w-sm min-w-[200px]`}>
+                <ImageSearch />
               <div className="relative w-full">
                 <input
                   onKeyDown={(e) => {if(e.key === "Enter" && searchinput?.length !== 0) {navigate(`/explore?page=1&q=${searchinput}`);setSearchInput('')}}}
