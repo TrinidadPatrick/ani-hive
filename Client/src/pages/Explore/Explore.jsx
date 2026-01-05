@@ -262,7 +262,7 @@ const Explore = () => {
     }
   }, [pageInfo, screenWidth])
 
-  
+
   return (
     <main onClick={()=>setShowState(false)} className='w-full h-[100dvh] bg-[#141414] flex flex-col gap-5 items-center pt-20'>
       <div className='flex flex-col items-start gap-0  w-[95%] lg:w-[90%] mx-auto'>
@@ -369,7 +369,7 @@ const Explore = () => {
           </div>
           {
             showSort &&
-          <div className=' w-full h-full absolute'>
+          <div className=' w-full h-full absolute -right-20'>
             <OutsideClickHandler onOutsideClick={()=>{setShowSort(false);}}>
               <div className='flex flex-col w-[300px] xs:w-[350px] -right-20 xs:right-0 gap-3 absolute bg-gray-700 top-12 rounded-lg'>
                 <div className='w-full bg-gray-900 p-2 flex gap-3 items-center justify-between'>
@@ -379,12 +379,12 @@ const Explore = () => {
                     <button onClick={()=>handleSelectedSortBy('desc')} className={`${selectedSortItem.sort_by === 'desc' ? 'bg-gray-600' : 'bg-gray-800' } cursor-pointer  px-2 py-1 text-gray-400 rounded text-sm`}> Desc</button>
                     </div>
                 </div>
-                <div className='grid grid-cols-3 w-full p-2 gap-3'>
+                <div className='grid grid-cols-2 sm:grid-cols-3 w-full p-2 gap-3'>
                 {
                   sortItems.map((item, index) => {
                     // const isSelected = selectedStatus.includes(stat)
                     return (
-                      <div onClick={()=>handleSelectedOrderBy(item.value)} key={index} className={`flex gap-1 z-[999999999] w-full items-center relative ${selectedSortItem.order_by === item.value ? 'bg-gray-900' : 'bg-gray-800'}  hover:bg-gray-900 py-1 px-2 rounded-lg cursor-pointer`}>
+                      <div onClick={()=>handleSelectedOrderBy(item.value)} key={index} className={`flex gap-1 z-[999999999] w-full items-center relative ${selectedSortItem.order_by === item.value ? 'bg-gray-900' : 'bg-gray-800'}  hover:bg-gray-900 py-2 px-2 rounded-lg cursor-pointer`}>
                         <input type='checkbox' checked={selectedSortItem.order_by === item.value} />
                         <p className='text-gray-400 text-sm md:text-base text-start w-full'>{item.key}</p>
                       </div>
