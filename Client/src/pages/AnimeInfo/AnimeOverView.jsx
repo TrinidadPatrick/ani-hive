@@ -13,6 +13,8 @@ import useSmallScreen from '../../utils/useSmallScreen.js';
 import AnimeRecommendationSkeleton from './skeleton/AnimeRecommendationSkeleton.jsx';
 import AnimeRelatedSkeleton from './skeleton/AnimeRelatedSkeleton.jsx';
 import AnimeReviewsSkeleton from './skeleton/AnimeReviewsSkeleton.jsx';
+import getYoutubeId from '../../utils/getYoutubeId.js';
+import TrailerPlayer from '../../components/TrailerPlayer.jsx';
 
 const AnimeOverView = () => {
     const isSmallScreen = useSmallScreen()
@@ -29,6 +31,7 @@ const AnimeOverView = () => {
     const [indexSeeMore, setIndexSeeMore] = useState([])
     const [indexSeeReview, setIndexSeeReview] = useState([])
     const [showTrailer, setShowTrailer] = useState(false)
+    const [youtubeId, setYoutubeId] = useState(null)
 
     const prevRef = useRef(null);
     const nextRef = useRef(null);
@@ -217,67 +220,6 @@ const AnimeOverView = () => {
         }
     }
 
-    const TrailerPlayer = useCallback(()=>{
-        return (
-            <main className='fixed w-[100svw] cursor-pointer h-[100dvh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
-                
-                {
-                    !animeInfo?.trailer.youtube_id && !animeInfo?.trailer?.embed_url ? (
-                        <>
-                        <button onClick={()=>setShowTrailer(false)} className='absolute text-white top-20 right-5 z-[99999999999999999]'>Close</button>
-                        <NoTrailerAvailable />
-                        </>
-                    )
-                    :
-                    (
-                    <>
-                        {
-                            isSmallScreen ? 
-                            (
-                                <div className='flex flex-col justify-center w-[100vw] h-[100vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-black'>
-                                <button onClick={()=>setShowTrailer(false)} className='absolute text-white top-10 right-5 z-[99999999999999999]'>Close</button>
-                                <ReactPlayer
-                                            url={animeInfo?.trailer.youtube_id ? `https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720` : animeInfo?.trailer?.embed_url}
-                                            width="100%"
-                                            // height="100%"
-                                            playing={true}
-                                            muted={false}
-                                            loop={true}
-                                            controls={false}
-                                    />
-                                </div>
-                            )
-                            :
-                            (
-                                <div className=' flex items-center justify-center w-[100vw] md:h-[100vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-black'>
-                                    <button onClick={()=>setShowTrailer(false)} className='absolute text-white top-5 right-7 cursor-pointer z-[99999999999999999]'>Close</button>
-                                    <ReactPlayer
-                                        url={animeInfo?.trailer.youtube_id ? `https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720` : animeInfo?.trailer?.embed_url}
-                                        width="90%"
-                                        height="90%"
-                                        playing={false}
-                                        muted={false}
-                                        loop={true}
-                                        controls={true}
-                                        config={{
-                                            youtube: {
-                                            playerVars: {
-                                                cc_load_policy: 1,
-                                                cc_lang_pref: "en"
-                                            }
-                                            }
-                                        }}
-                                    />
-                                </div>
-                            )
-                        }
-                    </>
-                    )
-                }
-            </main>
-            )
-    }, [animeInfo, isSmallScreen])
-
     const InfoRow = ({ label, children }) => (
         <li className="flex justify-start gap-2">
           <h1 className="text-gray-400 min-w-[80px] text-[0.8rem] lg:text-base font-medium ">{label}</h1>
@@ -296,7 +238,7 @@ const AnimeOverView = () => {
       }, [id]);
 
     useEffect(() => {
-        if(animeInfo && characters && (( !animeRelations) || ( !recommendations))) {
+        if(animeInfo && characters && (( !animeRelations) || ( !recommendations))) {        
             (async()=>{
                 getRecommendations(animeInfo?.title)
                 await new Promise(resolve => setTimeout(resolve, 1000));
@@ -304,6 +246,8 @@ const AnimeOverView = () => {
                 await new Promise(resolve => setTimeout(resolve, 1000))
                 getUserReviews(id)
             })()
+        const youtubeId = getYoutubeId(animeInfo?.trailer?.embed_url)
+        setYoutubeId(youtubeId)
         }
     }, [animeInfo, characters])
 
@@ -314,7 +258,7 @@ const AnimeOverView = () => {
 
   return (
   <main className='w-full grid grid-cols-13 h-fit bg-[#141414] relative overflow-x-hidden'>
-    {showTrailer && <TrailerPlayer />}
+    {showTrailer && <TrailerPlayer youtubeId={youtubeId} setShowTrailer={setShowTrailer} />}
     {
         animeInfo ?
         <div className='w-full col-span-13 xl:col-span-10 h-fit bg-[#141414] py-20 px-5 flex flex-col gap-5'>

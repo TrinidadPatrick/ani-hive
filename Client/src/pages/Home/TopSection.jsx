@@ -5,10 +5,13 @@ import image_1 from '../../images/image_2.jpeg'
 import { useNavigate } from 'react-router'
 import ReactPlayer from 'react-player'
 import useSmallScreen from '../../utils/useSmallScreen'
+import getYoutubeId from '../../utils/getYoutubeId'
+import TrailerPlayer from '../../components/TrailerPlayer'
 
 const TopSection = ({topAnimes}) => {
     const isSmallScreen = useSmallScreen()
     const [topAnime, setTopAnime] = useState(null)
+    const [youtubeId, setYoutubeId] = useState(null)
     const [showMore, setShowMore] = useState(false)
     const [showTrailer, setShowTrailer] = useState(false)
     const navigate = useNavigate()
@@ -16,76 +19,11 @@ const TopSection = ({topAnimes}) => {
     useEffect(() => {
         if(topAnimes !== null && topAnimes.data.length > 0) {
             setTopAnime(topAnimes.data[0])
+            const youtubeId = getYoutubeId(topAnimes.data[0]?.trailer.embed_url)
+            setYoutubeId(youtubeId)
+
         }
     }, [topAnimes])
-
-    const TrailerPlayer = ({trailer}) => {
-      return (
-      <main className='fixed w-[100svw] cursor-pointer h-[100dvh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
-                
-                {
-                    !trailer.youtube_id && !trailer?.embed_url ? (
-                        <>
-                        <button onClick={()=>setShowTrailer(false)} className='absolute text-white top-20 right-5 z-[99999999999999999]'>Close</button>
-                        <NoTrailerAvailable />
-                        </>
-                    )
-                    :
-                    (
-                    <>
-                        {
-                            isSmallScreen ? 
-                            (
-                                <div className='flex flex-col justify-center w-[100vw] h-[100vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-black'>
-                                <button onClick={()=>setShowTrailer(false)} className='absolute text-white top-10 right-5 z-[99999999999999999]'>Close</button>
-                                <ReactPlayer
-                                        url={trailer.youtube_id ? `https://www.youtube.com/watch?v=${trailer.youtube_id}&?vq=hd720` : trailer?.embed_url}
-                                        width="100%"
-                                        playing={true}
-                                        muted={false}
-                                        loop={true}
-                                        controls={false}
-                                        config={{
-                                            youtube: {
-                                            playerVars: {
-                                                cc_load_policy: 1,
-                                                cc_lang_pref: "en"
-                                            }
-                                            }
-                                        }}
-                                    />
-                                </div>
-                            )
-                            :
-                            (
-                                <div className=' flex items-center justify-center w-[100vw] md:h-[100vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-black'>
-                                    <button onClick={()=>setShowTrailer(false)} className='absolute text-white top-5 right-7 cursor-pointer z-[99999999999999999]'>Close</button>
-                                    <ReactPlayer
-                                        url={trailer.youtube_id ? `https://www.youtube.com/watch?v=${trailer.youtube_id}&?vq=hd720` : trailer?.embed_url}
-                                        width="90%"
-                                        height="90%"
-                                        playing={false}
-                                        muted={false}
-                                        loop={true}
-                                        controls={true}
-                                        config={{
-                                            youtube: {
-                                            playerVars: {
-                                                cc_load_policy: 1,
-                                                cc_lang_pref: "en"
-                                            }
-                                            }
-                                        }}
-                                    />
-                                </div>
-                            )
-                        }
-                    </>
-                    )
-                }
-            </main>
-      )
-  }
 
   useEffect(() => {
     if (showTrailer) {
@@ -140,7 +78,7 @@ const TopSection = ({topAnimes}) => {
           :
           (
             <section className="w-full md:h-[100svh] bg-gray-900 relative overflow-hidden flex items-center justify-center">
-              {showTrailer && <TrailerPlayer trailer={topAnime?.trailer} />}
+              {showTrailer && <TrailerPlayer youtubeId={youtubeId} setShowTrailer={setShowTrailer} />}
               {/* Background Image */}
               <img
                 // src={image_1}
