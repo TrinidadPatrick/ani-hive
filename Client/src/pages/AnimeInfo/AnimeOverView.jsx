@@ -385,13 +385,21 @@ const AnimeOverView = () => {
                                 <div className=' flex items-center justify-center w-[100vw] md:h-[100vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-black'>
                                     <button onClick={()=>setShowTrailer(false)} className='absolute text-white top-5 right-7 cursor-pointer z-[99999999999999999]'>Close</button>
                                     <ReactPlayer
-                                            url={animeInfo?.trailer.youtube_id ? `https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720` : animeInfo?.trailer?.embed_url}
-                                            width="90%"
-                                            height="90%"
-                                            playing={false}
-                                            muted={false}
-                                            loop={true}
-                                            controls={false}
+                                        url={animeInfo?.trailer.youtube_id ? `https://www.youtube.com/watch?v=${animeInfo?.trailer.youtube_id}&?vq=hd720` : animeInfo?.trailer?.embed_url}
+                                        width="90%"
+                                        height="90%"
+                                        playing={false}
+                                        muted={false}
+                                        loop={true}
+                                        controls={true}
+                                        config={{
+                                            youtube: {
+                                            playerVars: {
+                                                cc_load_policy: 1,
+                                                cc_lang_pref: "en"
+                                            }
+                                            }
+                                        }}
                                     />
                                 </div>
                             )

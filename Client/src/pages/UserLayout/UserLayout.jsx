@@ -30,6 +30,13 @@ const UserLayout = () => {
     // Cleanup event listener on unmount
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const handleSearch = () => {
+    setSearchInput('')
+    setShowSidebar(false)
+    navigate(`/explore?page=1&q=${searchinput}`)
+  }
+
   return (
     <>
     {/* sidebar */}
@@ -54,14 +61,14 @@ const UserLayout = () => {
           <div className="relative">
             
             <input
-              onKeyDown={(e) => {if(e.key === "Enter" && searchinput?.length !== 0) {navigate(`/explore?page=1&q=${searchinput}`);setSearchInput('')}}}
+              onKeyDown={(e) => {if(e.key === "Enter" && searchinput?.length !== 0) {handleSearch()}}}
               value={searchinput}
               onChange={(e)=> setSearchInput(e.target.value)}
               className="w-full bg-transparent placeholder:text-slate-400 text-gray-200 text-sm border border-slate-400 rounded-md pl-3 pr-28 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
               placeholder="Search anime" 
             />
             <button
-              onClick={()=>{if(searchinput?.length !== 0){navigate(`http://localhost:5173/explore?page=1&q=${searchinput}`);setSearchInput('')}}}
+              onClick={()=>{if(searchinput?.length !== 0){handleSearch()}}}
               className="absolute top-1 right-1 flex items-center rounded  py-1.5 lg:py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm bg-pink-500 hover:bg-pink-400"
               type="button"
             >
@@ -120,14 +127,14 @@ const UserLayout = () => {
                 <ImageSearch />
               <div className="relative w-full">
                 <input
-                  onKeyDown={(e) => {if(e.key === "Enter" && searchinput?.length !== 0) {navigate(`/explore?page=1&q=${searchinput}`);setSearchInput('')}}}
+                  onKeyDown={(e) => {if(e.key === "Enter" && searchinput?.length !== 0) {handleSearch()}}}
                   value={searchinput}
                   onChange={(e)=> setSearchInput(e.target.value)}
                   className="w-full bg-transparent placeholder:text-slate-400 text-gray-200 text-sm border border-slate-400 rounded-md pl-3 sm:pr-14 lg:pr-28 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                   placeholder="Search anime" 
                 />
                 <button
-                  onClick={()=>{if(searchinput?.length !== 0){navigate(`http://localhost:5173/explore?page=1&q=${searchinput}`);setSearchInput('')}}}
+                  onClick={()=>{if(searchinput?.length !== 0){handleSearch()}}}
                   className="absolute top-1 right-1 flex items-center rounded py-1.5 lg:py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow bg-pink-500 hover:bg-pink-400"
                   type="button"
                 >
