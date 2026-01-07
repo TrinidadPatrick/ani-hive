@@ -6,6 +6,7 @@ import AnimeOverView from './pages/AnimeInfo/AnimeOverView'
 import Schedule from './pages/Schedule/Schedule'
 import Explore from './pages/Explore/Explore'
 import Characters from './pages/Characters/Characters'
+import MalCallback from './pages/AuthCallback/MalCallback'
 
 const router = createBrowserRouter([
     {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
             {
                 path: '/anime/:id',
                 element: <AnimeOverView />
+            },
+            {
+                path: '/auth/mal/callback',
+                element: <MalCallback />
             }
         ]
     },

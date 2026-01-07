@@ -5,6 +5,8 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import ImageSearch from '../../components/ImageSearch.jsx';
 import { ToastContainer } from 'react-toastify';
+import LoginButton from '../../components/MalLogin/LoginButton.jsx';
+import MalProfileDropdown from '../../components/MalComponents/MalProfileDropdown.jsx';
 
 const UserLayout = () => {
   const navigate = useNavigate()
@@ -83,49 +85,49 @@ const UserLayout = () => {
       </div>
       {/* Nav menus */}
       <ul className='w-full justify-center items-center flex flex-col md:hidden text-white gap-5 '>
-                <li>
-                    <button onClick={()=>{navigate('/');setShowSidebar(false)}} className={` ${path === '/' || path.startsWith('/anime/') ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Home</button>
-                </li>
-                <li>
-                    <button onClick={()=>{navigate('/schedule');setShowSidebar(false)}} className={` ${path === '/schedule' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Schedule</button>
-                </li>
-                <li>
-                <button onClick={()=>{navigate('/explore');setShowSidebar(false)}} className={` ${path === '/explore' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Explore</button>
-                </li>
-                <li>
-                <button onClick={()=>{navigate('/characters');setShowSidebar(false)}} className={` ${path === '/characters' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Characters</button>
-                </li>
+        <li>
+            <button onClick={()=>{navigate('/');setShowSidebar(false)}} className={` ${path === '/' || path.startsWith('/anime/') ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Home</button>
+        </li>
+        <li>
+            <button onClick={()=>{navigate('/schedule');setShowSidebar(false)}} className={` ${path === '/schedule' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Schedule</button>
+        </li>
+        <li>
+          <button onClick={()=>{navigate('/explore');setShowSidebar(false)}} className={` ${path === '/explore' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Explore</button>
+        </li>
+        <li>
+          <button onClick={()=>{navigate('/characters');setShowSidebar(false)}} className={` ${path === '/characters' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer `}>Characters</button>
+        </li>
       </ul>
     </div>
     }
     <nav className='w-full fixed backdrop-blur z-99999 p-4 flex justify-between items-center gap-5'>
-            {/* Logo */}
-            <div onClick={()=>navigate('/')} className='w-full flex ps-5 cursor-pointer'>
-            <h1 className='text-white text-center text-4xl font-bold'>Ani</h1>
-            <h1 className='text-pink-500 text-center text-4xl font-bold'>Hive</h1>
-            </div>
-            
-            {/* Nav links */}
-            <ul className='w-full hidden md:flex text-white justify-end gap-5 lg:gap-10 pe-10'>
-                <li>
-                    <button onClick={()=>{navigate('/')}} className={` ${path === '/' || path.startsWith('/anime/') ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer text-sm lg:text-base `}>Home</button>
-                </li>
-                <li>
-                    <button onClick={()=>{navigate('/schedule')}} className={` ${path === '/schedule' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer text-sm lg:text-base `}>Schedule</button>
-                </li>
-                <li>
-                <button onClick={()=>{navigate('/explore')}} className={` ${path === '/explore' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer text-sm lg:text-base `}>Explore</button>
-                </li>
-                <li>
-                <button onClick={()=>{navigate('/characters')}} className={` ${path === '/characters' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer text-sm lg:text-base `}>Characters</button>
-                </li>
-            </ul>
+      {/* Logo */}
+      <div onClick={()=>navigate('/')} className='w-full flex ps-5 cursor-pointer'>
+      <h1 className='text-white text-center text-4xl font-bold'>Ani</h1>
+      <h1 className='text-pink-500 text-center text-4xl font-bold'>Hive</h1>
+      </div>
+      
+      {/* Nav links */}
+      <ul className='w-full hidden md:flex text-white justify-end gap-5 lg:gap-10 pe-10'>
+          <li>
+              <button onClick={()=>{navigate('/')}} className={` ${path === '/' || path.startsWith('/anime/') ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer text-sm lg:text-base `}>Home</button>
+          </li>
+          <li>
+              <button onClick={()=>{navigate('/schedule')}} className={` ${path === '/schedule' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer text-sm lg:text-base `}>Schedule</button>
+          </li>
+          <li>
+          <button onClick={()=>{navigate('/explore')}} className={` ${path === '/explore' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer text-sm lg:text-base `}>Explore</button>
+          </li>
+          <li>
+          <button onClick={()=>{navigate('/characters')}} className={` ${path === '/characters' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer text-sm lg:text-base `}>Characters</button>
+          </li>
+      </ul>
 
-            {/* Search input */}
-            <div className={`hidden w-full justify-end sm:flex `}>
-              <div className={`w-full ${window.location.pathname === '/explore' ? 'hidden' : 'sm:flex' } max-w-sm min-w-[200px]`}>
-                <ImageSearch />
-              <div className="relative w-full">
+      {/* Search input */}
+      <div className={`hidden w-full justify-end sm:flex `}>
+        <div className={`w-full ${window.location.pathname === '/explore' ? 'hidden' : 'sm:flex' } max-w-sm min-w-[200px]`}>
+          <ImageSearch />
+        <div className="relative w-full">
                 <input
                   onKeyDown={(e) => {if(e.key === "Enter" && searchinput?.length !== 0) {handleSearch()}}}
                   value={searchinput}
@@ -144,13 +146,15 @@ const UserLayout = () => {
             
                   <span className='hidden lg:block'>Search</span>
                 </button> 
-            </div>
-            </div>
-            </div>
+        </div>
+        </div>
+      </div>
 
-            <button onClick={()=>{setShowSidebar(!showSidebar)}} className='md:hidden h-full bg-pink-500 px-1 py-0.5 rounded'>
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 16 16"><path fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5"/></svg>
-            </button>
+      <MalProfileDropdown />
+
+      <button onClick={()=>{setShowSidebar(!showSidebar)}} className='md:hidden h-full bg-pink-500 px-1 py-0.5 rounded'>
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 16 16"><path fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5"/></svg>
+      </button>
 
           
         </nav>
