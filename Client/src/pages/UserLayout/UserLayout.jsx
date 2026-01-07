@@ -49,8 +49,10 @@ const UserLayout = () => {
       </div>
       {/* Search input */}
       <div className={`${window.location.pathname === '/explore' && 'hidden'} w-[80%]  flex mx-auto justify-center`}>
-          <div className="w-full max-w-sm min-w-[200px]">
+          <div className="w-full max-w-sm min-w-[200px] flex">
+          <ImageSearch />
           <div className="relative">
+            
             <input
               onKeyDown={(e) => {if(e.key === "Enter" && searchinput?.length !== 0) {navigate(`/explore?page=1&q=${searchinput}`);setSearchInput('')}}}
               value={searchinput}
