@@ -5,9 +5,12 @@ import 'react-multi-carousel/lib/styles.css';
 import ReactPlayer from 'react-player';
 import Youtube from 'react-youtube'
 import { useNavigate } from 'react-router';
+import NoTrailerAvailable from '../../components/NoTrailerAvailable';
+import useSmallScreen from '../../utils/useSmallScreen';
 
 const SeasonNowAnime = () => {
-   const navigate = useNavigate()
+    const navigate = useNavigate()
+    const isSmallScreen = useSmallScreen()
     const {SeasonNowAnime} = SeasonNowAnimeProvider()
     const [showMore, setShowMore] = useState(false)
     const [showTrailer, setShowTrailer] = useState(false)
@@ -39,27 +42,68 @@ const SeasonNowAnime = () => {
           items: 1,
           slidesToSlide: 1,
         }
-      };
+    };
 
-      const TrailerPlayer = () => {
+    const TrailerPlayer = () => {
         return (
-        <main  onClick={()=>setShowTrailer(false)} className='fixed w-[100svw] min-h-screen cursor-pointer h-[100dvh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
-            <div data-aos="zoom-in" className='h-[90vh] aspect-video absolute z-[99999999999] top-1/2 -translate-y-1/2 left-1/2 transform -translate-x-1/2  bg-gray-900'>
-            <ReactPlayer 
-                      url={`https://www.youtube.com/watch?v=${youtubeId}&vq=hd720`}
-                      width="100%"
-                      height="100%"
-                      playing={false}
-                      muted={false}
-                      loop={true}
-                      controls={false}
-                      // className="absolute top-0 left-0"
-                      />
-            </div>
-        </main>
+        <main className='fixed w-[100svw] cursor-pointer h-[100dvh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.9)]'>
+                
+                {
+                    !youtubeId ? (
+                        <>
+                        <button onClick={()=>setShowTrailer(false)} className='absolute text-white top-20 right-5 z-[99999999999999999]'>Close</button>
+                        <NoTrailerAvailable />
+                        </>
+                    )
+                    :
+                    (
+                    <>
+                        {
+                            isSmallScreen ? 
+                            (
+                                <div className='flex flex-col justify-center w-[100vw] h-[100vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-black'>
+                                <button onClick={()=>setShowTrailer(false)} className='absolute text-white top-10 right-5 z-[99999999999999999]'>Close</button>
+                                <ReactPlayer
+                                            url={`https://www.youtube.com/watch?v=${youtubeId}&?vq=hd720`}
+                                            width="100%"
+                                            // height="100%"
+                                            playing={true}
+                                            muted={false}
+                                            loop={true}
+                                            controls={false}
+                                    />
+                                </div>
+                            )
+                            :
+                            (
+                                <div className=' flex items-center justify-center w-[100vw] md:h-[100vh] aspect-video absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-black'>
+                                    <button onClick={()=>setShowTrailer(false)} className='absolute text-white top-5 right-7 cursor-pointer z-[99999999999999999]'>Close</button>
+                                    <ReactPlayer
+                                         url={`https://www.youtube.com/watch?v=${youtubeId}&?vq=hd720`}
+                                        width="90%"
+                                        height="90%"
+                                        playing={false}
+                                        muted={false}
+                                        loop={true}
+                                        controls={true}
+                                        config={{
+                                            youtube: {
+                                            playerVars: {
+                                                cc_load_policy: 1,
+                                                cc_lang_pref: "en"
+                                            }
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            )
+                        }
+                    </>
+                    )
+                }
+            </main>
         )
     }
-
 
   return (
     <>
@@ -115,6 +159,11 @@ const SeasonNowAnime = () => {
         {SeasonNowAnime?.length > 0 &&
           SeasonNowAnime.sort((a,b) => a.popularity - b.popularity).map((anime, index) => {
             if(SeasonNowAnime[index - 1]?.mal_id != anime?.mal_id && anime.title){
+              const url = anime?.trailer?.embed_url
+
+              const raw = url.split("?")[0].toString().split("/")
+              const yt_id = raw[raw.length - 1]
+
               return (
                 <section className="px-5 w-full h-full  lg:h-[80svh] bg-gray-900 relative overflow-hidden flex items-center justify-center">
               {/* Background Image */}{index}
@@ -158,8 +207,8 @@ const SeasonNowAnime = () => {
             
                 {/* Right Side: Anime Trailer */}
                   <div className="relative hidden md:block aspect-video rounded-lg overflow-hidden w-full md:w-fit md:h-[63svh] lg:h-[40vh]">
-                      <img src={anime?.trailer?.images?.maximum_image_url} alt={anime?.title_english || anime?.title} className='w-full h-full object-cover relative z-10' />
-                      <button onClick={()=>{setShowTrailer(true);setYoutubeId(anime?.trailer?.youtube_id)}} className='absolute bg-red-500 text-white text-4xl px-6 py-2 rounded-xl hover:bg-red-400 cursor-pointer z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+                      <img src={`https://img.youtube.com/vi/${yt_id}/maxresdefault.jpg`} alt={anime?.title_english || anime?.title} className='w-full h-full object-cover relative z-10' />
+                      <button onClick={()=>{setShowTrailer(true);setYoutubeId(yt_id)}} className='absolute bg-red-500 text-white text-4xl px-6 py-2 rounded-xl hover:bg-red-400 cursor-pointer z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                         ▶
                       </button>
                       {/* <ReactPlayer
