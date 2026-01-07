@@ -8,8 +8,6 @@ import 'swiper/css/navigation';
 import { FreeMode, Navigation } from 'swiper/modules';
 import ReactPlayer from 'react-player';
 import 'video.js/dist/video-js.css';
-import VideoJS from './Video';
-import Youtube from 'react-youtube'
 import NoTrailerAvailable from '../../components/NoTrailerAvailable.jsx';
 import useSmallScreen from '../../utils/useSmallScreen.js';
 import AnimeRecommendationSkeleton from './skeleton/AnimeRecommendationSkeleton.jsx';
@@ -17,15 +15,11 @@ import AnimeRelatedSkeleton from './skeleton/AnimeRelatedSkeleton.jsx';
 import AnimeReviewsSkeleton from './skeleton/AnimeReviewsSkeleton.jsx';
 
 const AnimeOverView = () => {
-    const playerRef = useRef(null);
-    const videoRef = useRef(null);
     const isSmallScreen = useSmallScreen()
 
     const reactionEmojis = ["📊", "👍", "❤️", "😂", "🤔", "📘", "✍️", "🎨"];
     const {id} = useParams()
     const textRef = useRef(null);
-    const [searchParams] = useSearchParams();
-    const name = searchParams.get('name');
     const [animeInfo, setAnimeInfo] = useState(null)
     const [characters, setCharacters] = useState(null)
     const [animeRelations, setAnimeRelations] = useState(null)
@@ -36,189 +30,96 @@ const AnimeOverView = () => {
     const [indexSeeReview, setIndexSeeReview] = useState([])
     const [showTrailer, setShowTrailer] = useState(false)
 
-    const [epUrl, setEpUrl] = useState('')
-    const [selectedEp, setSelectedEp] = useState({})
-    const [animeEpisodes, setAnimeEpisodes] = useState([])
-    const [epInfo, setEpInfo] = useState(null);
-    const [selectedQuality, setSelectedQuality] = useState(null)
-    const [showSettings, setShowSettings] = useState(false);
-    const [buttonRect, setButtonRect] = useState(null);
-
     const prevRef = useRef(null);
     const nextRef = useRef(null);
-
-    const buildUrl = (url) => {
-        const encodedUrl = encodeURIComponent(
-            url
-        );
-        const proxyUrl = `https://cosumet-api.vercel.app/anime/animepahe/proxy?url=${encodedUrl}`;
-
-        return proxyUrl
-    }
-
-    let videoJsOptions = {
-        autoplay: true,
-        muted: true, // required for autoplay
-        controls: true, 
-        responsive: true,
-        fluid: true,
-        controlBar: {
-          skipButtons: {
-            forward: 10,
-            backward: 10,
-          },
-          volumePanel: {
-            inline: false,
-          },
-        },
-        sources: [{
-          src: epUrl, 
-          type: 'application/x-mpegURL',
-        }],
-    };
       
 
-    const getAnimeInfo = async (id, option, retries = 10) => {
-        if(name && option == 1)
-        {
-            const malId = await fetchAnimeId(name)
-            try {
-                const result = await axios.get(`https://api.jikan.moe/v4/anime/${malId}/full`)
-                if(result.status === 200) {
-                    const anime = result.data.data
-                    if(option == 1){
-                        setAnimeInfo(anime)
-                    }else{
-                        return anime
-                    }
-                }
-            } catch (error) {
-                console.log(error)
-                if(retries > 0)
-                {
-                    setTimeout(()=>{
-                        getAnimeInfo(1, retries - 1)
-                    }, 1000)
-                }
-            }
-        }else{
-            try {
-                const result = await axios.get(`https://api.jikan.moe/v4/anime/${id}/full`)
-                if(result.status === 200) {
-                    const anime = result.data.data
-                    if(option == 1){
-                        setAnimeInfo(anime)
-                    }else{
-                        return anime
-                    }
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
-    }
-
-    const getCharacters = async(id) => {
-        if(name){
-            const malId = await fetchAnimeId(name)
-            try {
-                const result = await axios.get(`https://api.jikan.moe/v4/anime/${malId}/characters`)
-                if(result.status === 200) {
-                    const characters = result.data.data
-                    const sortedCharacters = characters.sort((a,b) => b.favorites - a.favorites)
-                    setCharacters(sortedCharacters)
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }else{
-            try {
-                const result = await axios.get(`https://api.jikan.moe/v4/anime/${id}/characters`)
-                if(result.status === 200) {
-                    const characters = result.data.data
-                    const sortedCharacters = characters.sort((a,b) => b.favorites - a.favorites)
-                    setCharacters(sortedCharacters)
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
-    }
-
-    const fetchAnimeId = async (animeTitle) => {
-    try {
-        const anilistQuery = `
-        query ($search: String) {
-            Media(search: $search, type: ANIME) {
-            id
-            idMal
-            title {
-                romaji
-                english
-                native
-            }
-            }
-        }
-        `;
-
-        const response = await axios.post('https://graphql.anilist.co', {
-        query: anilistQuery,
-        variables: { search: animeTitle }
-        });
-
-        const idMal = response.data.data.Media.idMal;
-
-        if (!idMal) {
-        console.warn(`No MAL ID found for ${animeTitle}`);
-        return null;
-        }
-
-        return idMal
-
-    } catch (error) {
-        console.error('Error fetching anime details:', error);
-        return null;
-    }
-    };     
-    
-    const getAnimeRelations = async (mal_id, retries = 10) => {
+    const getAnimeInfo = async (mal_id, option, retries = 10) => {
         try {
-            const result = await axios.get(`https://api.jikan.moe/v4/anime/${mal_id}/relations?type=anime`)
-            const flattened = result.data.data.flatMap(item =>
-                item.entry.map(entryObj => ({
-                  relation: item.relation,
-                  ...entryObj
-                }))
-              );
-            const animes = flattened.filter((anime) => anime.type === 'anime')
-            if(animes?.length === 0){
-                setAnimeRelations([])
-            }
-            for(const anime of animes){
-                const info = await getAnimeInfo(anime.mal_id, 2)
-                info.type = anime.type
-                if(animeRelations === null){
-                    setAnimeRelations([info]);
-                }else{
-                    setAnimeRelations(prev => {
-                    const isExist = prev?.findIndex(item => item.mal_id === info.mal_id) || -1;
-                    if (isExist === -1) {
-                      return prev ?[...prev, info] : [info]; // create new array (immutable update)
+            const result = await axios.get(`https://api.jikan.moe/v4/anime/${mal_id}/full`)
+                if(result.status === 200) {
+                    const anime = result.data.data
+                    if(option == 1){
+                        setAnimeInfo(anime)
+                    }else{
+                        return anime
                     }
-                    return prev; // no change
-                  });
                 }
-                await new Promise(resolve => setTimeout(resolve, 550));
-            }
-
         } catch (error) {
             console.log(error)
             if(retries > 0)
             {
                 setTimeout(()=>{
-                    getAnimeRelations(searchTerm, retries - 1)
+                    getAnimeInfo(searchTerm, retries - 1)
                 }, 1000)
             }
+        }
+    }
+
+    const getCharacters = async(mal_id, retries = 10) => {
+        try {
+            const result = await axios.get(`https://api.jikan.moe/v4/anime/${mal_id}/characters`)
+                if(result.status === 200) {
+                    const characters = result.data.data
+                    const sortedCharacters = characters.sort((a,b) => b.favorites - a.favorites)
+                    setCharacters(sortedCharacters)
+                }
+        } catch (error) {
+            console.log(error)
+            if(retries > 0)
+            {
+                setTimeout(()=>{
+                    getCharacters(mal_id, retries - 1)
+                }, 1000)
+            }
+        }
+    }  
+    
+    const getAnimeRelations = async (title, retries = 10) => {
+        const query = `
+        query ($search: String) {
+        Media (search: $search, type: ANIME) { 
+            id
+            title {
+            romaji
+            english
+            native
+            }
+            relations {
+            nodes {
+                id
+                idMal
+                title {
+                english
+                native
+                romaji
+                }
+                coverImage {
+                large
+                }
+                type
+            }
+            }
+        }
+        }
+        `;
+
+        const variables = { search: title };
+
+        try {
+            const { data } = await axios.post(
+            'https://graphql.anilist.co',
+            { query, variables },
+            { headers: { 'Content-Type': 'application/json' } }
+            );
+            const results = data.data.Media.relations.nodes
+            if(results){
+                const relatedAnimes = results.filter((result) => result.type === "ANIME")
+                setAnimeRelations(relatedAnimes)
+            }   
+        } catch (err) {
+            console.log(err);
+            setAnimeRelations([])
         }
     };
 
@@ -235,6 +136,7 @@ const AnimeOverView = () => {
             nodes {
               mediaRecommendation {
                 id
+                idMal
                 title {
                   romaji
                   english
@@ -242,19 +144,12 @@ const AnimeOverView = () => {
                 coverImage {
                   large
                 }
-                type
-                format
-                startDate {
-                  year
-                }
                 nextAiringEpisode {
                     episode
                     airingAt
                   }
                   genres
                 episodes
-                duration     # average episode length, in minutes
-                status       # e.g. FINISHED, RELEASING
               }
             }
           }
@@ -279,29 +174,21 @@ const AnimeOverView = () => {
 
     }
 
-    const getUserReviews = async (id) => {
-        if(name){
-            const malId = await fetchAnimeId(name)
-            try {
-                const result = await axios.get(`https://api.jikan.moe/v4/anime/${malId}/reviews`)
+    const getUserReviews = async (id, retries = 10) => {
+        try {
+            const result = await axios.get(`https://api.jikan.moe/v4/anime/${id}/reviews`)
                 if(result.status === 200) {
                     const reviews = result.data.data
                     const sortedReviews = reviews.sort((a,b) => new Date(b.date) - new Date(a.date))
                     setReviews(sortedReviews)
                 }
-            } catch (error) {
-                console.log(error)
-            }
-        }else{
-            try {
-                const result = await axios.get(`https://api.jikan.moe/v4/anime/${id}/reviews`)
-                if(result.status === 200) {
-                    const reviews = result.data.data
-                    const sortedReviews = reviews.sort((a,b) => new Date(b.date) - new Date(a.date))
-                    setReviews(sortedReviews)
-                }
-            } catch (error) {
-                console.log(error)
+        } catch (error) {
+            console.log(error)
+            if(retries > 0)
+            {
+                setTimeout(()=>{
+                    getUserReviews(id, retries - 1)
+                }, 1000)
             }
         }
     }
@@ -327,26 +214,6 @@ const AnimeOverView = () => {
         }else{
             const newIndexSeeReview = [...indexSeeReview, index]
             setIndexSeeReview(newIndexSeeReview)
-        }
-    }
-
-    const getAnimePaheInfo = async (title) => {
-        try {
-            const res = await axios.get(`https://cosumet-api.vercel.app/anime/animepahe/${encodeURIComponent(title)}`)
-            const data = res.data.results
-            if(data.length > 0){
-                for (const anime of data) {
-                    if((animeInfo.title.toLowerCase() == anime.title.toLowerCase() || animeInfo.title_english.toLowerCase() == anime.title.toLowerCase()) && (animeInfo.year == anime.releaseDate || animeInfo.score == anime.rating)){
-                        const res = await axios.get(`https://cosumet-api.vercel.app/anime/animepahe/info/${anime.id}`)
-                        const animeData = res.data
-                        setAnimeEpisodes(animeData.episodes)
-                        handleSelectEp(animeData.episodes[0].id, animeData.episodes[0])
-                        break;
-                    }
-                }
-            }
-        } catch (error) {
-            console.log(error)
         }
     }
 
@@ -411,59 +278,12 @@ const AnimeOverView = () => {
             )
     }, [animeInfo, isSmallScreen])
 
-    const handleSelectEp = async (id, ep) => {
-        try {
-            setSelectedEp(ep)
-            const res = await axios.get(`https://cosumet-api.vercel.app/anime/animepahe/watch?episodeId=${id}`)
-            const qualities = res.data.sources.filter((source) => source.isDub == false)
-            setEpInfo(qualities)
-            const url = buildUrl(res.data.sources[1].url)
-            setEpUrl(url)
-        } catch (error) {
-            console.log(error)
-        }
-        
-    }
-
     const InfoRow = ({ label, children }) => (
         <li className="flex justify-start gap-2">
           <h1 className="text-gray-400 min-w-[80px] text-[0.8rem] lg:text-base font-medium ">{label}</h1>
           <h1 className="text-gray-200 line-clamp-1 text-[0.8rem] lg:text-base">{children}</h1>
         </li>
     );
-
-    const handlePlayerReady = (player) => {
-        // playerRef.current = player;
-    
-        // // You can handle player events here, for example:
-        // player.on('waiting', () => {
-        //   videojs.log('player is waiting');
-        // });
-    
-        // player.on('dispose', () => {
-        //   videojs.log('player will dispose');
-        // });
-    };
-
-    const changeQuality = (quality) => {
-        const player = playerRef.current;
-        if (player) {
-            const currentTime = player.currentTime();
-            const isPaused = player.paused()
-
-            player.src({ src: buildUrl(quality?.url)
-            , type: 'application/x-mpegURL' });
-
-            player.one('loadedmetadata', () => {
-            player.currentTime(currentTime);
-            if (!isPaused) {
-                player.play();
-            }
-            });
-            setShowSettings(false);
-            setSelectedQuality(quality)
-        }
-    }
 
     useEffect(() => {
         if (id) {
@@ -478,10 +298,9 @@ const AnimeOverView = () => {
     useEffect(() => {
         if(animeInfo && characters && (( !animeRelations) || ( !recommendations))) {
             (async()=>{
-                // getAnimePaheInfo(animeInfo?.title)
                 getRecommendations(animeInfo?.title)
                 await new Promise(resolve => setTimeout(resolve, 1000));
-                getAnimeRelations(animeInfo?.mal_id)
+                getAnimeRelations(animeInfo.title)
                 await new Promise(resolve => setTimeout(resolve, 1000))
                 getUserReviews(id)
             })()
@@ -491,6 +310,7 @@ const AnimeOverView = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [])
+    
 
   return (
   <main className='w-full grid grid-cols-13 h-fit bg-[#141414] relative overflow-x-hidden'>
@@ -498,65 +318,7 @@ const AnimeOverView = () => {
     {
         animeInfo ?
         <div className='w-full col-span-13 xl:col-span-10 h-fit bg-[#141414] py-20 px-5 flex flex-col gap-5'>
-            {/* <div className='w-full'>
-                <h1 className='text-white text-2xl lg:text-3xl font-bold'>{animeInfo?.title_english || animeInfo?.title}</h1>
-            </div> */}
-            {/* Player */}
-            <div className={`hidden w-full ${epUrl == '' ? 'aspect-video' : 'h-fit'} relative `}>
-            {
-                epUrl == '' ?
-                <div className="relative w-full aspect-video bg-gray-300 rounded-lg overflow-hidden">
-                    {/* Shimmer effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r bg-black animate-shimmer" />
-                    {/* Play button placeholder */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                    </div>
-                </div>
-                :
-                <VideoJS epUrl={epUrl} videoRef={videoRef} playerRef={playerRef} setShowSettings={setShowSettings} setButtonRect={setButtonRect} options={videoJsOptions} onReady={handlePlayerReady}/>
-            }
-            {showSettings && buttonRect && (
-                <div className="absolute bg-gray-900 border shadow-md w-[150px] rounded z-50"
-                style={{
-                    top: buttonRect.bottom - 295 + window.scrollY,
-                    left: buttonRect.left - 140 + window.scrollX,
-                }}
-                >
-                <p className="font-bold mb-2 text-white p-1 bg-gray-700">Quality</p>
-                {
-                    epInfo?.length > 0 &&
-                    epInfo.map((ep, index, array) =>
-                    {
-                        return (
-                            <div onClick={()=>{changeQuality(ep)}} key={index} className="flex cursor-pointer gap-2 items-center py-1 px-2">
-                                <div className={`w-1 h-1 rounded-full ${selectedQuality?.quality == ep.quality ? 'bg-pink-500' : 'bg-gray-500'}`}></div>
-                                <p className="text-white text-sm">{ep.quality.split('·')[1]}</p>
-                            </div>
-                        )
-                    })
-                }
-                </div>
-            )}
-            </div>
-            {/* Episodes */}
-            <div className='hidden flex-col gap-2'>
-            <h1 className='text-white text-xl md:text-2xl font-bold'>Episodes</h1>
-            <span className=' text-red-500'>*Anime has been limited to 5 episodes only to avoid copyright issues</span>
-            <div className='w-full h-fit gap-3 grid grid-cols-4 xxs:grid-cols-6 xs:grid-cols-8 sm:grid-cols-12 md:grid-cols-16 lg:grid-cols-20 xl:grid-cols-24'>
-                {
-                    animeEpisodes.length > 0 &&
-                    animeEpisodes.slice(0,5).map((episode, index, array) =>
-                    {
-                        return (
-                            <button onClick={()=>handleSelectEp(episode.id, episode)} key={index} className={` h-fit flex flex-col gap-2 cursor-pointer ${selectedEp.number == episode.number ? 'bg-pink-500' : 'bg-gray-900'} hover:bg-pink-500 justify-center items-center rounded-sm px-3 py-1`}>
-                                    <h1 className='text-white text-sm md:text-base line-clamp-1'>{index + 1}</h1>
-                            </button>
-                        )
-                    })
-                }
-            </div>
-            </div>
+
             {/* Top Section */}
             <div className='flex-none h-full flex flex-col sm:flex-row gap-2'>
                 <div className='w-full aspect-video sm:aspect-auto sm:w-[200px]'>
@@ -841,7 +603,7 @@ const AnimeOverView = () => {
                             return (
                             <SwiperSlide
                             key={index}
-                            onClick={()=>{window.location.href = `/anime/${info.mal_id}`}}
+                            onClick={()=>{window.location.href = `/anime/${info.idMal}`}}
                             style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
                             className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
                             >
@@ -853,8 +615,8 @@ const AnimeOverView = () => {
                                 {/* Image */}
                                 <div className="w-full  h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
                                 <img
-                                    src={info?.images?.webp?.large_image_url}
-                                    alt={info?.title_english || info?.title}
+                                    src={info?.coverImage.large}
+                                    alt={info?.title.english || info?.title.romaji}
                                     className="w-full aspect-[2/2.8]  object-cover brightness-70"
                                 />
                                 </div>
@@ -863,7 +625,7 @@ const AnimeOverView = () => {
                                 <div className="w-full px-1 md:px-2 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[30%] xs:h-[25%] md:h-[30%] rounded-b-lg flex">
                                 <div className="flex flex-col items-start w-full h-full justify-around">
                                     <h2 className="text-white text-sm md:text-sm w-full line-clamp-3 text-center">
-                                    {info?.title_english || info?.title}
+                                    {info?.title.english || info?.title.romaji}
                                     </h2>
                                 </div>
                                 </div>
@@ -1142,7 +904,7 @@ const AnimeOverView = () => {
       </div>
         </div>
     }
-        {/* Other anime list */}
+        {/* Recommendations */}
         <div className='recoList xl:col-span-3 hidden xl:flex h-fit pb-5 bg-[#141414] overflow-auto mt-20 flex-col gap-3'>
             <div>
             <h1 className='text-white text-2xl font-bold'>Recommendations</h1>
@@ -1157,7 +919,7 @@ const AnimeOverView = () => {
                 recommendations?.map((recommendation, index, array) =>
                 {
                     return (
-                        <div onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.id}?name=${recommendation.mediaRecommendation.title.romaji}`} key={index} className='w-full hover:bg-[#212121] flex gap-2 cursor-pointer'>
+                        <div onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.idMal}`} key={index} className='w-full hover:bg-[#212121] flex gap-2 cursor-pointer'>
                             <div className='w-[90px] aspect-[2/2.3] flex-none'>
                                 <img src={recommendation?.mediaRecommendation?.coverImage?.large} alt={recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji} className='w-full h-full object-cover rounded-lg' />
                             </div>

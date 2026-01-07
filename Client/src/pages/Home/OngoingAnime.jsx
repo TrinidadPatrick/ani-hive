@@ -15,6 +15,7 @@ const OngoingAnime = () => {
         Page(perPage: 200) {
           media(status: RELEASING, type: ANIME, sort: POPULARITY_DESC, isAdult: false) {
             id
+            idMal
             title {
               romaji
             }
@@ -108,7 +109,7 @@ const OngoingAnime = () => {
         {
           if(array[index - 1]?.id != anime?.id){
             return (
-              <div  key={index} onClick={()=> {navigate('/anime/'+anime?.id+'?name='+anime?.title?.romaji)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
+              <div  key={index} onClick={()=> {navigate('/anime/'+anime?.idMal)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
                 <div className='absolute z-[999] top-1 left-1 bg-pink-600 px-1 py-0.5 rounded'>
                   <h2 className="text-gray-300 text-center w-full text-sm md:text-sm">
                       Ep {(anime?.nextAiringEpisode?.episode || '??') + '/'}{anime?.episodes || '??'}

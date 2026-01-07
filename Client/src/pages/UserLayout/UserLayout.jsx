@@ -69,7 +69,7 @@ const UserLayout = () => {
             />
             <button
               onClick={()=>{if(searchinput?.length !== 0){handleSearch()}}}
-              className="absolute top-1 right-1 flex items-center rounded  py-1.5 lg:py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm bg-pink-500 hover:bg-pink-400"
+              className="absolute top-1 right-1 flex items-center rounded  py-1.5 lg:py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm bg-pink-600 hover:bg-pink-500"
               type="button"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 lg:mr-2">
@@ -135,7 +135,7 @@ const UserLayout = () => {
                 />
                 <button
                   onClick={()=>{if(searchinput?.length !== 0){handleSearch()}}}
-                  className="absolute top-1 right-1 flex items-center rounded py-1.5 lg:py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow bg-pink-500 hover:bg-pink-400"
+                  className="absolute top-1 right-1 flex items-center rounded py-1.5 lg:py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow bg-pink-600 hover:bg-pink-500"
                   type="button"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 lg:mr-2">

@@ -87,7 +87,7 @@ const ImageSearch = () => {
     }
 
   return (
-    <div className='flex items-center px-2 mx-1 cursor-pointer bg-pink-500 rounded hover:bg-pink-400'>
+    <div className='flex items-center px-2 mx-1 cursor-pointer bg-pink-600 rounded hover:bg-pink-500'>
         {
           isSearching ? (
             <button title='Search by image' className='cursor-pointer '>
