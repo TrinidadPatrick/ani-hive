@@ -6,7 +6,6 @@ import { toast } from 'react-toastify'
 import Loader from './Loader'
 
 const ImageSearch = () => {
-    const [image, setImage] = useState(null)
     const [isSearching, setIsSearching] = useState(false)
     const fileInputRef = useRef()
     const navigate = useNavigate()
@@ -61,7 +60,6 @@ const ImageSearch = () => {
     const handleImageUpload = async (e) => {
         setIsSearching(true)
         const image = e.target.files[0]
-        setImage(image)
         
         const formData = new FormData()
         formData.append("image", image)

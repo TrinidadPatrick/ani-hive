@@ -123,7 +123,7 @@ const UserLayout = () => {
                   onKeyDown={(e) => {if(e.key === "Enter" && searchinput?.length !== 0) {navigate(`/explore?page=1&q=${searchinput}`);setSearchInput('')}}}
                   value={searchinput}
                   onChange={(e)=> setSearchInput(e.target.value)}
-                  className="w-full bg-transparent placeholder:text-slate-400 text-gray-200 text-sm border border-slate-400 rounded-md pl-3 pr-28 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                  className="w-full bg-transparent placeholder:text-slate-400 text-gray-200 text-sm border border-slate-400 rounded-md pl-3 sm:pr-14 lg:pr-28 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                   placeholder="Search anime" 
                 />
                 <button
