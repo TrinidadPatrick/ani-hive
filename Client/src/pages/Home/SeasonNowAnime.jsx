@@ -207,20 +207,10 @@ const SeasonNowAnime = () => {
             
                 {/* Right Side: Anime Trailer */}
                   <div className="relative hidden md:block aspect-video rounded-lg overflow-hidden w-full md:w-fit md:h-[63svh] lg:h-[40vh]">
-                      <img src={`https://img.youtube.com/vi/${yt_id}/maxresdefault.jpg`} alt={anime?.title_english || anime?.title} className='w-full h-full object-cover relative z-10' />
+                      <img src={`https://img.youtube.com/vi/${yt_id}/sddefault.jpg`} alt={anime?.title_english || anime?.title} className='w-full h-full object-cover relative z-10' />
                       <button onClick={()=>{setShowTrailer(true);setYoutubeId(yt_id)}} className='absolute bg-red-500 text-white text-4xl px-6 py-2 rounded-xl hover:bg-red-400 cursor-pointer z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                         ▶
                       </button>
-                      {/* <ReactPlayer
-                      url={`https://www.youtube.com/watch?v=${anime?.trailer.youtube_id}&?vq=hd720`}
-                      width="100%"
-                      height="100%"
-                      playing={false}
-                      muted={false}
-                      loop={true}
-                      controls={false}
-                      // className="absolute top-0 left-0"
-                      /> */}
                   </div>
               </div>
               </section>
