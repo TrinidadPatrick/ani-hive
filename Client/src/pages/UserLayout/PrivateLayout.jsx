@@ -11,6 +11,8 @@ const PrivateLayout = () => {
       }
     },[authenticated])
 
+    console.log(authenticated)
+
   return (
     <div>
         s
