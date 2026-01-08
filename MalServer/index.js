@@ -11,7 +11,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://ani-hive-dev.vercel.app/'],
+    origin: ['http://localhost:5173', 'https://ani-hive-dev.vercel.app'],
      allowedHeaders: ["Content-Type"],
     credentials: true
 }))

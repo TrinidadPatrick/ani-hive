@@ -10,7 +10,7 @@ const MalCallback = () => {
         const code = searchParams.get("code")
         const code_verifier = localStorage.getItem("code_verifier")
 
-        if(code){
+        if(code && code_verifier){
             try {
                 const result = await http.post("auth/mal/token", {code, codeVerifier : code_verifier}, {
                     withCredentials: true

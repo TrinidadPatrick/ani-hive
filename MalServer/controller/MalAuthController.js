@@ -1,4 +1,6 @@
 
+const ENVIRONMENT = process.env.ENVIRONMENT
+
 module.exports.token = async (req, res) => {
     const {code, codeVerifier} = req.body
 
@@ -14,7 +16,7 @@ module.exports.token = async (req, res) => {
                     client_secret: process.env.MAL_CLIENT_SECRET,
                     grant_type: "authorization_code",
                     code,
-                    redirect_uri: "http://localhost:5173/auth/mal/callback",
+                    redirect_uri: `${process.env.CLIENT_BASE_URL}/auth/mal/callback`,
                     code_verifier: codeVerifier,
                 }),
             }
@@ -24,21 +26,22 @@ module.exports.token = async (req, res) => {
 
         res.cookie("mal_access_token", access_token, {
             httpOnly: true,
-            secure: false,
-            sameSite: "strict",
-            // maxAge: expires_in * 1000,
+            secure: ENVIRONMENT === "LOCAL" ? false : true,
+            sameSite: ENVIRONMENT === "LOCAL" ? "strict" : "NONE",
+            maxAge: expires_in * 1000,
         })
 
         res.cookie("mal_refresh_token", refresh_token, {
             httpOnly: true,
-            secure: false,
-            sameSite: "strict",
+            secure: ENVIRONMENT === "LOCAL" ? false : true,
+            sameSite: ENVIRONMENT === "LOCAL" ? "strict" : "NONE",
             maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
         })
 
         res.status(200).json({message: "Login successfull"})
 
     } catch (error) {
+        console.log(error)
         return res.status(500).json({message: error})
     }
 }

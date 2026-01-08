@@ -35,10 +35,6 @@ const router = createBrowserRouter([
                 path: '/anime/:id',
                 element: <AnimeOverView />
             },
-            {
-                path: '/auth/mal/callback',
-                element: <MalCallback />
-            },
 
             // Private Route
             {
@@ -53,16 +49,10 @@ const router = createBrowserRouter([
             }
         ]
     },
-    // {
-    //     path: '/user',
-    //     element: <PrivateLayout />,
-    //     children: [
-    //         {
-    //             path: 'anime-list',
-    //             element: <AnimeList />
-    //         }
-    //     ]
-    // }
+    {
+        path: '/auth/mal/callback',
+        element: <MalCallback />
+    },
    
 ])
 
