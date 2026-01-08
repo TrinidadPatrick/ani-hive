@@ -18,6 +18,8 @@ const MalCallback = () => {
                 console.log(result.data)
             } catch (error) {
                 console.log(error)
+            } finally {
+                window.location.href = '/'
             }
         }
     }
@@ -25,10 +27,6 @@ const MalCallback = () => {
     useEffect(()=>{
         handleCallback()
     }, [])
-
-  return (
-    <div>MalCallback</div>
-  )
 }
 
 export default MalCallback

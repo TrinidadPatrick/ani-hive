@@ -1,41 +1,8 @@
 import React from 'react'
+import useAuthStore from '../../stores/AuthStore.js'
 
 const LoginButton = () => {
-
-    const generateCodeChallenge = (length = 64) => {
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~"
-        let result = ""
-
-        for (let i = 0; i < length; i++) {
-            result += chars.charAt(Math.floor(Math.random() * chars.length))
-        }
-
-        return result
-    }
-
-    const login = async () => {
-
-        const code_challenge = generateCodeChallenge()
-        localStorage.setItem("code_verifier", code_challenge)
-
-        const params = {
-            response_type: "code",
-            client_id: import.meta.env.VITE_CLIENT_ID,
-            code_challenge: code_challenge,
-            code_challenge_method: "plain",
-            state: "puppy",
-            redirect_uri: encodeURIComponent("http://localhost:5173/auth/mal/callback"),
-        }
-        
-        let string = ''
-        Object.entries(params).map(([key, value], index)=>{
-            string += index === 0 ? `?${key}=${value}` : `&${key}=${value}`
-        })
-        
-        const url = `https://myanimelist.net/v1/oauth2/authorize` + string
-        console.log(url)
-        window.location.href = url
-    }
+  const login = useAuthStore((s) => s.login)
 
   return (
     <button

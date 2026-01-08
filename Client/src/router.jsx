@@ -7,6 +7,8 @@ import Schedule from './pages/Schedule/Schedule'
 import Explore from './pages/Explore/Explore'
 import Characters from './pages/Characters/Characters'
 import MalCallback from './pages/AuthCallback/MalCallback'
+import PrivateLayout from './pages/UserLayout/PrivateLayout.jsx'
+import AnimeList from './pages/Private/AnimeList/AnimeList.jsx'
 
 const router = createBrowserRouter([
     {
@@ -36,9 +38,31 @@ const router = createBrowserRouter([
             {
                 path: '/auth/mal/callback',
                 element: <MalCallback />
+            },
+
+            // Private Route
+            {
+                path: '/user',
+                element: <PrivateLayout />,
+                children: [
+                    {
+                        path: 'anime-list',
+                        element: <AnimeList />
+                    }
+                ]
             }
         ]
     },
+    // {
+    //     path: '/user',
+    //     element: <PrivateLayout />,
+    //     children: [
+    //         {
+    //             path: 'anime-list',
+    //             element: <AnimeList />
+    //         }
+    //     ]
+    // }
    
 ])
 

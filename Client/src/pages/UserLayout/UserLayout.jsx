@@ -6,9 +6,11 @@ import 'aos/dist/aos.css';
 import ImageSearch from '../../components/ImageSearch.jsx';
 import { ToastContainer } from 'react-toastify';
 import LoginButton from '../../components/MalLogin/LoginButton.jsx';
-import MalProfileDropdown from '../../components/MalComponents/MalProfileDropdown.jsx';
+import MalProfileDropdown from '../../components/MalComponents/MalProfile/MalProfileHeading.jsx';
+import useAuthStore from '../../stores/AuthStore.js';
 
 const UserLayout = () => {
+  const checkAuth = useAuthStore((s) => s.checkAuth)
   const navigate = useNavigate()
   const location = useLocation()
   const path = location.pathname
@@ -32,6 +34,11 @@ const UserLayout = () => {
     // Cleanup event listener on unmount
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Handle authentication
+  useEffect(() => {
+    checkAuth()
+  },[])
 
   const handleSearch = () => {
     setSearchInput('')
