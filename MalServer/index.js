@@ -20,6 +20,6 @@ app.use('/api', mal_auth_router)
 app.use('/api/mal', mal_anime_router)
 
 
-app.listen(5000, () => {
-    console.log("App listening at port 5000")
-})
+// app.listen(5000, () => {
+//     console.log("App listening at port 5000")
+// })
