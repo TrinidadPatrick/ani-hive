@@ -19,6 +19,9 @@ app.use(cors({
 app.use('/api', mal_auth_router)
 app.use('/api/mal', mal_anime_router)
 
+app.get("/", (req,res) => {
+    return res.send("Welcome to AniHive Mal Server")
+})
 
 app.listen(5000, () => {
     console.log("App listening at port 5000")
