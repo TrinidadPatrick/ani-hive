@@ -12,7 +12,7 @@ const generateCodeChallenge = (length = 64) => {
     return result
 }
 
-const useAuthStore = create((set) => ({
+const useAuthStore = create((set, get) => ({
     profile: null,
     authenticated: null,
     isAuthenticating: false,
@@ -52,6 +52,24 @@ const useAuthStore = create((set) => ({
             }
         } finally {
             set({isAuthenticating: false})
+        }
+    },
+
+    logout: async () => {
+        const profile = get().profile
+        
+        if(profile)
+        {
+            try {
+                set({isAuthenticating: true})
+                const response = await http.post('auth/mal/logout', {user_id: profile.id})
+                set({profile: null, authenticated: false})
+                window.location.href = "/"
+            } catch (error) {
+                console.log(error)
+            } finally {
+                set({isAuthenticating: false})
+            }
         }
     },
 

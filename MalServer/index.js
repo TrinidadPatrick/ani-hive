@@ -2,10 +2,13 @@ require('dotenv').config();
 const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
+const { connectMongoDb } = require('./utils/MongoConnector');
 
 const app = express()
 const mal_auth_router = require('./routes/MalAuthRoutes')
-const mal_anime_router = require('./routes/MalAnimeRoutes')
+const mal_anime_router = require('./routes/MalAnimeRoutes');
+
+connectMongoDb()
 
 app.use(express.json())
 app.use(cookieParser())

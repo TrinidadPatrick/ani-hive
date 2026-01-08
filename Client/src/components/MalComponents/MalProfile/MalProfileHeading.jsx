@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import LoginButton from '../../MalLogin/LoginButton.jsx'
 import http from '../../../http.js'
 import useAuthStore from '../../../stores/AuthStore.js'
-import { CheckCircle, ChevronDown, Clock, Eye, PauseCircle, User } from 'lucide-react'
+import { CheckCircle, ChevronDown, Clock, Eye, LogOut, PauseCircle, User } from 'lucide-react'
 import { useState } from 'react'
 import { useOutsideClick } from '../../../hooks/useOutsideClick.js'
 
@@ -10,6 +10,7 @@ const MalProfileDropdown = () => {
     const ref = useRef(null)
     const authenticated = useAuthStore((s) => s.authenticated)
     const profile = useAuthStore((s) => s.profile)
+    const logout = useAuthStore((s) => s.logout)
 
     const [open, setOpen] = useState(false)
 
@@ -19,6 +20,10 @@ const MalProfileDropdown = () => {
 
     if(authenticated === null){
         return null
+    }
+
+    const handleLogout = () => {
+        console.log("Hello")
     }
 
     return (
@@ -32,7 +37,7 @@ const MalProfileDropdown = () => {
                     </div>
                     <ChevronDown color='white' size={20} />
 
-                    {open && <ProfileDropdown profile={profile} setOpen={setOpen} />}
+                    {open && <ProfileDropdown profile={profile} setOpen={setOpen} logout={logout} />}
                 </div>
             )
             : 
@@ -44,18 +49,19 @@ const MalProfileDropdown = () => {
   )
 }
 
-const ProfileDropdown = ({profile, setOpen}) => {
+const ProfileDropdown = ({profile, setOpen, logout}) => {
     const menuItems = [
-        { icon: Eye, label: 'Watching', action: () => console.log('Watching clicked') },
-        { icon: CheckCircle, label: 'Completed', action: () => console.log('Completed clicked') },
-        { icon: Clock, label: 'Plan to Watch', action: () => console.log('Plan to Watch clicked') },
-        { icon: PauseCircle, label: 'On Hold', action: () => console.log('On Hold clicked') },
+        { icon: Eye, label: 'Watching', action: () => console.log('Watching clicked'), className: 'text-slate-400' },
+        { icon: CheckCircle, label: 'Completed', action: () => console.log('Completed clicked'), className: 'text-slate-400' },
+        { icon: Clock, label: 'Plan to Watch', action: () => console.log('Plan to Watch clicked'), className: 'text-slate-400' },
+        { icon: PauseCircle, label: 'On Hold', action: () => console.log('On Hold clicked'), className: 'text-slate-400' },
+        { icon: LogOut, label: 'Logout', action: () => logout(), className: 'text-red-500' },
     ];
 
     
     return (
         <main className=' bg-slate-800 rounded-lg shadow-xl border border-slate-700 absolute top-10 right-0'>
-            <header className='flex items-center px-4 py-3 gap-3'>
+            <header className='flex items-center px-4 py-3 gap-3 border-b border-b-slate-600'>
                 <User className="w-5 h-5 text-slate-400" />
                 <h3 className="font-medium whitespace-nowrap text-slate-200">{profile?.name}</h3>
             </header>
@@ -69,8 +75,8 @@ const ProfileDropdown = ({profile, setOpen}) => {
                   }}
                   className="w-full flex items-center gap-3 px-4 py-3 text-slate-200 hover:bg-slate-700 transition-colors duration-150 text-left cursor-pointer"
                 >
-                  <Icon className="w-5 h-5 text-slate-400" />
-                  <span className="font-medium whitespace-nowrap">{item.label}</span>
+                  <Icon className={`w-5 h-5 ${item.className}`} />
+                  <span className={`font-medium whitespace-nowrap ${item.className}`}>{item.label}</span>
                 </button>
               );
             })}
