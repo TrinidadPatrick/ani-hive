@@ -90,8 +90,8 @@ module.exports.refresh = async (session, res) => {
             res.cookie("session_id", session_id, {
                 httpOnly: true,
                 secure: ENVIRONMENT === "LOCAL" ? false : true,
-                sameSite: ENVIRONMENT === "LOCAL" ? "strict" : "NONE",
-                maxAge: 2 * 60 * 60 * 1000, //2hrs
+                sameSite: ENVIRONMENT === "LOCAL" ? "strict" : "None",
+                maxAge: 121 * 60 * 1000, //2hrs and 1 minute
             })
 
             // delete old session since its redundantt nwo

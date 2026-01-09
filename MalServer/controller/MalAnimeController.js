@@ -19,7 +19,7 @@ module.exports.me = async (req, res) => {
           headers: { Authorization: `Bearer ${access_token}` },
         });
         if(response.status === 401) return res.status(401).json({ error: "Unauthorized" });
-        
+
         const data = await response.json();
 
         return res.status(200).json(data);

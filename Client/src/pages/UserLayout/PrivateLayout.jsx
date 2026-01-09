@@ -15,7 +15,6 @@ const PrivateLayout = () => {
 
   return (
     <div>
-        s
         <Outlet />
     </div>
   )

@@ -42,7 +42,7 @@ const router = createBrowserRouter([
                 element: <PrivateLayout />,
                 children: [
                     {
-                        path: 'anime-list',
+                        path: 'anime-list/:status',
                         element: <AnimeList />
                     }
                 ]
