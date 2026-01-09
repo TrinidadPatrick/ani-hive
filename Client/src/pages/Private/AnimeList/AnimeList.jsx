@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import useUserAnimeStore from '../../../stores/UserAnimeStore'
 
 const AnimeList = () => {
   const {status} = useParams()
+  const getList = useUserAnimeStore((s) => s.getList)
 
-  console.log(status)
+  useEffect(() => {
+    getList(status)
+  }, [status])
+
   return (
     <div>AnimeList</div>
   )

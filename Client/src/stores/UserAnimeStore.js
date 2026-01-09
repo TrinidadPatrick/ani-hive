@@ -10,6 +10,7 @@ const useUserAnimeStore = create((set, get) => ({
     plan_to_watch: null,
 
     getList: async (status) => {
+        console.log("Hello")
         try {
             set({isFinite: true})
             const response = await http.get(`mal/anime/${status}`)

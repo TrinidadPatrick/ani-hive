@@ -2,9 +2,10 @@ import React, { useEffect, useRef } from 'react'
 import LoginButton from '../../MalLogin/LoginButton.jsx'
 import http from '../../../http.js'
 import useAuthStore from '../../../stores/AuthStore.js'
-import { CheckCircle, ChevronDown, Clock, Eye, LogOut, PauseCircle, User } from 'lucide-react'
+import { CheckCircle, ChevronDown, Clock, Droplet, Eye, LogOut, PauseCircle, TicketX, User } from 'lucide-react'
 import { useState } from 'react'
 import { useOutsideClick } from '../../../hooks/useOutsideClick.js'
+import {useNavigate} from 'react-router-dom'
 
 const MalProfileDropdown = () => {
     const ref = useRef(null)
@@ -50,11 +51,13 @@ const MalProfileDropdown = () => {
 }
 
 const ProfileDropdown = ({profile, setOpen, logout}) => {
+    const navigate = useNavigate()
     const menuItems = [
-        { icon: Eye, label: 'Watching', action: () => console.log('Watching clicked'), className: 'text-slate-400' },
-        { icon: CheckCircle, label: 'Completed', action: () => console.log('Completed clicked'), className: 'text-slate-400' },
-        { icon: Clock, label: 'Plan to Watch', action: () => console.log('Plan to Watch clicked'), className: 'text-slate-400' },
-        { icon: PauseCircle, label: 'On Hold', action: () => console.log('On Hold clicked'), className: 'text-slate-400' },
+        { icon: Eye, label: 'Watching', action: () => navigate('/user/anime-list/watching'), className: 'text-slate-400' },
+        { icon: CheckCircle, label: 'Completed', action: () => navigate('/user/anime-list/completed'), className: 'text-slate-400' },
+        { icon: Clock, label: 'Plan to Watch', action: () => navigate('/user/anime-list/plan_to_watch'), className: 'text-slate-400' },
+        { icon: PauseCircle, label: 'On Hold', action: () => navigate('/user/anime-list/on_hold'), className: 'text-slate-400' },
+        { icon: TicketX, label: 'Dropped', action: () => navigate('/user/anime-list/dropped') , className: 'text-slate-400' },
         { icon: LogOut, label: 'Logout', action: () => logout(), className: 'text-red-500' },
     ];
 

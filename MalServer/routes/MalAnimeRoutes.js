@@ -5,6 +5,6 @@ const { sessionMiddleware } = require('../middleware/SessionMiddleware.js')
 const router = express.Router()
 
 router.get('/me', sessionMiddleware, me)
-router.get('/anime/:status', myAnimeList)
+router.get('/anime/:status', sessionMiddleware, myAnimeList)
 
 module.exports = router
