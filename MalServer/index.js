@@ -7,6 +7,7 @@ const { connectMongoDb } = require('./utils/MongoConnector');
 const app = express()
 const mal_auth_router = require('./routes/MalAuthRoutes')
 const mal_anime_router = require('./routes/MalAnimeRoutes');
+const { sessionMiddleware } = require('./middleware/SessionMiddleware.js');
 
 connectMongoDb()
 
