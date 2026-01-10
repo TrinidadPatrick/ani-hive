@@ -11,10 +11,8 @@ const PrivateLayout = () => {
       }
     },[authenticated])
 
-    console.log(authenticated)
-
   return (
-    <div>
+    <div className='w-full h-[100svh]'>
         <Outlet />
     </div>
   )

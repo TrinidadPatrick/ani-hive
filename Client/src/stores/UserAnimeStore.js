@@ -9,18 +9,19 @@ const useUserAnimeStore = create((set, get) => ({
     dropped: null,
     plan_to_watch: null,
 
-    getList: async (status) => {
-        console.log("Hello")
+
+    getList: async (status, offset = 0, isFetching = true) => {
         try {
-            set({isFinite: true})
-            const response = await http.get(`mal/anime/${status}`)
-            console.log(response.data)
-            // set({profile: response.data, authenticated: true})
+            set({isFetching: get()[status] === null})
+            const response = await http.get(`mal/anime/${status}?offset=${offset}`)
+            const animeList = response.data.data
+            const nextPageLink = response.data.paging.next
+            set({[status] : {
+                animeList: animeList,
+                nextPageLink: nextPageLink || ''
+            }}) 
         } catch (error) {
             console.log(error)
-            if(error.status === 401){
-                set({authenticated: false})
-            }
         } finally {
             set({isFetching: false})
         }
