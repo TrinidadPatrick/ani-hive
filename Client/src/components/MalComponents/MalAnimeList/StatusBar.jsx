@@ -12,7 +12,7 @@ const StatusBar = ({status}) => {
         { icon: PauseCircle, label: 'On hold', value: 'on_hold'},
         { icon: TicketX, label: 'Dropped', value: 'dropped'},
     ];
-
+    
     if(profile === null) return null
 
   return (

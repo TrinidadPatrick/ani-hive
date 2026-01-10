@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
 import useUserAnimeStore from '../../../stores/UserAnimeStore'
 import AnimeCard from '../../../components/MalComponents/MalAnimeList/AnimeCard.jsx';
@@ -11,23 +11,60 @@ const AnimeList = () => {
   const getList = useUserAnimeStore((s) => s.getList)
   const list = useUserAnimeStore((s) => s[status])
   const isFetching = useUserAnimeStore((s) => s.isFetching)
+  const [displayLimit, setDisplayLimit] = useState(20);
+  const observerTarget = useRef(null);
 
   const [searchValue, setSearchValue] = useState('')
+  const [genreValue, setGenreValue] = useState([])
+  const [dateValue, setDateValue] = useState({
+          startDate: {
+            year: null, month: null, day: null
+          },
+          endDate: {
+            year: null, month: null, day: null
+          }
+      });
 
   if (!validStatuses.includes(status)) {
     return <Navigate to="/" replace />;
   }
 
-  // console.log(list)
   useEffect(() => {
     getList(status)
+    setDisplayLimit(20)
   }, [status])
 
-  const mapAnime = useMemo(()=> {
-    if(searchValue === '') return list.animeList
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setDisplayLimit((prev) => prev + 10);
+        }
+      },
+      { threshold: 1.0 }
+    );
 
-    return list?.animeList?.filter((anime) => anime.node.title.toLowerCase().includes(searchValue.toLowerCase()))
-  },[searchValue, status])
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => observer.disconnect();
+  }, [list]);
+
+
+  const mapAnime = useMemo(()=> {
+    if(list !== null){
+    const shouldFilterDate = dateValue.startDate.year !== null
+    const startDate = new Date(dateValue.startDate.year, dateValue.startDate.month, dateValue.startDate.day)
+    const endDate = (!dateValue.endDate.year && !dateValue.endDate.month && !dateValue.endDate.day) ? new Date() : new Date(dateValue.endDate.year, dateValue.endDate.month, dateValue.endDate.day)
+
+    let finalList = []
+    finalList =  list?.animeList?.filter((anime) => anime.node.title.toLowerCase().includes(searchValue.toLowerCase()))
+    finalList = genreValue.length !== 0 ? finalList.filter((a) => a.node.genres.some((b) => genreValue.includes(b.name))) : finalList
+    finalList = shouldFilterDate ? finalList.filter((list) => new Date(list.node.start_date) >= startDate && new Date(list.node.end_date) <= endDate) : finalList
+    return finalList
+    }
+  },[searchValue, status, list, genreValue, dateValue])
 
   return (
     <div className='w-full h-full pt-20 flex flex-col max-w-7xl xl:max-w-[90vw] mx-auto'> 
@@ -38,15 +75,15 @@ const AnimeList = () => {
       </header>
 
       {/* Status bar and search input */}
-      <section className='w-full flex justify-between items-center'>
+      <section className='w-full flex flex-col lg:flex-row justify-between items-center'>
         <StatusBar status={status} />
-        <AnimeListSearch searchValue={searchValue} setSearchValue={setSearchValue} />
+        <AnimeListSearch setGenreValue={setGenreValue} setSearchValue={setSearchValue} setDateValue={setDateValue} />
       </section>
       
       <section className='grid grid-cols-1 semiMd:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-4 lg:gap-6 p-4'>
       {isFetching && <div className='text-white w-full h-full flex justify-center items-center'>Loading</div>}
       {
-        list && mapAnime?.map((item) => {
+        list && mapAnime?.slice(0, displayLimit)?.map((item) => {
           const anime = item.node
           const animeInfo = item.list_status
           return (
@@ -56,6 +93,7 @@ const AnimeList = () => {
           )
         })
       }
+      <div ref={observerTarget} style={{ height: '20px' }}></div>
       </section>
     </div>
   )

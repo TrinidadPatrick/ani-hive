@@ -22,7 +22,7 @@ const StatusDrodown = ({selectedWatchStatus, setSelectedWatchStatus, anime}) => 
     })
 
   return (
-    <div ref={ref} onClick={()=>setIsOpen(!isOpen)} className='bg-[#25252D] border border-pink-500 h-full px-2 flex items-center rounded-lg relative gap-2 cursor-pointer hover:bg-[#1b1b1b]'>
+    <div ref={ref} onClick={(e)=>{e.stopPropagation();;setIsOpen(!isOpen)}} className='bg-[#25252D] border border-pink-500 h-full px-2 flex items-center rounded-lg relative gap-2 cursor-pointer hover:bg-[#1b1b1b]'>
         <span className='text-pink-500 capitalize text-sm whitespace-nowrap'>{selectedWatchStatus.replaceAll("_", " ")}</span>
 
         <ChevronDown className='text-pink-500' width={20}  />
@@ -30,7 +30,7 @@ const StatusDrodown = ({selectedWatchStatus, setSelectedWatchStatus, anime}) => 
         {
             isOpen &&
             (
-                <div className='absolute bg-[#25252D] top-10 left-0 rounded-lg gap-2 flex flex-col'>
+                <div className='absolute bg-[#25252D] z-90 top-10 left-0 rounded-lg gap-2 flex flex-col'>
             {
                 statusItems.map((item, index)=> {
                     return (

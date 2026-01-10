@@ -41,7 +41,8 @@ module.exports.myAnimeList = async (req, res) => {
 
       const access_token = session.access_token ? session.access_token : await refresh(session, res)
       try {
-        const response = await fetch(`https://api.myanimelist.net/v2/users/@me/animelist?status=${status}&limit=1000&sort=list_updated_at&nsfw=true&offset=${offset}&fields=list_status,num_episodes,start_date,end_date`, {
+        const response = await fetch(`https://api.myanimelist.net/v2/users/@me/animelist?status=${status}&limit=1000&sort=list_updated_at&nsfw=true&offset=${offset}
+          &fields=list_status,num_episodes,start_date,end_date,genres,studios,media_type`, {
           headers: { Authorization: `Bearer ${access_token}` },
         });
         if(!response.ok) return res.status(400).json({message: "Bad request"})

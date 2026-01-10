@@ -117,7 +117,7 @@ const AnimeOverView = () => {
             );
             const results = data.data.Media.relations.nodes
             if(results){
-                const relatedAnimes = results.filter((result) => result.type === "ANIME")
+                const relatedAnimes = results.filter((result) => result.type === "ANIME" && result.idMal)
                 setAnimeRelations(relatedAnimes)
             }   
         } catch (err) {

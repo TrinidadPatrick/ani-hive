@@ -21,7 +21,7 @@ const ScorePicker = ({score, setScore}) => {
         return (
              <main className='fixed w-[100svw] cursor-pointer h-[100dvh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.2)]'>
                 <div className='absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-slate-900 p-4 w-sm rounded-lg'>
-                    <button onClick={()=>setIsOpen(false)} className='text-white absolute right-5 cursor-pointer hover:text-gray-300'><X width={17} /></button>
+                    <button onClick={(e)=>{setIsOpen(false);e.stopPropagation();}} className='text-white absolute right-5 cursor-pointer hover:text-gray-300'><X width={17} /></button>
                     <h2 className='font-bold text-xl text-white text-center pb-3'>Select Rating</h2>
                     <div className='flex flex-col gap-2'>
                         {

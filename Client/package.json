@@ -15,6 +15,7 @@
     "@videojs/http-streaming": "^3.17.0",
     "aos": "^2.3.4",
     "axios": "^1.9.0",
+    "dayjs": "^1.11.19",
     "hls.js": "^1.6.2",
     "lottie-web": "^5.13.0",
     "lucide-react": "^0.525.0",
