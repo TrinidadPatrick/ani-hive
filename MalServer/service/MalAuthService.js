@@ -91,7 +91,7 @@ module.exports.refresh = async (session, res) => {
                 httpOnly: true,
                 secure: ENVIRONMENT === "LOCAL" ? false : true,
                 sameSite: ENVIRONMENT === "LOCAL" ? "strict" : "None",
-                maxAge: 121 * 60 * 1000, //2hrs and 1 minute
+                maxAge: 1440 * 60 * 1000, //2hrs and 1 minute
             })
 
             // delete old session since its redundantt nwo

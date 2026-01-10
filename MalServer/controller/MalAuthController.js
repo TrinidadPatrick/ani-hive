@@ -55,7 +55,7 @@ module.exports.token = async (req, res) => {
                 httpOnly: true,
                 secure: ENVIRONMENT === "LOCAL" ? false : true,
                 sameSite: ENVIRONMENT === "LOCAL" ? "strict" : "None",
-                maxAge: 121 * 60 * 1000 //2hrs and 1 min
+                maxAge: 1440 * 60 * 1000 //2hrs and 1 min
             })
 
             return res.status(200).json({message: "Login successfull"})

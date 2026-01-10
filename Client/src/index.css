@@ -80,7 +80,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* --semiMd: 768px; */
+  --breakpoint-semiMd: 850px;
   --breakpoint-xs: 30rem;
   --breakpoint-xxs: 20rem;
 }

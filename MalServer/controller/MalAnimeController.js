@@ -15,7 +15,7 @@ module.exports.me = async (req, res) => {
         let access_token = session.access_token ? session.access_token : await refresh(session, res)
         
         // get user profile using old unexpired access token or new access token
-        const response = await fetch("https://api.myanimelist.net/v2/users/@me", {
+        const response = await fetch("https://api.myanimelist.net/v2/users/@me?fields=anime_statistics", {
           headers: { Authorization: `Bearer ${access_token}` },
         });
         if(response.status === 401) return res.status(401).json({ error: "Unauthorized" });
@@ -41,13 +41,42 @@ module.exports.myAnimeList = async (req, res) => {
 
       const access_token = session.access_token ? session.access_token : await refresh(session, res)
       try {
-        const response = await fetch(`https://api.myanimelist.net/v2/users/@me/animelist?status=${status}&limit=1000&sort=list_updated_at&nsfw=true&offset=${offset}&fields=list_status,num_episodes`, {
+        const response = await fetch(`https://api.myanimelist.net/v2/users/@me/animelist?status=${status}&limit=1000&sort=list_updated_at&nsfw=true&offset=${offset}&fields=list_status,num_episodes,start_date,end_date`, {
           headers: { Authorization: `Bearer ${access_token}` },
         });
         if(!response.ok) return res.status(400).json({message: "Bad request"})
         const data = await response.json();
         res.json(data);
       } catch (err) {
+        res.status(500).json({ error: "Failed to fetch user info", details: err });
+      }
+    }
+}
+
+module.exports.updateAnime = async (req, res) => {
+    const {id,num_watched_episodes,status,score} = req.body
+    const session = req.session
+    if(session){
+      console.log({id,num_watched_episodes,status})
+      const access_token = session.access_token ? session.access_token : await refresh(session, res)
+
+      try {
+        const response = await fetch(`https://api.myanimelist.net/v2/anime/${id}/my_list_status`, {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${access_token}` },
+          body: new URLSearchParams({
+                status,
+                num_watched_episodes,
+                score
+                }),
+        });
+
+        if(!response.ok) return res.status(400).json({message: "Bad request"})
+
+        const data = await response.json();
+        res.status(200).json(data);
+      } catch (err) {
+        console.log(err)
         res.status(500).json({ error: "Failed to fetch user info", details: err });
       }
     }
