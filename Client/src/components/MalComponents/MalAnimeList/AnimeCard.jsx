@@ -39,7 +39,7 @@ const AnimeCard = ({anime, animeInfo}) => {
   }
 
   return (
-    <div className='anime_card cursor-pointer flex gap-3 relative border border-gray-800/20 justify-start p-4 bg-themeDarker rounded-lg'>
+    <div className='anime_card cursor-pointer flex gap-3 relative border border-gray-800/20 justify-start p-2 sm:p-4 bg-themeDarker rounded-lg'>
       {/* Image Contianer */}
       <div className='overflow-hidden flex-none w-20 aspect-[2/2] lg:w-22 bg-white rounded-md'>
         <img src={anime.main_picture.medium} className='w-full h-full object-cover object-center brightness-75' />

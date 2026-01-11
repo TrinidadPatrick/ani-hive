@@ -1,12 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import useUserAnimeStore from '../../../stores/UserAnimeStore'
 import AnimeCard from '../../../components/MalComponents/MalAnimeList/AnimeCard.jsx';
 import StatusBar from '../../../components/MalComponents/MalAnimeList/StatusBar.jsx';
 import AnimeListSearch from '../../../components/MalComponents/MalAnimeList/AnimeListSearch.jsx';
 import useScrollPosition from '../../../stores/ScrollPositionStore.js';
+import UserStatistics from '../../../components/MalComponents/MalAnimeList/UserStatistics.jsx';
+import { motion } from "framer-motion";
+import AnimeCardV2 from '../../../components/MalComponents/MalAnimeList/AnimeCardV2.jsx';
 
 const AnimeList = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const validStatuses = ['watching', 'completed', 'on_hold', 'dropped', 'plan_to_watch'];
   const {status} = useParams()
@@ -17,6 +21,8 @@ const AnimeList = () => {
   const isFetching = useUserAnimeStore((s) => s.isFetching)
   const [displayLimit, setDisplayLimit] = useState(20);
   const observerTarget = useRef(null);
+
+  const [listType, setListType] = useState(searchParams.get('listType') || 'grid')
 
   const [searchValue, setSearchValue] = useState('')
   const [genreValue, setGenreValue] = useState([])
@@ -94,22 +100,39 @@ const AnimeList = () => {
         <h5 className='text-gray-300 text-lg font-semibold'>Track your anime in with fashion</h5>
       </header>
 
+      {/* User statistics */}
+      <section>
+        <UserStatistics />
+      </section>
+
       {/* Status bar and search input */}
       <section className='w-full flex flex-col lg:flex-row justify-between items-center'>
         <StatusBar status={status} setScrollPosition={setScrollPosition} scrollPosition={scrollPosition} />
-        <AnimeListSearch setGenreValue={setGenreValue} setSearchValue={setSearchValue} setDateValue={setDateValue} />
+        <AnimeListSearch listType={listType} setListType={setListType} setGenreValue={setGenreValue} setSearchValue={setSearchValue} setDateValue={setDateValue} />
       </section>
       
-      <section className='grid grid-cols-1 semiMd:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-4 lg:gap-6 p-4'>
+      <section className={` grid ${listType === 'grid' ? ' grid-cols-1 semiMd:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-4 lg:gap-6 ' : 
+        'grid-cols-1 xxs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 semiMd:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-6'} p-4`}>
       {isFetching && <div className='text-white w-full h-full flex justify-center items-center'>Loading</div>}
       {
-        list && mapAnime?.slice(0, displayLimit)?.map((item) => {
+        list && mapAnime?.slice(0,displayLimit)?.map((item, index) => {
           const anime = item.node
           const animeInfo = item.list_status
           return (
-            <div onClick={()=>{handleSelect(`/anime/${anime.id}`)}} className='overflow-visible' key={anime.id}>
-              <AnimeCard anime={anime} animeInfo={animeInfo} status={status} />
+            <motion.div
+            key={anime.id}
+            layout="position"
+            className=""
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: (index % 10) * 0.05 }}
+          >
+            <div onClick={()=>{handleSelect(`/anime/${anime.id}`)}} className='overflow-visible h-full' key={anime.id}>
+              {
+                listType === 'grid' ? <AnimeCard anime={anime} animeInfo={animeInfo} status={status} /> : <AnimeCardV2 anime={anime} animeInfo={animeInfo} status={status} />
+              }
             </div>
+            </motion.div>
           )
         })
       }

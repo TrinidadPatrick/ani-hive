@@ -16,7 +16,7 @@ const StatusBar = ({status, setScrollPosition, scrollPosition}) => {
     if(profile === null) return null
 
   return (
-    <div className='w-full p-4 flex'>
+    <div className='hidden w-full p-4 sm:flex'>
         {/* Status items */}
         <div className='flex gap-3 flex-wrap'>
             {

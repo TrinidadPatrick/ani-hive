@@ -5,9 +5,9 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import ImageSearch from '../../components/ImageSearch.jsx';
 import { ToastContainer } from 'react-toastify';
-import LoginButton from '../../components/MalLogin/LoginButton.jsx';
 import MalProfileDropdown from '../../components/MalComponents/MalProfile/MalProfileHeading.jsx';
 import useAuthStore from '../../stores/AuthStore.js';
+import { useRegisterSW } from 'virtual:pwa-register/react'
 
 const UserLayout = () => {
   const checkAuth = useAuthStore((s) => s.checkAuth)
@@ -17,6 +17,8 @@ const UserLayout = () => {
   const [searchinput, setSearchInput] = useState('')
   const [showSidebar, setShowSidebar] = useState(false)
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+  useRegisterSW({ onRegistered(r) { console.log('SW Registered') } })
   
   useEffect(()=>{
     AOS.init({

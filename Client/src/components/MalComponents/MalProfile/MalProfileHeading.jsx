@@ -6,6 +6,7 @@ import { CheckCircle, ChevronDown, Clock, Droplet, Eye, LogOut, PauseCircle, Tic
 import { useState } from 'react'
 import { useOutsideClick } from '../../../hooks/useOutsideClick.js'
 import {useNavigate} from 'react-router-dom'
+import useScrollPosition from '../../../stores/ScrollPositionStore.js'
 
 const MalProfileDropdown = () => {
     const ref = useRef(null)
@@ -34,7 +35,7 @@ const MalProfileDropdown = () => {
             (
                 <div ref={ref} onClick={()=>setOpen(!open)} className='relative flex gap-1 items-center cursor-pointer z-90'>
                     <div className='w-9 h-9  hover:opacity-90 border border-gray-700 rounded-full'>
-                        <img className='' src='https://avatar.iran.liara.run/public' />
+                        <img className='' src={`https://robohash.org/${profile.name}`} />
                     </div>
                     <ChevronDown color='white' size={20} />
 
@@ -51,14 +52,16 @@ const MalProfileDropdown = () => {
 }
 
 const ProfileDropdown = ({profile, setOpen, logout}) => {
+    const scrollPosition = useScrollPosition((s) => s.scrollPosition)
+    const setScrollPosition = useScrollPosition((s) => s.setScrollPosition)
     const navigate = useNavigate()
     const menuItems = [
-        { icon: Eye, label: 'Watching', action: () => navigate('/user/anime-list/watching'), className: 'text-slate-400' },
-        { icon: CheckCircle, label: 'Completed', action: () => navigate('/user/anime-list/completed'), className: 'text-slate-400' },
-        { icon: Clock, label: 'Plan to Watch', action: () => navigate('/user/anime-list/plan_to_watch'), className: 'text-slate-400' },
-        { icon: PauseCircle, label: 'On Hold', action: () => navigate('/user/anime-list/on_hold'), className: 'text-slate-400' },
-        { icon: TicketX, label: 'Dropped', action: () => navigate('/user/anime-list/dropped') , className: 'text-slate-400' },
-        { icon: LogOut, label: 'Logout', action: () => logout(), className: 'text-red-500' },
+        { icon: Eye, label: 'Watching', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/watching')}, className: 'text-slate-400' },
+        { icon: CheckCircle, label: 'Completed', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/completed')}, className: 'text-slate-400' },
+        { icon: Clock, label: 'Plan to Watch', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/plan_to_watch')}, className: 'text-slate-400' },
+        { icon: PauseCircle, label: 'On Hold', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/on_hold')}, className: 'text-slate-400' },
+        { icon: TicketX, label: 'Dropped', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/dropped')} , className: 'text-slate-400' },
+        { icon: LogOut, label: 'Logout', action: () => {setScrollPosition({...scrollPosition, userList: null});logout()}, className: 'text-red-500' },
     ];
 
     
