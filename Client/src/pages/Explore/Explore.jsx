@@ -5,10 +5,13 @@ import Select from 'react-select';
 import Footer from '../Home/Footer';
 import useExploreAnimeList from '../../stores/ExploreAnimeListStore';
 import ExploreNavbar from './ExploreNavbar';
+import useScrollPosition from '../../stores/ScrollPositionStore';
 
 const Explore = () => {
   const navigate = useNavigate()
   const otherRefs = useRef([])
+  const scrollPosition = useScrollPosition((s) => s.scrollPosition)
+  const setScrollPosition = useScrollPosition((s) => s.setScrollPosition)
   const animeList = useExploreAnimeList((s) => s.animeList)
   const setAnimeList = useExploreAnimeList((s) => s.setAnimeList)
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -150,6 +153,7 @@ const Explore = () => {
 
   const handlePaginate = (pageNum) => {
     setPage(pageNum)
+    setScrollPosition({...scrollPosition, explore : null})
     handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, pageNum)
   }
 
@@ -191,6 +195,12 @@ const Explore = () => {
       setPageList(pageLists);
     }
   }, [pageInfo, screenWidth])
+
+  useEffect(()=>{
+    if(scrollPosition?.explore && animeList !== null) {
+      window.scrollTo(0, scrollPosition.explore);
+    }
+  },[animeList])
 
   return (
     <main onClick={()=>setShowState(false)} className='w-full h-[100dvh] bg-[#141414] flex flex-col gap-5 items-center pt-20'>
@@ -254,7 +264,7 @@ const Explore = () => {
             {
               if(array[index - 1]?.mal_id != anime?.mal_id){
                 return (
-                  <div key={index} onClick={()=> {navigate('/anime/'+anime?.mal_id)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
+                  <div key={index} onClick={()=> {setScrollPosition({...scrollPosition, explore: window.pageYOffset});navigate('/anime/'+anime?.mal_id)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
                     <div className="w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-0">
                       <div className="w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>
                       <svg

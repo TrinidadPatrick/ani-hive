@@ -1,9 +1,12 @@
 import { useState } from "react";
 import OutsideClickHandler from 'react-outside-click-handler';
+import useScrollPosition from "../../stores/ScrollPositionStore";
 
 const ExploreNavbar = (props) => {
     const {selectedSortItem,setSelectedGenres,setShowOtherFilter, otherFilters,setShowSort,sortItems, setSelectedStatus, setSelectedSeason, setSelectedYear, setSelectedType,otherRefs, setSelectedSortItem, searchValue, selectedGenres, showState, setShowState, genres, themes, selectedStatus, status, showSort, showOtherFilter, setSearchValue, handleSearch, selectedSeason,selectedYear, selectedType} = props
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    const scrollPosition = useScrollPosition((s) => s.scrollPosition)
+    const setScrollPosition = useScrollPosition((s) => s.setScrollPosition)
 
     const isClearFilterDisabled = () => {
     return selectedGenres.length == 0 && selectedStatus == '' && selectedSeason == '' && selectedYear == '' && selectedType == '' && selectedSortItem.order_by == ''
@@ -59,7 +62,8 @@ const ExploreNavbar = (props) => {
       }
   }
 
-    const handleClear = () => {
+  const handleClear = () => {
+        setScrollPosition({...scrollPosition, explore : null})
         handleSearch(searchValue, [], '', '', '', '','','', 1)
         setShowState('')
         setSelectedSortItem({
@@ -71,12 +75,13 @@ const ExploreNavbar = (props) => {
         setSelectedSeason('')
         setSelectedYear('') 
         setSelectedType('')
-    }
+  }
+
   return (
     <div onClick={(e)=> e.stopPropagation()} className=" w-[95%]  lg:w-[90%] flex gap-y-7 gap-x-2 py-2 z-[99999999]">
             {/* Search Bar */}
             <div className='flex w-full gap-3 items-center relative'>
-              <input onKeyDown={(e)=>{if(e.key === 'Enter') handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}} value={searchValue} onChange={(e)=>{setSearchValue(e.target.value)}} type="text" className=" outline-0 w-full ps-2 h-10 bg-gray-800 rounded-lg text-white" placeholder="Search..." />
+              <input onKeyDown={(e)=>{if(e.key === 'Enter') {setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}}} value={searchValue} onChange={(e)=>{setSearchValue(e.target.value)}} type="text" className=" outline-0 w-full ps-2 h-10 bg-gray-800 rounded-lg text-white" placeholder="Search..." />
               <button className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48"><g fill="none" stroke="lightGray" strokeLinejoin="round" strokeWidth="4"><path d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z"/><path strokeLinecap="round" d="M26.657 14.343A7.98 7.98 0 0 0 21 12a7.98 7.98 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485"/></g></svg>
               </button>
@@ -339,7 +344,7 @@ const ExploreNavbar = (props) => {
             </div>
     
             {/* Search button */}
-            <button onClick={()=>{handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1);setShowState('')}} 
+            <button onClick={()=>{setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1);setShowState('')}} 
             className='flex w-fit px-4 md:px-10 lg:w-fit text-center justify-center text-white items-center relative bg-pink-500 hover:bg-pink-400 rounded-lg cursor-pointer'>
               Search
             </button>
