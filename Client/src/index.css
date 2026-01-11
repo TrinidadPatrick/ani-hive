@@ -75,11 +75,6 @@
     line-height: 1 !important;
   }
 
-  .anime_card{
-    content-visibility: auto;
-  contain-intrinsic-size: 300px; /* An estimate of your card height */
-  }
-
   /* .recoList::-webkit-scrollbar-thumb */
 
 @import "tailwindcss";

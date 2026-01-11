@@ -30,7 +30,7 @@ const StatusDrodown = ({selectedWatchStatus, setSelectedWatchStatus, anime}) => 
         {
             isOpen &&
             (
-                <div className='absolute bg-[#25252D] z-90 top-10 left-0 rounded-lg gap-2 flex flex-col'>
+                <div className='absolute bg-[#25252D] z-[999999999999999] top-10 left-0 rounded-lg gap-2 flex flex-col'>
             {
                 statusItems.map((item, index)=> {
                     return (

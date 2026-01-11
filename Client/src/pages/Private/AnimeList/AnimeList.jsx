@@ -1,13 +1,17 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Navigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import useUserAnimeStore from '../../../stores/UserAnimeStore'
 import AnimeCard from '../../../components/MalComponents/MalAnimeList/AnimeCard.jsx';
 import StatusBar from '../../../components/MalComponents/MalAnimeList/StatusBar.jsx';
 import AnimeListSearch from '../../../components/MalComponents/MalAnimeList/AnimeListSearch.jsx';
+import useScrollPosition from '../../../stores/ScrollPositionStore.js';
 
 const AnimeList = () => {
+  const navigate = useNavigate()
   const validStatuses = ['watching', 'completed', 'on_hold', 'dropped', 'plan_to_watch'];
   const {status} = useParams()
+  const scrollPosition = useScrollPosition((s) => s.scrollPosition)
+  const setScrollPosition = useScrollPosition((s) => s.setScrollPosition)
   const getList = useUserAnimeStore((s) => s.getList)
   const list = useUserAnimeStore((s) => s[status])
   const isFetching = useUserAnimeStore((s) => s.isFetching)
@@ -35,11 +39,23 @@ const AnimeList = () => {
   }, [status])
 
   useEffect(() => {
+    if(list && scrollPosition?.userList){
+      window.scrollTo({
+        top: scrollPosition.userList
+      })
+    }
+  },[list])
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
+       if(!scrollPosition?.userList){
+         if (entries[0].isIntersecting) {
           setDisplayLimit((prev) => prev + 10);
         }
+       }else{
+        setDisplayLimit(100000)
+       }
       },
       { threshold: 1.0 }
     );
@@ -51,6 +67,10 @@ const AnimeList = () => {
     return () => observer.disconnect();
   }, [list]);
 
+  const handleSelect = (url) => {
+    setScrollPosition({...scrollPosition, userList: window.pageYOffset})
+    navigate(url)
+  }
 
   const mapAnime = useMemo(()=> {
     if(list !== null){
@@ -76,7 +96,7 @@ const AnimeList = () => {
 
       {/* Status bar and search input */}
       <section className='w-full flex flex-col lg:flex-row justify-between items-center'>
-        <StatusBar status={status} />
+        <StatusBar status={status} setScrollPosition={setScrollPosition} scrollPosition={scrollPosition} />
         <AnimeListSearch setGenreValue={setGenreValue} setSearchValue={setSearchValue} setDateValue={setDateValue} />
       </section>
       
@@ -87,7 +107,7 @@ const AnimeList = () => {
           const anime = item.node
           const animeInfo = item.list_status
           return (
-            <div className='' key={anime.id}>
+            <div onClick={()=>{handleSelect(`/anime/${anime.id}`)}} className='overflow-visible' key={anime.id}>
               <AnimeCard anime={anime} animeInfo={animeInfo} status={status} />
             </div>
           )

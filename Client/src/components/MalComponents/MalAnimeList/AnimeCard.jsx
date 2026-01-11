@@ -39,14 +39,14 @@ const AnimeCard = ({anime, animeInfo}) => {
   }
 
   return (
-    <div onClick={()=>{navigate(`/anime/${anime.id}`)}} className='anime_card cursor-pointer flex gap-3 relative border border-gray-800/20 justify-start p-4 bg-[#1b1b1b] rounded-lg'>
+    <div className='anime_card cursor-pointer flex gap-3 relative border border-gray-800/20 justify-start p-4 bg-themeDarker rounded-lg'>
       {/* Image Contianer */}
       <div className='overflow-hidden flex-none w-20 aspect-[2/2] lg:w-22 bg-white rounded-md'>
         <img src={anime.main_picture.medium} className='w-full h-full object-cover object-center brightness-75' />
       </div>
 
       {/* Info Container */}
-      <div className='flex-1 flex flex-col justify-between'>
+      <div className='flex-1 flex flex-col justify-between overflow-visible'>
         {/* Title & date air*/}
         <div className='title_date_container'>
           <div className='title_score_container flex items-center '>
@@ -81,7 +81,7 @@ const AnimeCard = ({anime, animeInfo}) => {
         </div>
 
         {/* Watch status, ep status, and update btn */}
-        <div className='flex gap-2 items-center h-9'>
+        <div className='flex gap-2 items-center h-9 overflow-visible'>
           {/* Ratingf */}
           <ScorePicker score={score} setScore={setScore} />
   

@@ -79,7 +79,7 @@ const ExploreNavbar = (props) => {
   }
 
   return (
-    <div onClick={(e)=> e.stopPropagation()} className=" w-[95%]  lg:w-[90%] flex gap-y-7 gap-x-2 py-2 z-[99999999]">
+    <div onClick={(e)=> e.stopPropagation()} className=" w-[95%]  lg:w-[90%] flex gap-y-7 gap-x-2 py-2 z-[9999]">
             {/* Search Bar */}
             <div className='flex w-full gap-3 items-center relative'>
               <button onClick={()=>{setSearching(true);setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}} className="text-gray-400 absolute left-3 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">

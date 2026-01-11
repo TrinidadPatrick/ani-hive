@@ -2,7 +2,7 @@ import { CheckCircle, ChevronDown, Clock, Eye, PauseCircle, TicketX } from 'luci
 import useAuthStore from '../../../stores/AuthStore';
 import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 
-const StatusBar = ({status}) => {
+const StatusBar = ({status, setScrollPosition, scrollPosition}) => {
     const profile = useAuthStore((s) => s.profile)
     const navigate = useNavigate()
     const statusItems = [
@@ -22,7 +22,7 @@ const StatusBar = ({status}) => {
             {
                 statusItems.map((item, index) => {
                     return (
-                        <button onClick={() => navigate(`/user/anime-list/${item.value}`)} key={index} className={`flex items-center px-3 py-2 ${item.value === status ? 'bg-pink-600 text-gray-200' : 'text-gray-400'} cursor-pointer rounded-full text-sm`}>
+                        <button onClick={() => {setScrollPosition({...scrollPosition, userList: null});navigate(`/user/anime-list/${item.value}`)}} key={index} className={`flex items-center px-3 py-2 ${item.value === status ? 'bg-pink-600 text-gray-200' : 'text-gray-400 hover:text-gray-500'}  cursor-pointer rounded-full text-sm`}>
                             <span>{item.label}</span>
                             <div className='ml-2 bg-slate-200/10 rounded-full px-2 py-0.5 flex items-center justify-center'>{profile.anime_statistics[`num_items_${item.value}`]}</div>
                         </button>
