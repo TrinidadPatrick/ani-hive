@@ -1,19 +1,20 @@
 import { useState } from "react";
 import OutsideClickHandler from 'react-outside-click-handler';
 import useScrollPosition from "../../stores/ScrollPositionStore";
+import { X } from "lucide-react";
 
 const ExploreNavbar = (props) => {
-    const {selectedSortItem,setSelectedGenres,setShowOtherFilter, otherFilters,setShowSort,sortItems, setSelectedStatus, setSelectedSeason, setSelectedYear, setSelectedType,otherRefs, setSelectedSortItem, searchValue, selectedGenres, showState, setShowState, genres, themes, selectedStatus, status, showSort, showOtherFilter, setSearchValue, handleSearch, selectedSeason,selectedYear, selectedType} = props
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-    const scrollPosition = useScrollPosition((s) => s.scrollPosition)
-    const setScrollPosition = useScrollPosition((s) => s.setScrollPosition)
+  const {selectedSortItem,setSelectedGenres,setShowOtherFilter, otherFilters, setSearching, setShowSort,sortItems, setSelectedStatus, setSelectedSeason, setSelectedYear, setSelectedType,otherRefs, setSelectedSortItem, searchValue, selectedGenres, showState, setShowState, genres, themes, selectedStatus, status, showSort, showOtherFilter, setSearchValue, handleSearch, selectedSeason,selectedYear, selectedType} = props
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const scrollPosition = useScrollPosition((s) => s.scrollPosition)
+  const setScrollPosition = useScrollPosition((s) => s.setScrollPosition)
 
-    const isClearFilterDisabled = () => {
-    return selectedGenres.length == 0 && selectedStatus == '' && selectedSeason == '' && selectedYear == '' && selectedType == '' && selectedSortItem.order_by == ''
-    }
+  const isClearFilterDisabled = () => {
+  return selectedGenres.length == 0 && selectedStatus == '' && selectedSeason == '' && selectedYear == '' && selectedType == '' && selectedSortItem.order_by == ''
+  }
 
-      const handleSelectedOrderBy = (orderBy) => {
-    setSelectedSortItem({...selectedSortItem, order_by: orderBy})
+  const handleSelectedOrderBy = (orderBy) => {
+    setSelectedSortItem({...selectedSortItem, order_by: orderBy === selectedSortItem.order_by ? '' : orderBy})
   }
 
   const handleSelectedSortBy = (sortBy) => {
@@ -81,23 +82,25 @@ const ExploreNavbar = (props) => {
     <div onClick={(e)=> e.stopPropagation()} className=" w-[95%]  lg:w-[90%] flex gap-y-7 gap-x-2 py-2 z-[99999999]">
             {/* Search Bar */}
             <div className='flex w-full gap-3 items-center relative'>
-              <input onKeyDown={(e)=>{if(e.key === 'Enter') {setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}}} value={searchValue} onChange={(e)=>{setSearchValue(e.target.value)}} type="text" className=" outline-0 w-full ps-2 h-10 bg-gray-800 rounded-lg text-white" placeholder="Search..." />
-              <button className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48"><g fill="none" stroke="lightGray" strokeLinejoin="round" strokeWidth="4"><path d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z"/><path strokeLinecap="round" d="M26.657 14.343A7.98 7.98 0 0 0 21 12a7.98 7.98 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485"/></g></svg>
+              <button onClick={()=>{setSearching(true);setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}} className="text-gray-400 absolute left-3 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"><g fill="none" stroke="#99a1af" strokeLinejoin="round" strokeWidth="4"><path d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z"/><path strokeLinecap="round" d="M26.657 14.343A7.98 7.98 0 0 0 21 12a7.98 7.98 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485"/></g></svg>
+              </button>
+              <input onKeyDown={(e)=>{if(e.key === 'Enter') {setSearching(true);setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}}} value={searchValue} onChange={(e)=>{setSearchValue(e.target.value)}} type="text" className=" outline-0 w-full ps-10 h-10 bg-themeDarker border border-themeDark rounded-lg text-white placeholder:text-gray-400 placeholder:text-sm" placeholder="Search anime..." />
+              <button onClick={()=>{setSearching(true);setSearchValue('');setScrollPosition({...scrollPosition, explore : null});handleSearch('', selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}} className="text-gray-400 absolute right-3 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
+                <X width={17} />
               </button>
             </div>
             {/* Genre */}
-            <div className='hidden sm:flex w-full items-center relative bg-gray-800 hover:bg-gray-700 rounded-lg cursor-pointer'>
-              <div onClick={()=>{setShowState(showState === 'genre' ? '' : 'genre')}} className='cursor-pointer relative p-1 flex  items-center w-full h-full '>
-              <p className='ps-2 text-gray-400'>{selectedGenres.length == 0 ? 'Genre' : selectedGenres.map((genre) => genres?.find((g) => g.mal_id == genre)?.name).join(', ')}</p>
+            <div className='hidden sm:flex w-full items-center relative bg-themeDarker border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
+              <div onClick={()=>{setShowState(showState === 'genre' ? '' : 'genre');setShowSort(false);setShowOtherFilter(false)}} className=' overflow-hidden cursor-pointer relative p-1 flex  items-center w-full h-full '>
+              <p className='truncate ps-2 text-gray-400 whitespace-nowrap'>Genre</p>
               <button className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
               </button>
               </div>
               
-                <div className={`${showState === 'genre' ? '' : 'hidden'} w-fit h-fit absolute top-12 z-[99999999999999] `}>
-                {/* <OutsideClickHandler onOutsideClick={showState === 'genre' ? ()=>{setShowState('genre')} : ()=>{}}> */}
-                <div className='w-full md:w-[500px] overflow-auto lg:w-[500px] max-h-[400px] gap-3  bg-gray-800 grid grid-cols-2 md:grid-cols-4 left-0 top-12 p-2 rounded-lg'>
+              <div className={`${showState === 'genre' ? '' : 'hidden'} w-fit h-fit absolute top-12 z-[99999999999999] `}>
+                <div className='w-full md:w-[500px] overflow-auto lg:w-[500px] max-h-[400px] gap-3  bg-themeDarker border border-themeDark grid grid-cols-2 md:grid-cols-4 left-0 top-12 p-2 rounded-lg'>
                   {
                     genres.slice(0,18).map((genre, index) => {
                       const isSelected = selectedGenres.includes(genre?.mal_id)
@@ -110,12 +113,11 @@ const ExploreNavbar = (props) => {
                     })
                   }
                 </div>
-                {/* </OutsideClickHandler> */}
-                </div>
+              </div>
             </div>
             {/* Theme */}
-            <div className='hidden md:flex w-full items-center relative bg-gray-800 hover:bg-gray-700 rounded-lg cursor-pointer'>
-              <div onClick={()=>{setShowState(showState === 'theme' ? '' : 'theme')}} className='cursor-pointer relative p-1 flex  items-center w-full h-full '>
+            <div className='hidden md:flex w-full items-center relative bg-themeDarker border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
+              <div onClick={()=>{setShowState(showState === 'theme' ? '' : 'theme');setShowSort(false);setShowOtherFilter(false)}} className='cursor-pointer relative p-1 flex  items-center w-full h-full '>
               <p className='ps-2 text-gray-400'>Theme</p>
               <button className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
@@ -123,7 +125,7 @@ const ExploreNavbar = (props) => {
               </div>
               <div className={`${showState === 'theme' ? '' : 'hidden'} w-full h-full absolute top-12 `}>
               {/* <OutsideClickHandler onOutsideClick={showState === 'theme' ? ()=>{setShowState('')} : ()=>{}}> */}
-              <div className='w-full md:w-[500px] overflow-auto lg:w-[500px] max-h-[400px] gap-3 bg-gray-800 grid grid-cols-2 md:grid-cols-3 right-0 lg:left-0 top-12 p-2 rounded-lg'>
+              <div className='w-full md:w-[500px] overflow-auto lg:w-[500px] max-h-[400px] gap-3 bg-themeDarker border border-themeDark recoList grid grid-cols-2 md:grid-cols-3 right-0 lg:left-0 top-12 p-2 rounded-lg'>
               {
                 themes.map((genre, index) => {
                   const isSelected = selectedGenres.includes(genre?.mal_id)
@@ -140,16 +142,15 @@ const ExploreNavbar = (props) => {
               </div>
             </div>
             {/* Status */}
-            <div className='w-full hidden lg:flex items-center relative bg-gray-800 hover:bg-gray-700 rounded-lg cursor-pointer'>
-              <div onClick={()=>{setShowState(showState === 'status' ? '' : 'status')}} className='cursor-pointer relative p-1 flex  items-center w-full h-full '>
+            <div className='w-full hidden lg:flex items-center relative bg-themeDarker border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
+              <div onClick={()=>{setShowState(showState === 'status' ? '' : 'status');setShowSort(false);setShowOtherFilter(false)}} className='cursor-pointer relative p-1 flex  items-center w-full h-full '>
               <p className='ps-2 text-gray-400'>{selectedStatus == '' ? 'Status' : selectedStatus}</p>
               <button className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
               </button>
               </div>
               <div className={`${showState === 'status' ? '' : 'hidden'} w-full h-full absolute top-12`}>
-              {/* <OutsideClickHandler onOutsideClick={showState === 'status' ? ()=>{setShowState('')} : ()=>{}}> */}
-              <div className='w-full left-0 gap-3 absolute bg-gray-800 grid grid-cols-1 p-2 rounded-lg'>
+              <div className='w-full left-0 gap-3 absolute bg-themeDarker border border-themeDark grid grid-cols-1 p-2 rounded-lg'>
                 {
                   status.map((stat, index) => {
                     const isSelected = selectedStatus.toLowerCase() == stat.toLowerCase()
@@ -162,13 +163,12 @@ const ExploreNavbar = (props) => {
                   })
                 }
               </div>
-              {/* </OutsideClickHandler> */}
               </div>
             </div>
     
             {/* Sort */}
-            <div className='flex w-fit px-1 items-center relative bg-gray-800 hover:bg-gray-700 rounded-lg cursor-pointer'>
-              <div onClick={()=>{setShowSort(!showSort)}} className='cursor-pointer z-[99999999999] relative p-1 flex  items-center w-full h-full '>
+            <div className='flex w-fit px-1 items-center relative bg-themeDarker border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
+              <div onClick={()=>{setShowSort(!showSort);setShowState(false);setShowOtherFilter(false)}} className='cursor-pointer z-[99999999999] relative p-1 flex  items-center w-full h-full '>
               <button className="text-white right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
               {/* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="lightgray" strokeLinecap="round" strokeMiterlimit="10" strokeWidth="1.5" d="M21.25 12H8.895m-4.361 0H2.75m18.5 6.607h-5.748m-4.361 0H2.75m18.5-13.214h-3.105m-4.361 0H2.75m13.214 2.18a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm-9.25 6.607a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm6.607 6.608a2.18 2.18 0 1 0 0-4.361a2.18 2.18 0 0 0 0 4.36Z"/></svg> */}
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="lightgray" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10 14H2m6-4H2m4-4H2m10 12H2m17 2V4m0 16l3-3m-3 3l-3-3m3-13l3 3m-3-3l-3 3"/></svg>
@@ -176,38 +176,35 @@ const ExploreNavbar = (props) => {
               </div>
               {
                 showSort &&
-              <div className=' w-full h-full absolute -right-20'>
-                <OutsideClickHandler onOutsideClick={()=>{setShowSort(false);}}>
-                  <div className='flex flex-col w-[300px] xs:w-[350px] -right-20 xs:right-0 gap-3 absolute bg-gray-700 top-12 rounded-lg'>
-                    <div className='w-full bg-gray-900 p-2 flex gap-3 items-center justify-between'>
+              <div className=' w-full h-full absolute -right-15'>
+                  <div className='flex flex-col w-[300px] xs:w-[350px] -right-20 xs:right-0 absolute bg-themeDarker top-12 rounded-lg overflow-hidden'>
+                    <div className='w-full bg-themeDark p-2 flex gap-3 items-center justify-between'>
                       <span className='text-gray-400 text-sm uppercase'>Sort options</span>
                         <div className='flex items-center gap-2'>
-                        <button onClick={()=>handleSelectedSortBy('asc')} className={`${selectedSortItem.sort_by === 'asc' ? 'bg-gray-600' : 'bg-gray-800' } cursor-pointer  px-2 py-1 text-gray-400 rounded text-sm`}>Asc </button>
-                        <button onClick={()=>handleSelectedSortBy('desc')} className={`${selectedSortItem.sort_by === 'desc' ? 'bg-gray-600' : 'bg-gray-800' } cursor-pointer  px-2 py-1 text-gray-400 rounded text-sm`}> Desc</button>
+                        <button onClick={()=>handleSelectedSortBy('asc')} className={`${selectedSortItem.sort_by === 'asc' ? 'bg-themeDarker' : 'bg-themeDark' } cursor-pointer  px-2 py-1 text-gray-400 rounded text-sm`}>Asc </button>
+                        <button onClick={()=>handleSelectedSortBy('desc')} className={`${selectedSortItem.sort_by === 'desc' ? 'bg-themeDarker' : 'bg-themeDark' } cursor-pointer  px-2 py-1 text-gray-400 rounded text-sm`}> Desc</button>
                         </div>
                     </div>
-                    <div className='grid grid-cols-2 sm:grid-cols-3 w-full p-2 gap-3'>
+                    <div className='grid grid-cols-2 sm:grid-cols-3 w-full p-2 gap-0'>
                     {
                       sortItems.map((item, index) => {
-                        // const isSelected = selectedStatus.includes(stat)
                         return (
-                          <div onClick={()=>handleSelectedOrderBy(item.value)} key={index} className={`flex gap-1 z-[999999999] w-full items-center relative ${selectedSortItem.order_by === item.value ? 'bg-gray-900' : 'bg-gray-800'}  hover:bg-gray-900 py-2 px-2 rounded-lg cursor-pointer`}>
+                          <div onClick={()=>handleSelectedOrderBy(item.value)} key={index} className={`flex gap-1 z-[999999999] w-full items-center relative py-2 px-2 rounded-lg cursor-pointer`}>
                             <input type='checkbox' checked={selectedSortItem.order_by === item.value} />
-                            <p className='text-gray-400 text-sm md:text-base text-start w-full'>{item.key}</p>
+                            <p className='text-gray-400 text-sm text-start w-full'>{item.key}</p>
                           </div>
                         );
                       })
                     }
                     </div>
                   </div>
-                </OutsideClickHandler>
               </div>
               }
             </div>
     
             {/* Other Filter */}
-            <div className='flex w-fit px-1 items-center relative bg-gray-800 hover:bg-gray-700 rounded-lg cursor-pointer'>
-              <div onClick={()=>{setShowOtherFilter(!showOtherFilter)}} className='cursor-pointer z-[99999999999] relative p-1 flex  items-center w-full h-full '>
+            <div className='flex w-fit px-1 items-center relative bg-themeDarker border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
+              <div onClick={()=>{setShowOtherFilter(!showOtherFilter);setShowState(false);setShowSort(false)}} className='cursor-pointer z-[99999999999] relative p-1 flex  items-center w-full h-full '>
               <button className="text-white right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="lightgray" strokeLinecap="round" strokeMiterlimit="10" strokeWidth="1.5" d="M21.25 12H8.895m-4.361 0H2.75m18.5 6.607h-5.748m-4.361 0H2.75m18.5-13.214h-3.105m-4.361 0H2.75m13.214 2.18a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm-9.25 6.607a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm6.607 6.608a2.18 2.18 0 1 0 0-4.361a2.18 2.18 0 0 0 0 4.36Z"/></svg>
               </button>
@@ -215,20 +212,19 @@ const ExploreNavbar = (props) => {
               {
                 showOtherFilter &&
                 <div className=' w-full h-full absolute'>
-                  <OutsideClickHandler onOutsideClick={()=>{setShowOtherFilter(false);['status_v2','genre_v2','theme_v2', 'Season', 'Year', 'Type'].includes(showState) ? setShowState('') : ''}}>
-                  <div className='w-[300px] xs:w-[350px] -right-20 xs:right-0 gap-3 absolute bg-gray-700 grid grid-cols-3 top-12 p-2 rounded-lg'>
+                  <div className='w-[300px] xs:w-[350px] -right-20 xs:right-0 gap-3 absolute bg-themeDarker grid grid-cols-3 top-12 p-2 rounded-lg'>
                     {
                       otherFilters.map((filter, index) => {
                         // const isSelected = selectedStatus.includes(stat)
                         return (
-                          <div key={index} onClick={()=>{setShowState(filter.name == showState ? '' : filter.name)}} className='flex z-[999999999] w-full items-center relative bg-gray-800 hover:bg-gray-900 py-1 px-2 rounded-lg cursor-pointer'>
+                          <div key={index} onClick={()=>{setShowState(filter.name == showState ? '' : filter.name)}} className='flex z-[999999999] w-full items-center relative bg-themeDark hover:outline hover:outline-pink-600 py-1 px-2 rounded-lg cursor-pointer'>
                             <p className='text-gray-400 text-sm md:text-base text-start w-full'>{filter.name}</p>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
                             {
                               showState === filter.name &&
                               <div id={filter.name} ref={(rel) => {otherRefs.current[index] = rel}} className=' w-full h-full absolute z-[99999999999999999999999999999] '>
                               {/* <OtherFilterDropDown_V2 name={filter.name} options={filter.options} /> */}
-                              <div  className='otherFilter z-[9999999999999999999999999999999] w-full max-h-[300px] overflow-auto gap-3 -left-2 absolute bg-gray-800 grid grid-cols-1 top-8 md:top-9 p-2 rounded-lg'>
+                              <div  className='otherFilter z-[9999999999999999999999999999999] w-full max-h-[300px] overflow-auto gap-3 -left-2 absolute bg-themeDark grid grid-cols-1 top-8 md:top-9 p-2 rounded-lg'>
                                 {
                                 filter.options?.map((option, index) => {
                                   const isSelected = filter.name === 'Season' ? selectedSeason == option : filter.name === 'Year' ? selectedYear == option : selectedType == option
@@ -337,7 +333,6 @@ const ExploreNavbar = (props) => {
                     <button className='text-sm text-gray-400 cursor-pointer'>Clear filter</button>
                   </div>
                   </div>
-                  </OutsideClickHandler>
                 </div>
               }
               
@@ -345,7 +340,7 @@ const ExploreNavbar = (props) => {
     
             {/* Search button */}
             <button onClick={()=>{setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1);setShowState('')}} 
-            className='flex w-fit px-4 md:px-10 lg:w-fit text-center justify-center text-white items-center relative bg-pink-500 hover:bg-pink-400 rounded-lg cursor-pointer'>
+            className='flex w-fit px-4 md:px-10 lg:w-fit text-center justify-center text-white items-center relative bg-pink-600 hover:bg-pink-500 rounded-lg cursor-pointer'>
               Search
             </button>
             {/* Clear Filter button */}

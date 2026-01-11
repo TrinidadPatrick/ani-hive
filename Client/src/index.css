@@ -90,4 +90,8 @@
   --breakpoint-semiMd: 850px;
   --breakpoint-xs: 30rem;
   --breakpoint-xxs: 20rem;
+
+  --color-themeDarkest: #141414;
+  --color-themeDarker: #1b1b1b;
+  --color-themeDark: #25252D;
 }
