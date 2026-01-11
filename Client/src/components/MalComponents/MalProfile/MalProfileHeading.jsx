@@ -32,7 +32,7 @@ const MalProfileDropdown = () => {
         {
             authenticated === true ?
             (
-                <div ref={ref} onClick={()=>setOpen(!open)} className='relative flex gap-1 items-center cursor-pointer'>
+                <div ref={ref} onClick={()=>setOpen(!open)} className='relative flex gap-1 items-center cursor-pointer z-90'>
                     <div className='w-9 h-9  hover:opacity-90 border border-gray-700 rounded-full'>
                         <img className='' src='https://avatar.iran.liara.run/public' />
                     </div>
@@ -63,7 +63,7 @@ const ProfileDropdown = ({profile, setOpen, logout}) => {
 
     
     return (
-        <main className=' bg-slate-800 rounded-lg shadow-xl border border-slate-700 absolute top-10 right-0'>
+        <main className='bg-slate-800 rounded-lg shadow-xl border border-slate-700 absolute top-10 right-0 z-[999999999999999]'>
             <header className='flex items-center px-4 py-3 gap-3 border-b border-b-slate-600'>
                 <User className="w-5 h-5 text-slate-400" />
                 <h3 className="font-medium whitespace-nowrap text-slate-200">{profile?.name}</h3>
