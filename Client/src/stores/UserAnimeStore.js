@@ -22,6 +22,19 @@ const useUserAnimeStore = create((set, get) => ({
 
     isUpdating: false,
 
+    checkIsSaved: async (id) => {
+        try {
+            set({isFetching: true})
+            const response = await http.get(`mal/anime/check/${id}`)
+            const result = response.data
+            return result
+        } catch (error) {
+            console.log(error)
+        } finally {
+            set({isFetching: false})
+        }
+    },
+
     getList: async (status, offset = 0, isFetching = true) => {
         try {
             set({isFetching: get()[status] === null})

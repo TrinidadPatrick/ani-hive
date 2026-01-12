@@ -2,7 +2,7 @@ import { CheckCircle, ChevronDown, Clock, Eye, PauseCircle, TicketX } from 'luci
 import React, { useRef, useState } from 'react'
 import { useOutsideClick } from '../../../hooks/useOutsideClick';
 
-const StatusDrodown = ({selectedWatchStatus, setSelectedWatchStatus, anime}) => {
+const StatusDrodown = ({selectedWatchStatus, setSelectedWatchStatus, background, border, textColor, action}) => {
     const ref = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
     const statusItems = [
@@ -21,11 +21,12 @@ const StatusDrodown = ({selectedWatchStatus, setSelectedWatchStatus, anime}) => 
             if (isOpen) setIsOpen(false)
     })
 
-  return (
-    <div ref={ref} onClick={(e)=>{e.stopPropagation();;setIsOpen(!isOpen)}} className='bg-[#25252D] border border-[#37373b] h-full px-2 flex items-center justify-between rounded-lg relative gap-2 cursor-pointer hover:bg-[#1b1b1b]'>
-        <span className='text-gray-400 capitalize text-sm whitespace-nowrap'>{selectedWatchStatus.replaceAll("_", " ")}</span>
 
-        <ChevronDown className='text-gray-400' width={20}  />
+  return (
+    <div ref={ref} onClick={(e)=>{e.stopPropagation();;setIsOpen(!isOpen)}} className={`bg-${background} border border-${border} h-full px-2 flex items-center justify-between rounded-lg relative gap-2 cursor-pointer hover:bg-${background}/20`}>
+        <span className={`text-${textColor} capitalize text-sm whitespace-nowrap`}>{selectedWatchStatus.replaceAll("_", " ")}</span>
+
+        <ChevronDown className={`text-${textColor}`} width={20}  />
 
         {
             isOpen &&
@@ -34,9 +35,9 @@ const StatusDrodown = ({selectedWatchStatus, setSelectedWatchStatus, anime}) => 
             {
                 statusItems.map((item, index)=> {
                     return (
-                        <button onClick={()=>handleStatusClick(item.value)} key={index} className='flex items-center gap-2 cursor-pointer hover:bg-[#1b1b1b] py-1 px-2'>
-                            <item.icon className='text-white' width={15} />
-                            <span className='text-white text-sm whitespace-nowrap'>{item.label}</span>
+                        <button onClick={()=>{handleStatusClick(item.value);action(item.value)}} key={index} className='flex items-center gap-2 cursor-pointer hover:bg-[#1b1b1b] py-1 px-2'>
+                            <item.icon className={`text-${textColor}  flex-none`} width={15} />
+                            <span className={`text-${textColor}  text-sm whitespace-nowrap`}>{item.label}</span>
                         </button>
                     )
                 })

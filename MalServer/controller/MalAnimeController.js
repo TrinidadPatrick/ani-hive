@@ -49,6 +49,25 @@ module.exports.myAnimeList = async (req, res) => {
         const data = await response.json();
         res.json(data);
       } catch (err) {
+        res.status(500).json({ error: "Failed to fetch anime list", details: err });
+      }
+    }
+}
+
+module.exports.checkIsSaved = async (req, res) => {
+    const {id} = req.params
+    const session = req.session
+    if(session){
+
+      const access_token = session.access_token ? session.access_token : await refresh(session, res)
+      try {
+        const response = await fetch(`https://api.myanimelist.net/v2/anime/${id}?fields=my_list_status`, {
+          headers: { Authorization: `Bearer ${access_token}` },
+        });
+        if(!response.ok) return res.status(400).json({message: "Bad request"})
+        const data = await response.json();
+        res.json(data);
+      } catch (err) {
         res.status(500).json({ error: "Failed to fetch user info", details: err });
       }
     }
@@ -78,7 +97,7 @@ module.exports.updateAnime = async (req, res) => {
         res.status(200).json(data);
       } catch (err) {
         console.log(err)
-        res.status(500).json({ error: "Failed to fetch user info", details: err });
+        res.status(500).json({ error: "Failed to update anime info", details: err });
       }
     }
 }

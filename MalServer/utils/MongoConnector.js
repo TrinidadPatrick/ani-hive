@@ -28,8 +28,8 @@ module.exports.connectMongoDb = async () => {
     } catch (error) {
         console.log(error)
         cached.promise = null;
-        console.error("MongoDB Connection Error:", e);
-        throw e;
+        console.error("MongoDB Connection Error:", error);
+        throw error;
     }
 
     return cached.conn

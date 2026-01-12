@@ -15,13 +15,20 @@ import AnimeRelatedSkeleton from './skeleton/AnimeRelatedSkeleton.jsx';
 import AnimeReviewsSkeleton from './skeleton/AnimeReviewsSkeleton.jsx';
 import getYoutubeId from '../../utils/getYoutubeId.js';
 import TrailerPlayer from '../../components/TrailerPlayer.jsx';
+import useUserAnimeStore from '../../stores/UserAnimeStore.js';
+import { Play, Plus } from 'lucide-react';
+import StatusDrodown from '../../components/MalComponents/MalAnimeList/StatusDrodown.jsx';
 
 const AnimeOverView = () => {
+    const checkIsSaved = useUserAnimeStore((s) => s.checkIsSaved)
+    const updateAnime = useUserAnimeStore((s) => s.updateAnime)
     const isSmallScreen = useSmallScreen()
 
     const reactionEmojis = ["📊", "👍", "❤️", "😂", "🤔", "📘", "✍️", "🎨"];
     const {id} = useParams()
     const textRef = useRef(null);
+    const [selectedWatchStatus, setSelectedWatchStatus] = useState(null)
+    const [animeUserStatus, setAnimeUserStatus] = useState(null)
     const [animeInfo, setAnimeInfo] = useState(null)
     const [characters, setCharacters] = useState(null)
     const [animeRelations, setAnimeRelations] = useState(null)
@@ -35,7 +42,20 @@ const AnimeOverView = () => {
 
     const prevRef = useRef(null);
     const nextRef = useRef(null);
-      
+    
+    const checkAnimeForUser = async (anime_id) => {
+        const result = await checkIsSaved(anime_id)
+        if(result && result.my_list_status){
+            setAnimeUserStatus(result.my_list_status)
+            setSelectedWatchStatus(result.my_list_status.status)
+        }
+    }
+
+    const handleAction = async (status = 'plan_to_watch') => {
+        const {num_episodes_watched, score} = animeUserStatus ? animeUserStatus : {num_episodes_watched : 0, score: 0}
+        const result = await updateAnime({id, num_watched_episodes : num_episodes_watched, score, status})
+    }
+    
 
     const getAnimeInfo = async (mal_id, option, retries = 10) => {
         try {
@@ -230,12 +250,13 @@ const AnimeOverView = () => {
     useEffect(() => {
         if (id) {
           (async () => {
+            await checkAnimeForUser(id)
             await getAnimeInfo(id, 1);
             await new Promise(resolve => setTimeout(resolve, 1000));
             await getCharacters(id);
           })();
         }
-      }, [id]);
+    }, [id]);
 
     useEffect(() => {
         if(animeInfo && characters && (( !animeRelations) || ( !recommendations))) {        
@@ -254,14 +275,18 @@ const AnimeOverView = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [])
-    
 
   return (
-  <main className='w-full grid grid-cols-13 h-fit bg-[#141414] relative overflow-x-hidden'>
+  <main className='w-full grid grid-cols-13 h-fit relative overflow-x-hidden'>
+    <div 
+    className="absolute inset-0 bg-[url(https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&q=80)] z-0 brightness-60 opacity-70" 
+    aria-hidden="true"
+  />
+    
     {showTrailer && <TrailerPlayer youtubeId={youtubeId} setShowTrailer={setShowTrailer} />}
     {
         animeInfo ?
-        <div className='w-full col-span-13 xl:col-span-10 h-fit bg-[#141414] py-20 px-5 flex flex-col gap-5'>
+        <div className='w-full col-span-13 xl:col-span-10 h-fit py-20 px-5 flex flex-col gap-5 z-90'>
 
             {/* Top Section */}
             <div className='flex-none h-full flex flex-col sm:flex-row gap-2'>
@@ -269,15 +294,7 @@ const AnimeOverView = () => {
                     <img src={animeInfo?.images?.jpg.large_image_url} alt={animeInfo?.title_english || animeInfo?.title} className='w-full sm:h-full aspect-video object-cover rounded-lg' />
                 </div>
                 <div className='flex-1 h-full  flex flex-col gap-2 px-2'>
-                    <div className='w-full flex flex-col md:flex-row gap-2 md:gap-0 justify-between'>
-                        <div className=''>
-                        <h1 className='text-white text-2xl lg:text-3xl font-bold line-clamp-2'>{animeInfo?.title_english || animeInfo?.title}</h1>
-                        </div>
-                        <div>
-                            <button onClick={()=>{setShowTrailer(true)}} className='text-white whitespace-nowrap text-xs md:text-base px-3 py-2 bg-pink-600 rounded font-medium cursor-pointer hover:bg-pink-500'>Watch Trailer</button>
-                        </div>
-                    </div>
-                    
+                    {/* Badges */}
                     <div className='w-full flex gap-2 my-1'>
                         <div className='px-2 py-0.5 bg-pink-600 rounded'>
                             <h1 className='text-white text-xs font-medium'>{animeInfo?.rating ? animeInfo?.rating.split(' - ')[0] : 'N/A'}</h1>
@@ -289,6 +306,39 @@ const AnimeOverView = () => {
                             <h1 className='text-white text-xs font-medium'>#{animeInfo?.rank}</h1>
                         </div>
                     </div>
+
+                    {/* Title */}
+                    <div className='w-full flex flex-col w gap-2 justify-between'>
+                        <div className=''>
+                        <h1 className='text-white text-2xl lg:text-3xl font-bold line-clamp-2'>{animeInfo?.title_english || animeInfo?.title}</h1>
+                        </div>
+                        <div className='flex gap-2 my-2 '>
+                            <button onClick={()=>{setShowTrailer(true)}} className='flex gap-2 text-white whitespace-nowrap text-xs md:text-base px-5 py-2 bg-themeDark border border-[#3a3a3a] rounded-lg font-medium cursor-pointer hover:bg-themeDarker'>
+                                <Play width={17} />
+                                Watch Trailer
+                            </button>
+                            {
+                                animeUserStatus ? (
+                                <div className='w-[130px]'>
+                                <StatusDrodown 
+                                selectedWatchStatus={selectedWatchStatus} 
+                                setSelectedWatchStatus={setSelectedWatchStatus} 
+                                background={'pink-600'} border={'gray-500'} textColor={'gray-100'} 
+                                action={handleAction}
+                                />
+                                </div>
+                                )
+                                :
+                                (
+                                <button onClick={()=>{handleAction()}} className='flex gap-2 text-white whitespace-nowrap text-xs md:text-base px-5 py-2 bg-pink-600 rounded-lg font-medium cursor-pointer hover:bg-pink-500'>
+                                    <Plus width={17} />
+                                    Add to library
+                                </button>
+                                )
+                            }
+                        </div>
+                    </div>
+                    
                     {/* Other informations */}
                     <div className='w-full h-full grid grid-cols-1 md:grid-cols-2'>
                         <div className='h-full w-full'>
@@ -803,7 +853,7 @@ const AnimeOverView = () => {
         </div>
         :
         // Loader
-        <div className='w-full col-span-12 h-[100svh] bg-[#141414] mt-20'>
+        <div className='w-full col-span-12 h-[100svh] bg-[#141414] mt-20 z-90'>
             
             {/* Header */}
             <div className="flex gap-6">
@@ -849,7 +899,7 @@ const AnimeOverView = () => {
         </div>
     }
         {/* Recommendations */}
-        <div className='recoList xl:col-span-3 hidden xl:flex h-fit pb-5 bg-[#141414] overflow-auto mt-20 flex-col gap-3'>
+        <div className='recoList xl:col-span-3 hidden xl:flex h-fit pb-5 bg-[#141414] overflow-auto mt-20 flex-col gap-3 z-90'>
             <div>
             <h1 className='text-white text-2xl font-bold'>Recommendations</h1>
             </div>
