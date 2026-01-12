@@ -16,12 +16,19 @@ import AnimeReviewsSkeleton from './skeleton/AnimeReviewsSkeleton.jsx';
 import getYoutubeId from '../../utils/getYoutubeId.js';
 import TrailerPlayer from '../../components/TrailerPlayer.jsx';
 import useUserAnimeStore from '../../stores/UserAnimeStore.js';
-import { Play, Plus } from 'lucide-react';
+import { Play, Plus, Star, Trash2 } from 'lucide-react';
 import StatusDrodown from '../../components/MalComponents/MalAnimeList/StatusDrodown.jsx';
+import useAuthStore from '../../stores/AuthStore.js';
+import LoaderV2 from '../../components/LoaderV2.jsx';
 
 const AnimeOverView = () => {
+    const authenticated = useAuthStore((s) => s.authenticated)
+    const login = useAuthStore((s) => s.login)
+    const isUpdating = useUserAnimeStore((s) => s.isUpdating)
+    const isDeleting = useUserAnimeStore((s) => s.isDeleting)
     const checkIsSaved = useUserAnimeStore((s) => s.checkIsSaved)
     const updateAnime = useUserAnimeStore((s) => s.updateAnime)
+    const deleteAnime = useUserAnimeStore((s) => s.deleteAnime)
     const isSmallScreen = useSmallScreen()
 
     const reactionEmojis = ["📊", "👍", "❤️", "😂", "🤔", "📘", "✍️", "🎨"];
@@ -48,14 +55,27 @@ const AnimeOverView = () => {
         if(result && result.my_list_status){
             setAnimeUserStatus(result.my_list_status)
             setSelectedWatchStatus(result.my_list_status.status)
+        }else{
+            setAnimeUserStatus(null)
         }
     }
 
     const handleAction = async (status = 'plan_to_watch') => {
+        if(authenticated === false){
+            return login()
+        }
+
         const {num_episodes_watched, score} = animeUserStatus ? animeUserStatus : {num_episodes_watched : 0, score: 0}
         const result = await updateAnime({id, num_watched_episodes : num_episodes_watched, score, status})
+        await checkAnimeForUser(id)
     }
-    
+
+    const handleDeleteAnime = async (id) => {
+        const result = await deleteAnime(id)
+        if(result.status === 200){
+            checkAnimeForUser(id)
+        }
+    }
 
     const getAnimeInfo = async (mal_id, option, retries = 10) => {
         try {
@@ -242,8 +262,8 @@ const AnimeOverView = () => {
 
     const InfoRow = ({ label, children }) => (
         <li className="flex justify-start gap-2">
-          <h1 className="text-gray-400 min-w-[80px] text-[0.8rem] lg:text-base font-medium ">{label}</h1>
-          <h1 className="text-gray-200 line-clamp-1 text-[0.8rem] lg:text-base">{children}</h1>
+          <h1 className="text-gray-400  min-w-[100px] text-[0.8rem] lg:text-[0.9rem] font-medium w-25 ">{label}</h1>
+          <h1 className="text-gray-200 line-clamp-1 text-[0.8rem] lg:text-[0.9rem] font-bold">{children}</h1>
         </li>
     );
 
@@ -286,67 +306,83 @@ const AnimeOverView = () => {
     {showTrailer && <TrailerPlayer youtubeId={youtubeId} setShowTrailer={setShowTrailer} />}
     {
         animeInfo ?
-        <div className='w-full col-span-13 xl:col-span-10 h-fit py-20 px-5 flex flex-col gap-5 z-90'>
+        <div className='w-full col-span-13 xl:col-span-10 h-fit py-20 px-2 sm:px-5 flex flex-col gap-5 z-90'>
 
             {/* Top Section */}
             <div className='flex-none h-full flex flex-col sm:flex-row gap-2'>
-                <div className='w-full aspect-video sm:aspect-auto sm:w-[200px]'>
+                <div className='w-full aspect-video sm:aspect-auto sm:w-[220px]'>
                     <img src={animeInfo?.images?.jpg.large_image_url} alt={animeInfo?.title_english || animeInfo?.title} className='w-full sm:h-full aspect-video object-cover rounded-lg' />
                 </div>
                 <div className='flex-1 h-full  flex flex-col gap-2 px-2'>
                     {/* Badges */}
                     <div className='w-full flex gap-2 my-1'>
-                        <div className='px-2 py-0.5 bg-pink-600 rounded'>
-                            <h1 className='text-white text-xs font-medium'>{animeInfo?.rating ? animeInfo?.rating.split(' - ')[0] : 'N/A'}</h1>
+                        <div style={{ backgroundImage: 'linear-gradient(135deg, #f59f0a33, #c47f081a)', border: '1px solid hsl(38 92% 50% / .3)' }} className='flex gap-2 items-center px-3 rounded-2xl'>
+                            <Star width={15} className='text-[#f7b23b] fill-[#f7b23b]' />
+                            <h1 className='text-[#f7b23b] text-[0.7rem] font-medium mt-0.5'>{animeInfo?.score || 0}</h1>
                         </div>
-                        <div className='px-2 py-0.5 bg-pink-600 rounded'>
-                            <h1 className='text-white text-xs font-medium'>{animeInfo?.type}</h1>
+                        <div className='px-3 bg-themeLightDark rounded-2xl flex items-center'>
+                            <h1 className='text-white text-[0.7rem] font-medium'>{animeInfo?.rating ? animeInfo?.rating.split(' - ')[0] : 'N/A'}</h1>
                         </div>
-                        <div className='px-2 py-0.5 bg-pink-600 rounded'>
-                            <h1 className='text-white text-xs font-medium'>#{animeInfo?.rank}</h1>
+                        <div className='px-3 bg-themeLightDark rounded-2xl flex items-center'>
+                            <h1 className='text-white text-[0.7rem] font-medium'>{animeInfo?.type}</h1>
+                        </div>
+                        <div className='px-3 bg-themeLightDark rounded-2xl flex items-center'>
+                            <h1 className='text-white text-[0.7rem] font-medium'>#{animeInfo?.rank}</h1>
                         </div>
                     </div>
 
                     {/* Title */}
                     <div className='w-full flex flex-col w gap-2 justify-between'>
                         <div className=''>
-                        <h1 className='text-white text-2xl lg:text-3xl font-bold line-clamp-2'>{animeInfo?.title_english || animeInfo?.title}</h1>
+                        <h1 className='text-white text-2xl lg:text-4xl font-bold line-clamp-2'>{animeInfo?.title_english || animeInfo?.title}</h1>
                         </div>
                         <div className='flex gap-2 my-2 '>
-                            <button onClick={()=>{setShowTrailer(true)}} className='flex gap-2 text-white whitespace-nowrap text-xs md:text-base px-5 py-2 bg-themeDark border border-[#3a3a3a] rounded-lg font-medium cursor-pointer hover:bg-themeDarker'>
-                                <Play width={17} />
+                            <button onClick={()=>{setShowTrailer(true)}} className='flex items-center gap-2 text-white whitespace-nowrap text-xs md:text-sm px-5 py-2 bg-themeDark rounded-lg font-medium cursor-pointer hover:bg-themeDarker'>
+                                <Play width={16} />
                                 Watch Trailer
                             </button>
                             {
                                 animeUserStatus ? (
-                                <div className='w-[130px]'>
+                                <div className=''>
                                 <StatusDrodown 
                                 selectedWatchStatus={selectedWatchStatus} 
                                 setSelectedWatchStatus={setSelectedWatchStatus} 
-                                background={'pink-600'} border={'gray-500'} textColor={'gray-100'} 
+                                buttonClassname='bg-pink-600 h-full px-3 flex items-center justify-between rounded-lg relative gap-2 cursor-pointer hover:bg-pink-500'
+                                titleClassname='text-gray-100 text-sm'
+                                arrowClassname='text-gray-100'
+                                dropdownClassname='bg-themeDark border border-themeLightDark shadow'
+                                textClassname='text-gray-200 text-sm'
+                                dropdownButtonClassname='hover:bg-themeDarker'
+                                arrowSize={20}
                                 action={handleAction}
                                 />
                                 </div>
                                 )
                                 :
                                 (
-                                <button onClick={()=>{handleAction()}} className='flex gap-2 text-white whitespace-nowrap text-xs md:text-base px-5 py-2 bg-pink-600 rounded-lg font-medium cursor-pointer hover:bg-pink-500'>
-                                    <Plus width={17} />
-                                    Add to library
+                                <button disabled={(authenticated === null)} onClick={()=>{handleAction()}} className='flex gap-2 text-white whitespace-nowrap text-xs md:text-sm w-37 justify-center items-center py-2 bg-pink-600 rounded-lg font-medium cursor-pointer hover:bg-pink-500'>
+                                    {
+                                        isUpdating ? (<LoaderV2 width={7} height={7} color={'bg-gray-100'} />) : (<div className='flex gap-2 items-center'><Plus width={17} />Add to library</div>)
+                                    }
                                 </button>
                                 )
                             }
+                            <button title='Remove from list' disabled={(authenticated === null)} onClick={()=>{handleDeleteAnime(id)}} className={`${animeUserStatus === null && 'hidden'} flex items-center justify-center text-white whitespace-nowrap text-xs md:text-base w-12 py-2 bg-pink-600 rounded-lg font-medium cursor-pointer hover:bg-pink-500`}>
+                                {
+                                    isDeleting ? (<LoaderV2 width={6} height={6} color={'bg-gray-100'} />) : <Trash2 width={19} />
+                                }
+                            </button>
                         </div>
                     </div>
                     
                     {/* Other informations */}
-                    <div className='w-full h-full grid grid-cols-1 md:grid-cols-2'>
+                    <div className='w-full h-full grid grid-cols-1 md:grid-cols-2 bg-themeDarker border border-themeLightDark rounded-lg p-3'>
                         <div className='h-full w-full'>
 
-                        <ul className="h-full gap-1 flex flex-col justify-between">
+                        <ul className="h-full gap-3 flex flex-col justify-between">
                             <InfoRow label="Score:">
-                                {animeInfo?.score || 0}
-                                <span className="text-gray-400 ml-2">
+                                <span className='text-amber-500'>{animeInfo?.score || 0}</span>
+                                <span className="text-gray-400 ml-2 text-sm font-normal">
                                 By {animeInfo?.scored_by?.toLocaleString() || 0} users
                                 </span>
                             </InfoRow>
@@ -383,15 +419,11 @@ const AnimeOverView = () => {
                             <InfoRow label="Duration:">
                                 {animeInfo?.duration || '???'}
                             </InfoRow>
-
-                            <InfoRow label="Genre:">
-                                {animeInfo?.genres?.map((genre) => genre.name).join(', ') || '???'}
-                            </InfoRow>
                         </ul>
 
                         </div>
                         <div className='h-full w-full'>
-                        <ul className="h-full flex flex-col gap-2 justify-start">
+                        <ul className="h-full flex flex-col gap-3 justify-start">
                             <InfoRow label="Studios:">
                                 {animeInfo?.studios?.map((studio) => studio.name).join(', ') || '???'}
                             </InfoRow>
@@ -405,20 +437,22 @@ const AnimeOverView = () => {
                             <InfoRow label="Source:">
                                 {animeInfo?.source || '???'}
                             </InfoRow>
+
+                            <InfoRow label="Genre:">
+                                {animeInfo?.genres?.map((genre) => genre.name).join(', ') || '???'}
+                            </InfoRow>
                         </ul>
                         </div>
                     </div>
                 </div>
             </div>
-             <hr className='text-gray-600 mt-3'></hr>                               
+
             {/* Synopsis */}
-            <div className='w-full h-full '>
+            <div className='w-full h-full  '>
                 <div className='w-full h-fit  py-0 px-0 flex flex-col'>
                     <div className='flex-1 h-fit flex flex-col gap-2'>
                         <h1 className='text-white text-xl md:text-2xl font-bold'>Synopsis</h1>
-                        <p className='text-white text-[0.8rem] md:text-sm lg:text-base'>{animeInfo?.synopsis.replace('[Written by MAL Rewrite]', '')}
-                        
-                        </p>
+                        <div className='text-gray-400 text-[0.8rem] md:text-sm lg:text-base bg-themeDarker border border-themeLightDark rounded-lg p-3'>{animeInfo?.synopsis.replace('[Written by MAL Rewrite]', '')}</div>
                     </div>
                 </div>
             </div>

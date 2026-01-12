@@ -77,7 +77,6 @@ module.exports.updateAnime = async (req, res) => {
     const {id,num_watched_episodes,status,score} = req.body
     const session = req.session
     if(session){
-      console.log({id,num_watched_episodes,status})
       const access_token = session.access_token ? session.access_token : await refresh(session, res)
 
       try {
@@ -98,6 +97,30 @@ module.exports.updateAnime = async (req, res) => {
       } catch (err) {
         console.log(err)
         res.status(500).json({ error: "Failed to update anime info", details: err });
+      }
+    }
+}
+
+module.exports.deleteAnime = async (req, res) => {
+    const id = req.params.id
+    const session = req.session
+    if(session){
+
+      const access_token = session.access_token ? session.access_token : await refresh(session, res)
+
+      try {
+        const response = await fetch(`https://api.myanimelist.net/v2/anime/${id}/my_list_status`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${access_token}` },
+        });
+
+        if(!response.ok) return res.status(400).json({message: "Bad request"})
+
+        const data = await response.json();
+        res.status(200).json(data);
+      } catch (err) {
+        console.log(err)
+        res.status(500).json({ error: "Failed to delete anime", details: err });
       }
     }
 }

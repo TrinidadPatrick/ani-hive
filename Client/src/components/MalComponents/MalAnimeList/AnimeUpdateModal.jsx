@@ -12,6 +12,8 @@ const AnimeUpdateModal = ({setIsOpen, score, setScore, selectedWatchStatus, setS
   const isUpdating = useUserAnimeStore((s) => s.isUpdating)
   const updateAnime = useUserAnimeStore((s) => s.updateAnime)
   const getList = useUserAnimeStore((s) => s.getList)
+  const isDeleting = useUserAnimeStore((s) => s.isDeleting)
+  const deleteAnime = useUserAnimeStore((s) => s.deleteAnime)
 
   const renderClickableStars = () => {
     
@@ -40,6 +42,14 @@ const AnimeUpdateModal = ({setIsOpen, score, setScore, selectedWatchStatus, setS
 
   const handleUpdate = async () => {
     const result = await updateAnime({id: anime.id, num_watched_episodes: epStatus, score: score, status: selectedWatchStatus})
+    if(result.status === 200){
+      setIsOpen(false)
+      getList(status)
+    }
+  }
+
+  const handleDelete = async () => {
+    const result = await deleteAnime(anime.id)
     if(result.status === 200){
       setIsOpen(false)
       getList(status)
@@ -87,7 +97,18 @@ const AnimeUpdateModal = ({setIsOpen, score, setScore, selectedWatchStatus, setS
                     Status
             </label>
             <div className="h-10">
-            <StatusDrodown selectedWatchStatus={selectedWatchStatus} setSelectedWatchStatus={setSelectedWatchStatus} anime={anime} />
+            <StatusDrodown 
+            selectedWatchStatus={selectedWatchStatus} s
+            setSelectedWatchStatus={setSelectedWatchStatus} 
+            anime={anime} 
+            buttonClassname='bg-themeDarker border border-themeLightDark h-full px-3 flex items-center justify-between rounded-lg relative gap-2 cursor-pointer hover:bg-themeDark'
+            titleClassname='text-gray-100 text-base'
+            arrowClassname='text-gray-100'
+            dropdownClassname='bg-themeDark'
+            textClassname='text-gray-200 text-sm'
+            dropdownButtonClassname='hover:bg-themeDarker'
+            arrowSize={20}
+            />
             </div>
             </div>
 
@@ -111,8 +132,13 @@ const AnimeUpdateModal = ({setIsOpen, score, setScore, selectedWatchStatus, setS
               </div>
             </div>
 
-            {/* Submit */}
-            <div className="w-full flex justify-end mt-7">
+            {/* Submit & delete */}
+            <div className="w-full flex justify-end mt-7 gap-2">
+            <button onClick={handleDelete} title='update' className='bg-red-500 hover:bg-red-400 cursor-pointer w-20 justify-center rounded h-8 flex items-center gap-2 text-gray-100'>
+                {
+                  isDeleting ? <LoaderV2 width={6} height={6} color={'bg-white'} /> : 'Delete'
+                }
+            </button>
             <button onClick={handleUpdate} title='update' className='bg-pink-600 hover:bg-pink-500 cursor-pointer w-20 justify-center rounded h-8 flex items-center gap-2 text-gray-100'>
                 {
                   isUpdating ? <LoaderV2 width={6} height={6} color={'bg-white'} /> : 'Update'

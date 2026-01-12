@@ -19,7 +19,7 @@ const useAuthStore = create((set, get) => ({
     isAuthenticating: false,
 
     login : async () => {
-
+        const returnUrl = window.location.href;
         const code_challenge = generateCodeChallenge()
         localStorage.setItem("code_verifier", code_challenge)
 
@@ -30,6 +30,7 @@ const useAuthStore = create((set, get) => ({
             code_challenge_method: "plain",
             state: "puppy",
             redirect_uri: encodeURIComponent(import.meta.env.VITE_BASE_URL + "/auth/mal/callback"),
+            state: encodeURIComponent(returnUrl),
         }
         
         let string = ''
@@ -66,7 +67,7 @@ const useAuthStore = create((set, get) => ({
                 set({isAuthenticating: true})
                 const response = await http.post('auth/mal/logout', {user_id: profile.id})
                 set({profile: null, authenticated: false})
-                window.location.href = "/"
+                // window.location.reload()
             } catch (error) {
                 console.log(error)
             } finally {

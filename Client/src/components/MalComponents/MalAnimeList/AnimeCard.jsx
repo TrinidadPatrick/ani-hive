@@ -64,13 +64,13 @@ const AnimeCard = ({anime, animeInfo}) => {
   
           {/* Watch Status */}
           <div className='h-full cursor-default px-3 border border-themeDark flex items-center rounded-lg bg-themeDark'>
-            <span className='text-gray-100 capitalize text-sm'>{selectedWatchStatus.replaceAll("_", " ")}</span>
+            <span className='text-gray-100 capitalize text-[0.8rem]'>{selectedWatchStatus.replaceAll("_", " ")}</span>
           </div>
           {/* <StatusDrodown selectedWatchStatus={selectedWatchStatus} setSelectedWatchStatus={setSelectedWatchStatus} anime={anime} /> */}
 
           {/* Update btn */}
-          <button onClick={(e)=>{e.stopPropagation();setIsOpen(true)}} title='update' className='bg-pink-600 hover:bg-pink-500 cursor-pointer px-2 rounded-lg h-full'>
-            <Pencil width={20} className='text-white' />
+          <button onClick={(e)=>{e.stopPropagation();setIsOpen(true)}} title='update' className='bg-pink-600 hover:bg-pink-500 cursor-pointer px-2.5 rounded-lg h-full'>
+            <Pencil width={17} className='text-white' />
           </button>
         </div>
 

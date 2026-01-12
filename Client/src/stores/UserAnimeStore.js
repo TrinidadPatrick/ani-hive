@@ -21,6 +21,7 @@ const useUserAnimeStore = create((set, get) => ({
     plan_to_watch: null,
 
     isUpdating: false,
+    isDeleting: false,
 
     checkIsSaved: async (id) => {
         try {
@@ -73,6 +74,24 @@ const useUserAnimeStore = create((set, get) => ({
             return error
           } finally {
             set({isUpdating: false})
+          }
+    },
+
+    deleteAnime: async (id) => {
+        set({isDeleting: true})
+
+          try {
+            const response = await http.delete(`mal/anime/${id}`);
+            if(response.status === 200){
+                return response
+            }
+            handleToast('error', 'Something went wrong');
+          } catch (error) {
+            console.log(error)
+            handleToast('error', 'Something went wrong');
+            return error
+          } finally {
+            set({isDeleting: false})
           }
     }
 

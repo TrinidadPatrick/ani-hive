@@ -103,10 +103,10 @@ const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType,
             <Filter className='text-gray-400' width={18} />
         </button>
         {/* List type */}
-        <button onClick={()=>{setListType('grid');setSearchParams({listType: 'grid'})}} className={`h-full ${listType === 'grid' ? 'bg-pink-600 text-gray-800' : 'bg-[#1b1b1b] hover:bg-[#2b2a2a] text-gray-400'} cursor-pointer aspect-square flex items-center justify-center rounded-lg`}>
+        <button onClick={()=>{setListType('grid');localStorage.setItem('listType', 'grid')}} className={`h-full ${listType === 'grid' ? 'bg-pink-600 text-gray-800' : 'bg-[#1b1b1b] hover:bg-[#2b2a2a] text-gray-400'} cursor-pointer aspect-square flex items-center justify-center rounded-lg`}>
             <Grid className='' width={18} />
         </button>
-        <button onClick={()=>{setListType('card');;setSearchParams({listType: 'card'})}} className={`h-full ${listType === 'card' ? 'bg-pink-600 text-gray-800' : 'bg-[#1b1b1b] hover:bg-[#2b2a2a] text-gray-400'} cursor-pointer aspect-square flex items-center justify-center rounded-lg`}>
+        <button onClick={()=>{setListType('card');localStorage.setItem('listType', 'card')}} className={`h-full ${listType === 'card' ? 'bg-pink-600 text-gray-800' : 'bg-[#1b1b1b] hover:bg-[#2b2a2a] text-gray-400'} cursor-pointer aspect-square flex items-center justify-center rounded-lg`}>
             <List className='' width={18} />
         </button>
 

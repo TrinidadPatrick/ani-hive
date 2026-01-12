@@ -2,7 +2,7 @@ import { CheckCircle, ChevronDown, Clock, Eye, PauseCircle, TicketX } from 'luci
 import React, { useRef, useState } from 'react'
 import { useOutsideClick } from '../../../hooks/useOutsideClick';
 
-const StatusDrodown = ({selectedWatchStatus, setSelectedWatchStatus, background, border, textColor, action}) => {
+const StatusDrodown = ({selectedWatchStatus, setSelectedWatchStatus, buttonClassname, dropdownClassname, textClassname, titleClassname, arrowClassname, arrowSize, dropdownButtonClassname, action}) => {
     const ref = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
     const statusItems = [
@@ -13,8 +13,11 @@ const StatusDrodown = ({selectedWatchStatus, setSelectedWatchStatus, background,
         { icon: TicketX, label: 'Dropped', value: 'dropped'},
     ];
 
-    const handleStatusClick = (status) => {
-        setSelectedWatchStatus(status)
+    const handleStatusClick = (item) => {
+        setSelectedWatchStatus(item.value)
+        if(action){
+            action(item.value)
+        }
     }
 
     useOutsideClick(ref, ()=>{
@@ -23,21 +26,21 @@ const StatusDrodown = ({selectedWatchStatus, setSelectedWatchStatus, background,
 
 
   return (
-    <div ref={ref} onClick={(e)=>{e.stopPropagation();;setIsOpen(!isOpen)}} className={`bg-${background} border border-${border} h-full px-2 flex items-center justify-between rounded-lg relative gap-2 cursor-pointer hover:bg-${background}/20`}>
-        <span className={`text-${textColor} capitalize text-sm whitespace-nowrap`}>{selectedWatchStatus.replaceAll("_", " ")}</span>
+    <div ref={ref} onClick={(e)=>{e.stopPropagation();setIsOpen(!isOpen)}} className={buttonClassname}>
+        <span className={`capitalize whitespace-nowrap ${titleClassname}`}>{selectedWatchStatus.replaceAll("_", " ")}</span>
 
-        <ChevronDown className={`text-${textColor}`} width={20}  />
+        <ChevronDown className={`${arrowClassname}`} width={arrowSize}  />
 
         {
             isOpen &&
             (
-                <div className='w-full absolute bg-[#25252D] z-[999999999999999] top-12 left-0 rounded-lg gap-2 flex flex-col'>
+                <div className={` absolute z-[999999999999999] top-12 left-0 rounded-lg gap-2 flex flex-col ${dropdownClassname}`}>
             {
                 statusItems.map((item, index)=> {
                     return (
-                        <button onClick={()=>{handleStatusClick(item.value);action(item.value)}} key={index} className='flex items-center gap-2 cursor-pointer hover:bg-[#1b1b1b] py-1 px-2'>
-                            <item.icon className={`text-${textColor}  flex-none`} width={15} />
-                            <span className={`text-${textColor}  text-sm whitespace-nowrap`}>{item.label}</span>
+                        <button onClick={()=>{handleStatusClick(item)}} key={index} className={`flex items-center gap-2 cursor-pointer py-1 px-2 ${dropdownButtonClassname}`}>
+                            <item.icon className={`flex-none ${textClassname}`} width={15} />
+                            <span className={` whitespace-nowrap ${textClassname}`}>{item.label}</span>
                         </button>
                     )
                 })

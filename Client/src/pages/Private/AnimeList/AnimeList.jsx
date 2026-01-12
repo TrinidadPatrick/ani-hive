@@ -23,7 +23,7 @@ const AnimeList = () => {
   const [displayLimit, setDisplayLimit] = useState(20);
   const observerTarget = useRef(null);
 
-  const [listType, setListType] = useState(searchParams.get('listType') || 'grid')
+  const [listType, setListType] = useState(localStorage.getItem('listType') || 'grid')
 
   const [searchValue, setSearchValue] = useState('')
   const [genreValue, setGenreValue] = useState([])
