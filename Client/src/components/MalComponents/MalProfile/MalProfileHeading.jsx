@@ -24,10 +24,6 @@ const MalProfileDropdown = () => {
         return null
     }
 
-    const handleLogout = () => {
-        console.log("Hello")
-    }
-
     return (
     <div className='relative'>
         {
@@ -56,18 +52,18 @@ const ProfileDropdown = ({profile, setOpen, logout}) => {
     const setScrollPosition = useScrollPosition((s) => s.setScrollPosition)
     const navigate = useNavigate()
     const menuItems = [
-        { icon: Eye, label: 'Watching', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/watching')}, className: 'text-slate-400' },
-        { icon: CheckCircle, label: 'Completed', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/completed')}, className: 'text-slate-400' },
-        { icon: Clock, label: 'Plan to Watch', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/plan_to_watch')}, className: 'text-slate-400' },
-        { icon: PauseCircle, label: 'On Hold', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/on_hold')}, className: 'text-slate-400' },
-        { icon: TicketX, label: 'Dropped', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/dropped')} , className: 'text-slate-400' },
+        { icon: Eye, label: 'Watching', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/watching')}, className: 'text-gray-400' },
+        { icon: CheckCircle, label: 'Completed', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/completed')}, className: 'text-gray-400' },
+        { icon: Clock, label: 'Plan to Watch', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/plan_to_watch')}, className: 'text-gray-400' },
+        { icon: PauseCircle, label: 'On Hold', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/on_hold')}, className: 'text-gray-400' },
+        { icon: TicketX, label: 'Dropped', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/dropped')} , className: 'text-gray-400' },
         { icon: LogOut, label: 'Logout', action: () => {setScrollPosition({...scrollPosition, userList: null});logout()}, className: 'text-red-500' },
     ];
 
     
     return (
-        <main className='bg-slate-800 rounded-lg shadow-xl border border-slate-700 absolute top-10 right-0 z-[999999999999999]'>
-            <header className='flex items-center px-4 py-3 gap-3 border-b border-b-slate-600'>
+        <main className='bg-themeDarker rounded-lg shadow-xl border border-themeDark absolute top-10 right-0 z-[999999999999999]'>
+            <header className='flex items-center px-4 py-3 gap-3 border-b border-themeDark cursor-default'>
                 <User className="w-5 h-5 text-slate-400" />
                 <h3 className="font-medium whitespace-nowrap text-slate-200">{profile?.name}</h3>
             </header>
@@ -79,10 +75,10 @@ const ProfileDropdown = ({profile, setOpen, logout}) => {
                   onClick={() => {
                     item.action();
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-slate-200 hover:bg-slate-700 transition-colors duration-150 text-left cursor-pointer"
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-themeDark transition-colors duration-150 text-left cursor-pointer"
                 >
                   <Icon className={`w-5 h-5 ${item.className}`} />
-                  <span className={`font-medium whitespace-nowrap ${item.className}`}>{item.label}</span>
+                  <span className={`font-medium whitespace-nowrap text-sm ${item.className}`}>{item.label}</span>
                 </button>
               );
             })}

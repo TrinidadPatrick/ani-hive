@@ -1,10 +1,14 @@
 import { motion } from "framer-motion";
 import { Save, Star, X } from "lucide-react";
 import StatusDrodown from "./StatusDrodown";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Loader from "../../Loader.jsx";
+import LoaderV2 from "../LoaderV2.jsx";
+import useUserAnimeStore from "../../../stores/UserAnimeStore.js";
 
 const AnimeUpdateModal = ({isOpen, setIsOpen, score, setScore, selectedWatchStatus, setSelectedWatchStatus, anime, epStatus, setEpStatus, total_ep, handleUpdate}) => {
-
+  const isUpdating = useUserAnimeStore((s) => s.isUpdating)
+  const updateAnime = useUserAnimeStore((s) => s.updateAnime)
   const renderClickableStars = () => {
     const stars = [];
     for (let i = 1; i <= 10; i++) {
@@ -33,6 +37,8 @@ const AnimeUpdateModal = ({isOpen, setIsOpen, score, setScore, selectedWatchStat
     }
     setSelectedWatchStatus('watching')
   },[epStatus])
+
+  console.log(isUpdating)
 
   return (
     <main onClick={(e) => e.stopPropagation()} className='fixed w-[100svw] cursor-pointer h-[100dvh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.2)]'>
@@ -93,8 +99,10 @@ const AnimeUpdateModal = ({isOpen, setIsOpen, score, setScore, selectedWatchStat
 
             {/* Submit */}
             <div className="w-full flex justify-end mt-7">
-            <button onClick={()=>{handleUpdate()}} title='update' className='bg-pink-600 hover:bg-pink-500 cursor-pointer px-2 rounded py-1 flex items-center gap-2 text-gray-100'>
-                Update
+            <button onClick={()=>{updateAnime({id: anime.id, num_watched_episodes: epStatus, score: score, status: selectedWatchStatus})}} title='update' className='bg-pink-600 hover:bg-pink-500 cursor-pointer px-3 rounded h-8 flex items-center gap-2 text-gray-100'>
+                {
+                  isUpdating ? <LoaderV2 width={6} height={6} color={'bg-white'} /> : 'Update'
+                }
             </button>
             </div>
         </div>

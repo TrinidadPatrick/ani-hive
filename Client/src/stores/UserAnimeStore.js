@@ -9,6 +9,7 @@ const useUserAnimeStore = create((set, get) => ({
     dropped: null,
     plan_to_watch: null,
 
+    isUpdating: false,
 
     getList: async (status, offset = 0, isFetching = true) => {
         try {
@@ -26,6 +27,25 @@ const useUserAnimeStore = create((set, get) => ({
             set({isFetching: false})
         }
     },
+
+    updateAnime: async ({id, num_watched_episodes, score, status}) => {
+        set({isUpdating: true})
+        const payload = {
+            id,
+            num_watched_episodes,
+            score,
+            status
+          }
+
+          try {
+            const response = await http.post(`mal/anime`, payload);
+            return response
+          } catch (error) {
+            console.log(error)
+          } finally {
+            set({isUpdating: false})
+          }
+    }
 
 }))
 
