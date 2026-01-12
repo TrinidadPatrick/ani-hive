@@ -16,15 +16,15 @@ const StatusBar = ({status, setScrollPosition, scrollPosition}) => {
     if(profile === null) return null
 
   return (
-    <div className='hidden w-full p-4 sm:flex'>
+    <div className='w-full p-4 flex'>
         {/* Status items */}
-        <div className='flex gap-3 flex-wrap'>
+        <div className='flex gap-3 overflow-x-scroll statusList'>
             {
                 statusItems.map((item, index) => {
                     return (
-                        <button onClick={() => {setScrollPosition({...scrollPosition, userList: null});navigate(`/user/anime-list/${item.value}`)}} key={index} className={`flex items-center px-3 py-2 ${item.value === status ? 'bg-pink-600 text-gray-200' : 'text-gray-400 hover:text-gray-500'}  cursor-pointer rounded-full text-sm`}>
-                            <span>{item.label}</span>
-                            <div className='ml-2 bg-slate-200/10 rounded-full px-2 py-0.5 flex items-center justify-center'>{profile.anime_statistics[`num_items_${item.value}`]}</div>
+                        <button onClick={() => {setScrollPosition({...scrollPosition, userList: null});navigate(`/user/anime-list/${item.value}`)}} key={index} className={`text-sm flex items-center px-2 sm:px-3 py-1 sm:py-2 ${item.value === status ? 'bg-pink-600 text-gray-200' : 'text-gray-400 hover:text-gray-500'}  cursor-pointer rounded-full`}>
+                            <span className='whitespace-nowrap'>{item.label}</span>
+                            <div className=' ml-2 bg-slate-200/10 rounded-full px-2 py-0.5 flex items-center justify-center'>{profile.anime_statistics[`num_items_${item.value}`]}</div>
                         </button>
                     )
                 })

@@ -1,5 +1,16 @@
 import {create} from 'zustand'
 import http from '../http.js'
+import {toast} from 'react-toastify'
+
+const handleToast = (type, message) => {
+    toast[type](message, {
+                position: "bottom-left",
+                autoClose: 5000,
+                closeOnClick: true,
+                progress: undefined,
+                theme: "dark",
+            });
+}
 
 const useUserAnimeStore = create((set, get) => ({
     isFetching: false,
@@ -39,9 +50,14 @@ const useUserAnimeStore = create((set, get) => ({
 
           try {
             const response = await http.post(`mal/anime`, payload);
-            return response
+            if(response.status === 200){
+                return response
+            }
+            handleToast('error', 'Something went wrong');
           } catch (error) {
             console.log(error)
+            handleToast('error', 'Something went wrong');
+            return error
           } finally {
             set({isUpdating: false})
           }

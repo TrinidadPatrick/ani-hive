@@ -1,5 +1,6 @@
 import {create} from 'zustand'
 import http from '../http.js'
+import { toast } from 'react-toastify'
 
 const generateCodeChallenge = (length = 64) => {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~"
@@ -44,12 +45,13 @@ const useAuthStore = create((set, get) => ({
         try {
             set({isAuthenticating: true})
             const response = await http.get('mal/me')
-            set({profile: response.data, authenticated: true})
+            if(response.status === 200){
+                return set({profile: response.data, authenticated: true})
+            }
+            set({authenticated: false})
         } catch (error) {
             console.log(error)
-            if(error.status === 401){
-                set({authenticated: false})
-            }
+            set({authenticated: false})
         } finally {
             set({isAuthenticating: false})
         }

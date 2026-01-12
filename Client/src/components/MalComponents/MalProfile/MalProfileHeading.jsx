@@ -30,7 +30,7 @@ const MalProfileDropdown = () => {
             authenticated === true ?
             (
                 <div ref={ref} onClick={()=>setOpen(!open)} className='relative flex gap-1 items-center cursor-pointer z-90'>
-                    <div className='w-9 h-9  hover:opacity-90 border border-gray-700 rounded-full'>
+                    <div className='w-9 h-9  hover:opacity-90 border border-gray-700 rounded-full overflow-hidden'>
                         <img className='' src={`https://robohash.org/${profile.name}`} />
                     </div>
                     <ChevronDown color='white' size={20} />

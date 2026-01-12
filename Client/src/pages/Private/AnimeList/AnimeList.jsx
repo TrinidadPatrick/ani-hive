@@ -8,6 +8,7 @@ import useScrollPosition from '../../../stores/ScrollPositionStore.js';
 import UserStatistics from '../../../components/MalComponents/MalAnimeList/UserStatistics.jsx';
 import { motion } from "framer-motion";
 import AnimeCardV2 from '../../../components/MalComponents/MalAnimeList/AnimeCardV2.jsx';
+import AnimeListSkeleton from '../../../components/MalComponents/Skeletons/AnimeListSkeleton.jsx';
 
 const AnimeList = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -110,34 +111,40 @@ const AnimeList = () => {
         <StatusBar status={status} setScrollPosition={setScrollPosition} scrollPosition={scrollPosition} />
         <AnimeListSearch listType={listType} setListType={setListType} setGenreValue={setGenreValue} setSearchValue={setSearchValue} setDateValue={setDateValue} />
       </section>
-      
-      <section className={` grid ${listType === 'grid' ? ' grid-cols-1 semiMd:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-4 lg:gap-6 ' : 
-        'grid-cols-1 xxs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 semiMd:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-6'} p-4`}>
-      {isFetching && <div className='text-white w-full h-full flex justify-center items-center'>Loading</div>}
       {
-        list && mapAnime?.slice(0,displayLimit)?.map((item, index) => {
-          const anime = item.node
-          const animeInfo = item.list_status
-          return (
-            <motion.div
-            key={anime.id}
-            layout="position"
-            className=""
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: (index % 10) * 0.05 }}
-          >
-            <div onClick={()=>{handleSelect(`/anime/${anime.id}`)}} className='overflow-visible h-full' key={anime.id}>
-              {
-                listType === 'grid' ? <AnimeCard anime={anime} animeInfo={animeInfo} status={status} /> : <AnimeCardV2 anime={anime} animeInfo={animeInfo} status={status} />
-              }
-            </div>
-            </motion.div>
-          )
-        })
+        list === null ? ( <> <AnimeListSkeleton /> </> ) :
+        (
+        <>
+          <section className={` grid ${listType === 'grid' ? ' grid-cols-1 semiMd:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-4 lg:gap-6 ' : 
+              'grid-cols-1 xxs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 semiMd:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-6'} p-4`}>
+            {isFetching && <div className='text-white w-full h-full flex justify-center items-center'>Loading</div>}
+            {
+              list && mapAnime?.slice(0,displayLimit)?.map((item, index) => {
+                const anime = item.node
+                const animeInfo = item.list_status
+                return (
+                  <motion.div
+                  key={anime.id}
+                  layout="position"
+                  className=""
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: (index % 10) * 0.05 }}
+                >
+                  <div onClick={()=>{handleSelect(`/anime/${anime.id}`)}} className='overflow-visible h-full' key={anime.id}>
+                    {
+                      listType === 'grid' ? <AnimeCard anime={anime} animeInfo={animeInfo} status={status} /> : <AnimeCardV2 anime={anime} animeInfo={animeInfo} status={status} />
+                    }
+                  </div>
+                  </motion.div>
+                )
+              })
+            }
+            <div ref={observerTarget} style={{ height: '20px' }}></div>
+          </section>
+        </>
+        )
       }
-      <div ref={observerTarget} style={{ height: '20px' }}></div>
-      </section>
     </div>
   )
 }

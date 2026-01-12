@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import useAuthStore from '../../stores/AuthStore.js'
 import chibi from '../../images/chibi.gif'
+import ProfileSkeleton from '../../components/MalComponents/Skeletons/ProfileSkeleton.jsx'
+import AnimeListSkeleton from '../../components/MalComponents/Skeletons/AnimeListSkeleton.jsx'
 
 const PrivateLayout = () => {
     const authenticated = useAuthStore((s) => s.authenticated)
@@ -12,12 +14,12 @@ const PrivateLayout = () => {
         window.location.href = "/"
       }
     },[authenticated])
-    
-    if(isAuthenticating) return null
 
   return (
     <div className='w-full h-[100svh]'>
         <Outlet />
+
+        {/* Chibi */}
         <div onClick={()=>{window.scrollTo({
           top: 0,
           behavior: 'smooth'

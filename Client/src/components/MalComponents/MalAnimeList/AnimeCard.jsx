@@ -22,23 +22,6 @@ const AnimeCard = ({anime, animeInfo}) => {
     setEpStatus((prev) => (prev > 0 ? prev - 1 : prev))
   }
 
-  // const handleUpdate = async () => {
-  //   const payload = {
-  //     id: anime.id,
-  //     num_watched_episodes: epStatus,
-  //     score,
-  //     status: selectedWatchStatus
-  //   }
-
-  //   try {
-  //     const response = await http.post(`mal/anime`, payload);
-  //     console.log(response.data)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-
-  // }
-
   return (
     <div className='anime_card cursor-pointer flex gap-3 relative border border-gray-800/20 justify-start p-2 sm:p-4 bg-themeDarker rounded-lg'>
       {/* Image Contianer */}
@@ -55,7 +38,7 @@ const AnimeCard = ({anime, animeInfo}) => {
             {/* Badge */}
             <div className=" flex items-center gap-1 rounded-full bg-gray-700/50 px-2 py-1 backdrop-blur-sm">
                 <Star className="h-3 w-3 fill-pink-600 text-pink-600" width={30} />
-                <span className="text-xs font-medium text-white">{animeInfo.score}</span>
+                <span className="text-xs font-medium text-white">{score}</span>
             </div>
           </div>
           {/* Start and End Date */}
@@ -80,8 +63,8 @@ const AnimeCard = ({anime, animeInfo}) => {
           {/* <ScorePicker score={score} setScore={setScore} /> */}
   
           {/* Watch Status */}
-          <div className='h-full px-3 border border-themeDark flex items-center rounded-lg bg-themeDark'>
-            <span className='text-gray-100 capitalize'>{selectedWatchStatus.replaceAll("_", " ")}</span>
+          <div className='h-full cursor-default px-3 border border-themeDark flex items-center rounded-lg bg-themeDark'>
+            <span className='text-gray-100 capitalize text-sm'>{selectedWatchStatus.replaceAll("_", " ")}</span>
           </div>
           {/* <StatusDrodown selectedWatchStatus={selectedWatchStatus} setSelectedWatchStatus={setSelectedWatchStatus} anime={anime} /> */}
 
