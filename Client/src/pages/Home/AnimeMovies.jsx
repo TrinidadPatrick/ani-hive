@@ -61,10 +61,10 @@ const AnimeMovies = () => {
       </button>
     <Swiper
     modules={[FreeMode, Navigation]}
-    freeMode={true}
     spaceBetween={20}
     slidesPerView={2}
-    slidesPerGroup={1}  grabCursor={true}
+    slidesPerGroup={1} 
+    grabCursor={true}
     navigation={{
       nextEl: nextRef.current,
       prevEl: prevRef.current,

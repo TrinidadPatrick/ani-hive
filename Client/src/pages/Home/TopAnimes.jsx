@@ -63,10 +63,10 @@ const TopAnimes = ({topAnimes}) => {
           </button>
         <Swiper
         modules={[FreeMode, Navigation]}
-        freeMode={true}
         spaceBetween={20}
-        slidesPerView={2}
-        slidesPerGroup={1}  grabCursor={true}
+        slidesPerView={1}
+        slidesPerGroup={1} 
+        grabCursor={true}
         navigation={{
           nextEl: nextRef.current,
           prevEl: prevRef.current,
