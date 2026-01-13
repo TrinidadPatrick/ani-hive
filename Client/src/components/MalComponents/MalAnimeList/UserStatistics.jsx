@@ -31,7 +31,7 @@ const UserStatistics = () => {
   }
 
   return (
-    <div className=" p-2 sm:p-4 space-y-5">
+    <div className=" p-2 sm:p-4 md:space-y-5">
 
       <div className="bg-themeDarker rounded-xl py-4 border border-themeDark flex flex-col sm:flex-row items-center px-3 gap-5">
         {/* User Avatar */}
@@ -73,7 +73,7 @@ const UserStatistics = () => {
         </div>
       </div>
 
-      <div className="bg-themeDarker rounded-xl py-4 border border-themeDark grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="bg-themeDarker hidden rounded-xl py-4 border border-themeDark md:grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {stats.map((stat, index) => (
           <motion.div
             key={stat.label}
