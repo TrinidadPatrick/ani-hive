@@ -108,7 +108,7 @@ const TopSection = ({topAnimes}) => {
                     <div><span className="font-semibold text-pink-400">Genre:</span> {topAnime?.genres.map((genre)=>genre.name).join(', ')}</div>
                   </div>
 
-                  <button onClick={()=>{navigate(`/anime/${topAnime?.mal_id}`)}} className="mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
+                  <button onClick={()=>{navigate(`/anime/${topAnime?.mal_id}?title=${topAnime?.title}`)}} className="mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
                     Overview
                     </button>
                     <button onClick={()=>{setShowTrailer(true)}} className=" hover:bg-gray-50/2 ml-3 mt-4 cursor-pointer bg-transparent border text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
