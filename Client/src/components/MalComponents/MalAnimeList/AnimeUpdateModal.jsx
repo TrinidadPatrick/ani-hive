@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Save, Star, X } from "lucide-react";
+import { Minus, Plus, Save, Star, X } from "lucide-react";
 import StatusDrodown from "./StatusDrodown";
 import { useEffect, useState } from "react";
 import useUserAnimeStore from "../../../stores/UserAnimeStore.js";
@@ -49,11 +49,23 @@ const AnimeUpdateModal = ({setIsOpen, score, setScore, selectedWatchStatus, setS
   }
 
   const handleDelete = async () => {
-    const result = await deleteAnime(anime.id)
-    if(result.status === 200){
-      setIsOpen(false)
-      getList(status)
+    const shouldDelete = confirm(`Delete ${anime.title}?`, (e) => console.log(e));
+    console.log(shouldDelete)
+    if(shouldDelete){
+      const result = await deleteAnime(anime.id)
+      if(result.status === 200){
+        setIsOpen(false)
+        getList(status)
+      }
     }
+  }
+
+  const handleIncrement = () => {
+    setEpStatus((prev) => prev + 1)
+  }
+
+  const handleDecrement = () => {
+    setEpStatus((prev) => prev - 1)
   }
 
   useEffect(() => {
@@ -117,7 +129,10 @@ const AnimeUpdateModal = ({setIsOpen, score, setScore, selectedWatchStatus, setS
               <label className="text-sm font-medium text-gray-100">
                 Episodes Watched
               </label>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 mt-1">
+                <button disabled={epStatus === 0} onClick={handleDecrement} className="text-white bg-themeLightDark rounded-full w-7 h-7 flex justify-center items-center cursor-pointer">
+                  <Minus width={17} />
+                </button>
                 <input
                   type="range"
                   min={0}
@@ -126,6 +141,9 @@ const AnimeUpdateModal = ({setIsOpen, score, setScore, selectedWatchStatus, setS
                   onChange={(e) => setEpStatus(Number(e.target.value))}
                   className="flex-1 accent-pink-600"
                 />
+                <button disabled={epStatus === total_ep} onClick={handleIncrement} className="text-white bg-themeLightDark rounded-full w-7 h-7 flex justify-center items-center cursor-pointer">
+                  <Plus width={17} />
+                </button>
                 <span className="text-sm font-bold text-gray-100 min-w-[60px] text-right">
                   {epStatus} / {total_ep}
                 </span>
