@@ -1,16 +1,7 @@
 import axios from 'axios'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router'
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/navigation';
-import { FreeMode, Navigation } from 'swiper/modules';
 import 'video.js/dist/video-js.css';
-import useSmallScreen from '../../utils/useSmallScreen.js';
-import AnimeRecommendationSkeleton from './skeleton/AnimeRecommendationSkeleton.jsx';
-import AnimeRelatedSkeleton from './skeleton/AnimeRelatedSkeleton.jsx';
-import AnimeReviewsSkeleton from './skeleton/AnimeReviewsSkeleton.jsx';
 import getYoutubeId from '../../utils/getYoutubeId.js';
 import TrailerPlayer from '../../components/TrailerPlayer.jsx';
 import useUserAnimeStore from '../../stores/UserAnimeStore.js';
@@ -20,6 +11,8 @@ import useAuthStore from '../../stores/AuthStore.js';
 import LoaderV2 from '../../components/LoaderV2.jsx';
 import Characters from './Characters.jsx';
 import Recommendations from './Recommendations.jsx';
+import RelatedAnime from './RelatedAnime.jsx';
+import Reviews from './Reviews.jsx';
 
 const AnimeOverView = () => {
     const authenticated = useAuthStore((s) => s.authenticated)
@@ -30,22 +23,13 @@ const AnimeOverView = () => {
     const updateAnime = useUserAnimeStore((s) => s.updateAnime)
     const deleteAnime = useUserAnimeStore((s) => s.deleteAnime)
 
-    const reactionEmojis = ["📊", "👍", "❤️", "😂", "🤔", "📘", "✍️", "🎨"];
     const {id} = useParams()
-    const textRef = useRef(null);
     const [selectedWatchStatus, setSelectedWatchStatus] = useState(null)
     const [animeUserStatus, setAnimeUserStatus] = useState(null)
     const [animeInfo, setAnimeInfo] = useState(null)
-    const [animeRelations, setAnimeRelations] = useState(null)
-    const [recommendations, setRecommendations] = useState(null);
     const [reviews, setReviews] = useState(null);
-    const [indexSeeMore, setIndexSeeMore] = useState([])
-    const [indexSeeReview, setIndexSeeReview] = useState([])
     const [showTrailer, setShowTrailer] = useState(false)
     const [youtubeId, setYoutubeId] = useState(null)
-
-    const prevRef = useRef(null);
-    const nextRef = useRef(null);
     
     const checkAnimeForUser = async (anime_id) => {
         const result = await checkIsSaved(anime_id)
@@ -96,167 +80,6 @@ const AnimeOverView = () => {
         }
     }
 
-    const getCharacters = async(mal_id, retries = 10) => {
-        try {
-            const result = await axios.get(`https://api.jikan.moe/v4/anime/${mal_id}/characters`)
-                if(result.status === 200) {
-                    const characters = result.data.data
-                    const sortedCharacters = characters.sort((a,b) => b.favorites - a.favorites)
-                    setCharacters(sortedCharacters)
-                }
-        } catch (error) {
-            console.log(error)
-            if(retries > 0)
-            {
-                setTimeout(()=>{
-                    getCharacters(mal_id, retries - 1)
-                }, 1000)
-            }
-        }
-    }  
-    
-    const getAnimeRelations = async (title, retries = 10) => {
-        const query = `
-        query ($search: String) {
-        Media (search: $search, type: ANIME) { 
-            id
-            title {
-            romaji
-            english
-            native
-            }
-            relations {
-            nodes {
-                id
-                idMal
-                title {
-                english
-                native
-                romaji
-                }
-                coverImage {
-                large
-                }
-                type
-            }
-            }
-        }
-        }
-        `;
-
-        const variables = { search: title };
-
-        try {
-            const { data } = await axios.post(
-            'https://graphql.anilist.co',
-            { query, variables },
-            { headers: { 'Content-Type': 'application/json' } }
-            );
-            const results = data.data.Media.relations.nodes
-            if(results){
-                const relatedAnimes = results.filter((result) => result.type === "ANIME" && result.idMal)
-                setAnimeRelations(relatedAnimes)
-            }   
-        } catch (err) {
-            console.log(err);
-            setAnimeRelations([])
-        }
-    };
-
-    const getRecommendations = async (searchTerm) => {
-    const query = `
-      query ($search: String) {
-        Media(search: $search, type: ANIME) {
-          id
-          title {
-            romaji
-            english
-          }
-          recommendations(sort: RATING_DESC, perPage: 10) {
-            nodes {
-              mediaRecommendation {
-                id
-                idMal
-                title {
-                  romaji
-                  english
-                }
-                coverImage {
-                  large
-                }
-                nextAiringEpisode {
-                    episode
-                    airingAt
-                  }
-                  genres
-                episodes
-              }
-            }
-          }
-        }
-      }
-    `;
-
-    const variables = { search: searchTerm };
-
-    try {
-        const { data } = await axios.post(
-          'https://graphql.anilist.co',
-          { query, variables },
-          { headers: { 'Content-Type': 'application/json' } }
-        );
-        const media = data.data.Media;
-        setRecommendations(media.recommendations.nodes);
-      } catch (err) {
-        setRecommendations([])
-        console.log(err);
-    }
-
-    }
-
-    const getUserReviews = async (id, retries = 10) => {
-        try {
-            const result = await axios.get(`https://api.jikan.moe/v4/anime/${id}/reviews`)
-                if(result.status === 200) {
-                    const reviews = result.data.data
-                    const sortedReviews = reviews.sort((a,b) => new Date(b.date) - new Date(a.date))
-                    setReviews(sortedReviews)
-                }
-        } catch (error) {
-            console.log(error)
-            if(retries > 0)
-            {
-                setTimeout(()=>{
-                    getUserReviews(id, retries - 1)
-                }, 1000)
-            }
-        }
-    }
-
-    const handleSeeMore = (index) => {
-        const newIndex = indexSeeMore.findIndex((item) => item === index)
-        if(newIndex !== -1){
-            const newIndexSeeMore = [...indexSeeMore]
-            newIndexSeeMore.splice(newIndex, 1)
-            setIndexSeeMore(newIndexSeeMore)
-        }else{
-            const newIndexSeeMore = [...indexSeeMore, index]
-            setIndexSeeMore(newIndexSeeMore)
-        }
-    }
-
-    const handleSeeReview = (index) => {
-        const newIndex = indexSeeReview.findIndex((item) => item === index)
-        if(newIndex !== -1){
-            const newIndexSeeReview = [...indexSeeReview]
-            newIndexSeeReview.splice(newIndex, 1)
-            setIndexSeeReview(newIndexSeeReview)
-        }else{
-            const newIndexSeeReview = [...indexSeeReview, index]
-            setIndexSeeReview(newIndexSeeReview)
-        }
-    }
-
     const InfoRow = ({ label, children }) => (
         <li className="flex justify-start gap-2">
           <h1 className="text-gray-400  min-w-[100px] text-[0.8rem] lg:text-[0.9rem] font-medium w-25 ">{label}</h1>
@@ -274,14 +97,7 @@ const AnimeOverView = () => {
     }, [id]);
 
     useEffect(() => {
-        if(animeInfo && (( !animeRelations) || ( !recommendations))) {        
-            (async()=>{
-                getRecommendations(animeInfo?.title)
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                getAnimeRelations(animeInfo.title)
-                await new Promise(resolve => setTimeout(resolve, 1000))
-                getUserReviews(id)
-            })()
+        if(animeInfo) {        
         const youtubeId = getYoutubeId(animeInfo?.trailer?.embed_url)
         setYoutubeId(youtubeId)
         }
@@ -451,228 +267,24 @@ const AnimeOverView = () => {
                     </div>
                 </div>
             </div>
+
             {/* Characters */}
             <Characters mal_id={id} />
-            {/* Related */}
-            <div className='w-full flex flex-col gap-3'>
-                <div>
-                    <h1 className='text-white text-xl md:text-2xl font-bold'>Related</h1>
-                </div>
-                {
-                    animeRelations && animeRelations?.length == 0 &&
-                    <div className='w-full h-full flex justify-center items-center'>
-                        <h1 className='text-gray-500 text-2xl'>No Related Anime</h1>
-                    </div>
-                }
-                <div className='relative'>
-                {
-                    !animeRelations ?
-                    (
-                        <AnimeRelatedSkeleton />
-                    )
-                    :
-                    animeRelations && animeRelations?.length !== 0 &&
-                    (
-                        <Swiper
-                        modules={[FreeMode, Navigation]}
-                        freeMode={true}
-                        spaceBetween={20}
-                        slidesPerView={2}
-                        slidesPerGroup={1}  grabCursor={true}
-                        navigation={{
-                        nextEl: nextRef.current,
-                        prevEl: prevRef.current,
-                        }}
-                        onBeforeInit={(swiper) => {
-                        swiper.params.navigation.prevEl = prevRef.current;
-                        swiper.params.navigation.nextEl = nextRef.current;animeRelations
-                        }}
-                        breakpoints={{
-                        0: {
-                            slidesPerView: 3,
-                            slidesPerGroup: 3,
-                        },
-                        481: {
-                            slidesPerView: 4,
-                            slidesPerGroup: 4,
-                        },
-                        630: {
-                            slidesPerView: 4,
-                            slidesPerGroup: 4,
-                        },
-                        769: {
-                            slidesPerView: 5,
-                            slidesPerGroup: 5,
-                        },
-                        890: {
-                            slidesPerView: 6,
-                            slidesPerGroup: 6,
-                        },
-                        1280: {
-                            slidesPerView: 7,
-                            slidesPerGroup: 7,
-                        },
-                        }}
-                        className="w-full mx-auto "
-                        >
-                        {animeRelations && animeRelations?.length > 0 &&
-                        animeRelations.map((info, index, array) =>
-                        {
-                            if(1 === 1){
-                            return (
-                            <SwiperSlide
-                            key={index}
-                            onClick={()=>{window.location.href = `/anime/${info.idMal}`}}
-                            style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
-                            className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
-                            >
-                            <div className="relative h-fit overflow-hidden rounded-lg">
-                            <div className=' absolute top-1 left-2 z-[999999999999] px-2 py-0.5 rounded-lg flex items-center justify-center gap-1'>
-                                <div className='bg-black opacity-55 absolute w-full h-full rounded-lg'></div>
-                                <p className='text-white z-[9999999] text-sm'>{info?.type}</p>
-                            </div>
-                                {/* Image */}
-                                <div className="w-full  h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
-                                <img
-                                    src={info?.coverImage.large}
-                                    alt={info?.title.english || info?.title.romaji}
-                                    className="w-full aspect-[2/2.8]  object-cover brightness-70"
-                                />
-                                </div>
-        
-                                {/* Info */}
-                                <div className="w-full px-1 md:px-2 py-1 bottom-0 bg-transparent backdrop-blur-xl h-[30%] xs:h-[25%] md:h-[30%] rounded-b-lg flex">
-                                <div className="flex flex-col items-start w-full h-full justify-around">
-                                    <h2 className="text-white text-sm md:text-sm w-full line-clamp-3 text-center">
-                                    {info?.title.english || info?.title.romaji}
-                                    </h2>
-                                </div>
-                                </div>
-                            </div>
-                            </SwiperSlide>
-                            )
-                            }})
-                        }
-                        
-                        </Swiper>  
-                    )
-                }        
-                </div>                       
-            </div>
-            {/* Recommendations */}
-            <Recommendations title={animeInfo?.title} />
-            {/* Reviews */}
-            <div className='w-full flex flex-col gap-3'>
-                <div>
-                    <h1 className='text-white text-xl md:text-2xl font-bold'>Reviews</h1>
-                </div>
-                {
-                    reviews && reviews?.length == 0 &&
-                    <div className='w-full h-full flex justify-center items-center'>
-                        <h1 className='text-gray-500 text-2xl'>No Reviews</h1>
-                    </div>
-                }
-                <div className='w-full h-full flex flex-col gap-2'>
-                    {
-                        reviews && reviews?.length > 0 ?
-                        reviews.map((review, index, array) =>
-                        {
-                            const textLength = review.review.length
-                            const date = new Date(review.date)
-                            const dateString = date.toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric'
-                            })
 
-                            return (
-                                <div key={index} className='w-full flex gap-2'>
-                                    
-                                    <div className='w-[50px] aspect-[2/2.3] flex-none'>
-                                        <img src={review?.user?.images?.jpg.image_url} alt={review?.author?.name} className='w-full aspect-square object-cover rounded-lg' />
-                                    </div>
-                                    <div className='flex flex-col justify-between py-0 items-start'>
-                                        <div className='flex flex-col gap-1'>
-                                        {/* Date and name */}
-                                        <div className='flex justify-between'>
-                                        <h2 className='text-white font-medium text-sm md:text-base line-clamp-2 '>{review?.user?.username}</h2>
-                                        <p className='text-gray-400 text-sm'>{dateString}</p>
-                                        </div>
-                                        {/* Tag */}
-                                        <div className='flex gap-3'>
-                                            {
-                                                review?.tags?.length > 0 &&
-                                                review?.tags.map((tag, index, array) =>
-                                                {
-                                                    return (
-                                                        <div key={index} className='px-2 py-0.5 bg-[#ff96d812] rounded'>
-                                                            <h1 className='text-pink-400 text-xs font-medium'>{tag}</h1>
-                                                        </div>
-                                                    )
-                                                })
-                                            }
-                                        </div>
-                                        {/* Review Content */}
-                                        <div className='relative'>
-                                            {/* Spoiler Warning */}
-                                            {
-                                                !indexSeeReview.includes(index) &&  review?.is_spoiler &&
-                                                <div className='absolute w-full h-full backdrop-blur-xs rounded-lg z-[9999999] flex flex-col justify-center items-center'>
-                                                <h1 className='text-white text-lg font-bold'>Spoiler Warning</h1>
-                                                <p className='text-white text-sm'>This review contains spoilers</p>
-                                                <button onClick={()=>handleSeeReview(index)} className='text-white px-2 py-1 bg-pink-400 hover:bg-pink-500 rounded text-sm cursor-pointer hover:text-gray-200 w-fit'>See review</button>
-                                                </div>
-                                            }
-                                        {
-                                            textLength <= 1200 ?
-                                            <p className='text-gray-200 text-sm whitespace-pre-line'>{review?.review}</p>
-                                            :
-                                            <p
-                                            ref={textRef}
-                                            className={`text-gray-300 text-sm whitespace-pre-line transition-all duration-300 ease-in-out overflow-hidden ${
-                                                indexSeeMore.includes(index) ? 'max-h-[1000px]' : 'max-h-[8.5rem] line-clamp-6'
-                                            }`}
-                                            >
-                                            {review?.review}
-                                            </p>
-                                        }
-                                        {/* See More Button */}
-                                        {
-                                            textLength > 1200 &&
-                                            <button 
-                                            onClick={()=>{handleSeeMore(index)}}
-                                            className='text-white text-sm cursor-pointer hover:text-gray-200  w-fit'>{
-                                                indexSeeMore.includes(index) ? 'see less' : 'see more'
-                                            }</button>
-                                        }
-                                        </div>
-                                        <div className='flex gap-3 flex-wrap p-2 bg-[#34343438] rounded'>
-                                            {
-                                                Object.entries(review.reactions).map(([key, value], index)=>{
-                                                    const reaction = key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' ')
-                                                    return (
-                                                        <p key={index} className='text-white text-xs sm:text-sm font-light px-2 py-1 border rounded border-gray-400'>{reaction} {reactionEmojis[index]}: {value}</p>
-                                                    )
-                                                })
-                                            }
-                                        </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        })
-                        :
-                        !reviews &&
-                        (
-                            <AnimeReviewsSkeleton />
-                        )
-                    }
-                </div>
-            </div>
+            {/* Related */}
+            <RelatedAnime />
+
+            {/* Recommendations */}
+            <section className='flex xl:hidden'>
+            <Recommendations title={animeInfo?.title} />
+            </section>
+
+            {/* Reviews */}
+            <Reviews mal_id={id} />
         </div>
         :
         // Loader
-        <div className='w-full col-span-12 h-[100svh] bg-[#141414] mt-20 z-90'>
+        <div className='w-full col-span-13 h-[100svh] bg-[#141414] mt-20 z-90  p-4'>
             
             {/* Header */}
             <div className="flex gap-6">
@@ -718,43 +330,7 @@ const AnimeOverView = () => {
         </div>
     }
         {/* Recommendations */}
-        <div className='recoList xl:col-span-3 hidden xl:flex h-fit pb-5 bg-[#141414] overflow-auto mt-20 flex-col gap-3 z-90'>
-            <div>
-            <h1 className='text-white text-2xl font-bold'>Recommendations</h1>
-            </div>
-            {
-                recommendations === null ? 
-                (
-                    <AnimeRecommendationSkeleton />
-                )
-                :
-                recommendations && recommendations?.length !== 0 ?
-                recommendations?.map((recommendation, index, array) =>
-                {
-                    return (
-                        <div onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.idMal}`} key={index} className='w-full hover:bg-[#212121] flex gap-2 cursor-pointer'>
-                            <div className='w-[90px] aspect-[2/2.3] flex-none'>
-                                <img src={recommendation?.mediaRecommendation?.coverImage?.large} alt={recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji} className='w-full h-full object-cover rounded-lg' />
-                            </div>
-                            <div className='flex flex-col justify-between py-1'>
-                                <div>
-                                <h2 className='text-white font-medium text-sm md:text-[0.9rem] line-clamp-2'>{recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji}</h2>
-                                <p className='text-gray-300 text-sm'>Ep {recommendation?.mediaRecommendation?.nextAiringEpisode?.episode || recommendation?.mediaRecommendation?.episodes }/{recommendation?.mediaRecommendation?.episodes}</p>
-                                </div>
-                                <p className='text-gray-300 text-sm'>{recommendation?.mediaRecommendation?.genres?.join(', ')}</p>
-                            </div>
-                        </div>
-                    )
-                })
-                :
-                recommendations && recommendations?.length === 0 &&
-                    (
-                    <div className='w-full h-full flex justify-center items-center '>
-                        <h1 className='text-gray-400 text-2xl'>No Recommendations</h1>
-                    </div>
-                    )
-            }
-        </div>
+        <Recommendations title={animeInfo?.title} />
   </main>
   )
 }
