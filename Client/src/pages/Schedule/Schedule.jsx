@@ -102,8 +102,6 @@ const Schedule = () => {
         query,
         variables,
       });
-    // const uniqueAnimes = response.data.data.Page.airingSchedules?.filter((obj, index, self) => index === self.findIndex((item) => item.title.))
-    // console.log(response.data.data.Page.airingSchedules)
     setAnimeList(response.data.data.Page.airingSchedules);
     } catch (error) {
       console.error(error);
@@ -128,11 +126,10 @@ const Schedule = () => {
   }
 
   useEffect(() => {
-    // getAnimeList(selectedDay)
     getAiringAnime(selectedDay  )
   }, [selectedDay])
 
-
+  console.log(animeList)
   return (
     <main className='w-full h-[100svh] bg-[#141414] flex flex-col gap-5 md:gap-10 items-center pt-20'>
         <h1 className='text-white text-4xl font-bold'>Schedule</h1>
@@ -148,8 +145,6 @@ const Schedule = () => {
                 })
             }
         </div>
-
-        {/* Anime List */}
         <>
     {
       loading ?
@@ -198,7 +193,7 @@ const Schedule = () => {
                           
                           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                             <div className={`transition-all duration-300 ${hovered === index ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-90'}`}>
-                              <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-cyan-400 transition-colors">
+                              <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-pink-400 transition-colors">
                                 {anime?.title_english || anime?.title}
                               </h3>
                               <div className="flex items-center gap-2 text-sm text-gray-300">
@@ -210,7 +205,7 @@ const Schedule = () => {
                             </div>
                             
                             {hovered === index && (
-                              <button onClick={()=>navigate(`/anime/${anime?.mal_id}`)} className="cursor-pointer mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105">
+                              <button onClick={()=>navigate(`/anime/${anime?.mal_id}`)} className="cursor-pointer mt-4 px-4 py-2 bg-pink-600 hover:bg-cyan-500 rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105">
                                 View Details
                               </button>
                             )}
