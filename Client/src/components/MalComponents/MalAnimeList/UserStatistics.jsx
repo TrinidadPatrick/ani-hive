@@ -31,7 +31,7 @@ const UserStatistics = () => {
   }
 
   return (
-    <div className="p-4 space-y-5">
+    <div className=" p-2 sm:p-4 space-y-5">
 
       <div className="bg-themeDarker rounded-xl py-4 border border-themeDark flex flex-col sm:flex-row items-center px-3 gap-5">
         {/* User Avatar */}

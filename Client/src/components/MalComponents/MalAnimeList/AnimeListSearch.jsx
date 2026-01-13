@@ -92,9 +92,9 @@ const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType,
   },[])
 
   return (
-    <div className=' flex items-center gap-2 h-10 w-full lg:w-fit px-4 '>
+    <div className=' flex items-center gap-2 h-10 w-full lg:w-fit px-2 sm:px-4 '>
         {/* Search Input */}
-        <div className='relative bg-[#1b1b1b] rounded-lg border border-[#2e2e2e] w-full lg:w-[17rem] h-full'>
+        <div className='relative bg-[#1b1b1b] rounded-lg border border-[#2e2e2e] w-full lg:w-[13rem] xl:w-[17rem] h-full'>
             <Search onClick={()=> handleSubmitSearch()} className=' cursor-pointer absolute hover:text-gray-300 text-gray-400 top-1.5 left-3' width={16} />
             <input onKeyDown={(e) => {if(e.key === 'Enter'){handleSubmitSearch()}}} ref={searchRef} type="text" className='text-gray-200 text-sm pl-10 pr-3 py-2 outline-none  w-full' placeholder='Search anime...' />
         </div>

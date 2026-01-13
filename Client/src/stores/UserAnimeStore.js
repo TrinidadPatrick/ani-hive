@@ -12,6 +12,8 @@ const handleToast = (type, message) => {
             });
 }
 
+
+
 const useUserAnimeStore = create((set, get) => ({
     isFetching: false,
     watching: null,
@@ -19,9 +21,11 @@ const useUserAnimeStore = create((set, get) => ({
     on_hold: null,
     dropped: null,
     plan_to_watch: null,
+    animeStatuses: [],
 
     isUpdating: false,
     isDeleting: false,
+    isFetchingSchedule: false,
 
     checkIsSaved: async (id) => {
         try {
@@ -93,7 +97,53 @@ const useUserAnimeStore = create((set, get) => ({
           } finally {
             set({isDeleting: false})
           }
-    }
+    },
+
+    fetchAiringData : async (lists, status) => {
+        const animeIds = lists?.filter((list) => list.node?.status === 'currently_airing').map((list) => list.node.id)
+        const query = `
+          query ($ids: [Int]) {
+            Page {
+              media(idMal_in: $ids, type: ANIME) {
+                idMal
+                title { romaji }
+                nextAiringEpisode {
+                  timeUntilAiring
+                  episode
+                }
+              }
+            }
+          }
+        `;
+      
+        try {
+            set({isFetchingSchedule: true})
+            const response = await fetch('https://graphql.anilist.co', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                  query: query,
+                  variables: { ids: animeIds }
+                })
+              });
+
+            const { data } = await response.json();
+
+            set((state) => {
+                const combined = [...state.animeStatuses, ...data.Page.media]
+                const uniqueMap = new Map(combined.map((item) => [item.idMal, item]))
+                return {animeStatuses: Array.from(uniqueMap.values())}
+            })
+        } catch (error) {
+            console.log(error)
+        } finally {
+            set({isFetchingSchedule: false})
+        }
+    
+      }
 
 }))
 

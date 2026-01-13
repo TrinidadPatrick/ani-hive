@@ -1,12 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {Minus, Pencil, Plus, Save, Star} from 'lucide-react'
 import StatusDrodown from './StatusDrodown'
 import http from '../../../http'
 import ScorePicker from './ScorePicker'
 import { useNavigate, useParams } from 'react-router-dom'
 import AnimeUpdateModal from './AnimeUpdateModal.jsx'
+import useUserAnimeStore from '../../../stores/UserAnimeStore.js'
+import LoaderV2 from '../../LoaderV2.jsx'
 
 const AnimeCard = ({anime, animeInfo}) => {
+  const [rerender, setRerender] = useState(1)
+  const animeStatuses = useUserAnimeStore((s) => s.animeStatuses)
   const {status} = useParams()
   const [isOpen, setIsOpen] = useState(false)
   const [score, setScore] = useState(animeInfo.score)
@@ -14,13 +18,32 @@ const AnimeCard = ({anime, animeInfo}) => {
   const [epStatus, setEpStatus] = useState(animeInfo.num_episodes_watched || 0)
   let total_ep = anime.num_episodes || '??'
 
-  const handleIncrement = () => {
-    setEpStatus((prev) => (prev < total_ep ? prev + 1 : prev))
+  const formatTimeLeft = (seconds) => {
+    if (typeof seconds !== 'number') return "";
+    if(seconds === 0) return 'Airing'
+    
+    const days = Math.floor(seconds / (3600 * 24));
+    const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+  
+    if (days > 0) return `${days}d ${hours}h`;
+    if (hours > 0) return `${hours}h ${mins}m`;
+    return `${mins}m`;
   }
 
-  const handleDecrement = () => {
-    setEpStatus((prev) => (prev > 0 ? prev - 1 : prev))
-  }
+  useEffect(() => {
+    if(anime && animeStatuses.length !== 0){
+      if(anime.status === 'currently_airing'){
+        const airedEps = animeStatuses.find((status) => status.idMal === anime.id)?.nextAiringEpisode
+
+        const formatted = formatTimeLeft(airedEps?.timeUntilAiring || 0 )
+        const ep = airedEps?.episode
+        anime.airInfo = !airedEps?.timeUntilAiring ? 'Airing' : `EP ${ep} in ${formatted}`
+        
+        setRerender(rerender + 1)
+      }
+    }
+  },[anime, animeStatuses])
 
   return (
     <div className='anime_card cursor-pointer flex gap-3 relative border border-gray-800/20 justify-start p-2 sm:p-4 bg-themeDarker rounded-lg'>
@@ -58,18 +81,27 @@ const AnimeCard = ({anime, animeInfo}) => {
         </div>
 
         {/* Watch status, ep status, and update btn */}
-        <div className='flex gap-2 items-center h-9 overflow-visible'>
-          {/* Ratingf */}
-          {/* <ScorePicker score={score} setScore={setScore} /> */}
+        <div className='flex gap-2 items-center h-8 overflow-visible'>
   
           {/* Watch Status */}
-          <div className='h-full cursor-default px-3 border border-themeDark flex items-center rounded-lg bg-themeDark'>
+          <div className='h-full cursor-default px-3 border border-themeDark flex items-center rounded-md bg-themeDark'>
             <span className='text-gray-100 capitalize text-[0.8rem]'>{selectedWatchStatus.replaceAll("_", " ")}</span>
           </div>
-          {/* <StatusDrodown selectedWatchStatus={selectedWatchStatus} setSelectedWatchStatus={setSelectedWatchStatus} anime={anime} /> */}
+          {
+            anime.status === 'currently_airing' && 
+            (
+            <div className='h-full cursor-default min-w-23 justify-center border border-themeDark flex items-center rounded-md bg-themeDark'>
+              {
+                anime?.airInfo ? <span className='text-gray-100 capitalize text-[0.8rem]'>{anime?.airInfo}</span>
+                :
+                <LoaderV2 color='bg-white' width={5} height={5} />
+              }
+            </div>
+            )
+          }
 
           {/* Update btn */}
-          <button onClick={(e)=>{e.stopPropagation();setIsOpen(true)}} title='update' className='bg-pink-600 hover:bg-pink-500 cursor-pointer px-2.5 rounded-lg h-full'>
+          <button onClick={(e)=>{e.stopPropagation();setIsOpen(true)}} title='update' className='bg-pink-600 hover:bg-pink-500 cursor-pointer px-2.5 rounded-md h-full'>
             <Pencil width={17} className='text-white' />
           </button>
         </div>

@@ -11,7 +11,6 @@ import AnimeCardV2 from '../../../components/MalComponents/MalAnimeList/AnimeCar
 import AnimeListSkeleton from '../../../components/MalComponents/Skeletons/AnimeListSkeleton.jsx';
 
 const AnimeList = () => {
-  const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const validStatuses = ['watching', 'completed', 'on_hold', 'dropped', 'plan_to_watch'];
   const {status} = useParams()
@@ -20,11 +19,11 @@ const AnimeList = () => {
   const getList = useUserAnimeStore((s) => s.getList)
   const list = useUserAnimeStore((s) => s[status])
   const isFetching = useUserAnimeStore((s) => s.isFetching)
+  const fetchAiringData = useUserAnimeStore((s) => s.fetchAiringData)
   const [displayLimit, setDisplayLimit] = useState(20);
   const observerTarget = useRef(null);
 
   const [listType, setListType] = useState(localStorage.getItem('listType') || 'grid')
-
   const [searchValue, setSearchValue] = useState('')
   const [genreValue, setGenreValue] = useState([])
   const [dateValue, setDateValue] = useState({
@@ -74,6 +73,12 @@ const AnimeList = () => {
     return () => observer.disconnect();
   }, [list]);
 
+  useEffect(() => {
+    if(list){
+      fetchAiringData(list.animeList, status)
+    }
+  },[list])
+
   const handleSelect = (url) => {
     setScrollPosition({...scrollPosition, userList: window.pageYOffset})
     navigate(url)
@@ -96,7 +101,7 @@ const AnimeList = () => {
   return (
     <div className='w-full h-full pt-20 flex flex-col max-w-7xl xl:max-w-[90vw] mx-auto'> 
       {/* Title */}
-      <header className='p-4'>
+      <header className=' p-2 sm:p-4'>
         <h1 className='text-white text-4xl font-bold'>My Anime list</h1>
         <h5 className='text-gray-300 text-lg font-semibold'>Track your anime in with fashion</h5>
       </header>
@@ -115,9 +120,8 @@ const AnimeList = () => {
         list === null ? ( <> <AnimeListSkeleton /> </> ) :
         (
         <>
-          <section className={` grid ${listType === 'grid' ? ' grid-cols-1 semiMd:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-4 lg:gap-6 ' : 
-              'grid-cols-1 xxs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 semiMd:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-6'} p-4`}>
-            {isFetching && <div className='text-white w-full h-full flex justify-center items-center'>Loading</div>}
+          <section className={`grid ${listType === 'grid' ? ' grid-cols-1 semiMd:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-4 lg:gap-6 ' : 
+              'grid-cols-1 xxs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 semiMd:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-4'} p-2 sm:p-4`}>
             {
               list && mapAnime?.slice(0,displayLimit)?.map((item, index) => {
                 const anime = item.node
@@ -130,7 +134,7 @@ const AnimeList = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: (index % 10) * 0.05 }}
-                >
+                  >
                   <div onClick={()=>{handleSelect(`/anime/${anime.id}`)}} className='overflow-visible h-full' key={anime.id}>
                     {
                       listType === 'grid' ? <AnimeCard anime={anime} animeInfo={animeInfo} status={status} /> : <AnimeCardV2 anime={anime} animeInfo={animeInfo} status={status} />

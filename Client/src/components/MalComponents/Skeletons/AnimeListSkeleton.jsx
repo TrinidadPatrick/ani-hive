@@ -31,7 +31,7 @@ const Card = () => {
 
 const AnimeListSkeleton = () => {
     return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full mt-2">
       {[...Array(6)].map((_, i) => (
         <Card key={i} />
       ))}
