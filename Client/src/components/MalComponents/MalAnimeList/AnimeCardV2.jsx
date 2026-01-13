@@ -139,7 +139,9 @@ const AnimeCardV2 = ({anime, animeInfo}) => {
                       {
                         anime?.airInfo ? <span className='text-gray-100 capitalize text-[0.7rem] sm:text-[0.8rem] whitespace-nowrap'>{anime?.airInfo}</span>
                         :
+                        <div className='py-2'>
                         <LoaderV2 color='bg-white' width={5} height={5} />
+                        </div>
                       }
                     </div>
                     )
@@ -153,11 +155,6 @@ const AnimeCardV2 = ({anime, animeInfo}) => {
           <h3 className="flex-1 text-sm sm:text-base font-display font-semibold text-gray-100 line-clamp-2 sm:line-clamp-1 leading-tight">
           {anime.title}
           </h3>
-          {/* Score */}
-          {/* <div className="flex items-center gap-2 ">
-          <div className="flex items-center gap-0.5">{renderStars(score)}</div>
-          <span className="text-sm font-medium text-gray-100">{score}</span>
-          </div> */}
 
           {/* Aired Date */}
           <div className="flex items-center gap-2 ">
