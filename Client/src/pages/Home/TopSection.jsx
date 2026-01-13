@@ -112,8 +112,8 @@ const TopSection = ({topAnimes}) => {
                     </div>
 
                     <div className='flex gap-2 mt-5'>
-                      {topAnime?.genres.map((genre)=> (
-                        <div className='text-sm px-4 py-1 rounded-full bg-themeDark border border-themeLightDark text-white'>
+                      {topAnime?.genres.map((genre, index)=> (
+                        <div key={index} className='text-sm px-4 py-1 rounded-full bg-themeDark border border-themeLightDark text-white'>
                           {genre.name}
                         </div>
                       ))}
@@ -123,7 +123,7 @@ const TopSection = ({topAnimes}) => {
                   <button onClick={()=>{setShowMore(!showMore)}} className='inline px-1 font-medium cursor-pointer'>{showMore ? '...see less' : '...see more'}</button></p>
                   
                   <div className='flex'>
-                    <button onClick={()=>{navigate(`/anime/${topAnime?.mal_id}?title=${topAnime?.title}`)}} className="flex items-center gap-2 mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-lg shadow-lg transition duration-300">
+                    <button onClick={()=>{navigate(`/anime/${topAnime?.mal_id}?title=${topAnime?.title || ''}`)}} className="flex items-center gap-2 mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-lg shadow-lg transition duration-300">
                       <ArrowUpRight width={17} />
                       Overview
                     </button>

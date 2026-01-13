@@ -87,15 +87,13 @@ const Recommendations = React.memo(({title}) => {
     }
 
     useEffect(() => {
-        if(!recommendations){
             if(animeTitle){
                 getRecommendations(animeTitle)
-            }else{
+            }else if(!animeTitle && title){
                 getRecommendations(title)
             }
-            console.log(animeTitle)
-        }
     }, [title])
+
     return (
     <>
     <div className="w-full flex xl:hidden flex-col gap-3 ">
@@ -166,7 +164,7 @@ const Recommendations = React.memo(({title}) => {
                         <SwiperSlide
                             key={index}
                             onClick={() =>
-                            (window.location.href = `/anime/${recommendation.mediaRecommendation.id}?name=${recommendation.mediaRecommendation.title.romaji}`)
+                            (window.location.href = `/anime/${recommendation.mediaRecommendation.idMal}?title=${recommendation.mediaRecommendation.title.romaji}`)
                             }
                             style={{ width: "195px", height: "40svh" }}
                             className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
@@ -235,7 +233,7 @@ const Recommendations = React.memo(({title}) => {
                 recommendations?.map((recommendation, index, array) =>
                 {
                     return (
-                        <div onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.idMal}`} key={index} className='w-full hover:bg-[#212121] flex gap-2 cursor-pointer'>
+                        <div onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.idMal}?title=${recommendation.mediaRecommendation.title.romaji}`} key={index} className='w-full hover:bg-[#212121] flex gap-2 cursor-pointer'>
                             <div className='w-[90px] aspect-[2/2.3] flex-none'>
                                 <img src={recommendation?.mediaRecommendation?.coverImage?.large} alt={recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji} className='w-full h-full object-cover rounded-lg' />
                             </div>

@@ -137,7 +137,7 @@ const SeasonNowAnime = () => {
                     <div><span className="font-semibold text-pink-400">Type:</span> {anime?.type}</div>
                   </div>
             
-                  <button onClick={()=>{navigate(`/anime/${anime?.mal_id}`)}} className="mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
+                  <button onClick={()=>{navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)}} className="mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
                     Overview
                   </button>
                   <button onClick={()=>{setShowTrailer(true);setYoutubeId(yt_id)}} className=" hover:bg-gray-50/2 md:hidden ml-3 mt-4 cursor-pointer bg-transparent border text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">

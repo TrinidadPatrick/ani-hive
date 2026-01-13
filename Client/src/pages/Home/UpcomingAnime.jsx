@@ -132,7 +132,7 @@ const UpcomingAnime = () => {
             style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
             className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
             >
-            <div onClick={()=>{navigate(`/anime/${anime?.mal_id}`)}} className="relative h-full overflow-hidden rounded-lg cursor-pointer">
+            <div onClick={()=>{navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)}} className="relative h-full overflow-hidden rounded-lg cursor-pointer">
                 {/* Image */}
                 <div className="w-full bg-red-100 h-full rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
                 <img

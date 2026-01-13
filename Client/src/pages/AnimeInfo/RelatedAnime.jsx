@@ -84,7 +84,7 @@ const RelatedAnime = () => {
                         <SwiperSlide
                             key={index}
                             onClick={() => {
-                            window.location.href = `/anime/${info.idMal}`;
+                            window.location.href = `/anime/${info.idMal}?title=${info?.title.english || info?.title.romaji}`;
                             }}
                             style={{ width: "195px", height: "auto" }}
                             className="h-full md:h-[40svh] flex items-center justify-center rounded-lg cursor-pointer"

@@ -135,7 +135,7 @@ const AnimeList = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: (index % 10) * 0.05 }}
                   >
-                  <div onClick={()=>{handleSelect(`/anime/${anime.id}`)}} className='overflow-visible h-full' key={anime.id}>
+                  <div onClick={()=>{handleSelect(`/anime/${anime.id}?title=${anime?.title || ''}`)}} className='overflow-visible h-full' key={anime.id}>
                     {
                       listType === 'grid' ? <AnimeCard anime={anime} animeInfo={animeInfo} status={status} /> : <AnimeCardV2 anime={anime} animeInfo={animeInfo} status={status} />
                     }

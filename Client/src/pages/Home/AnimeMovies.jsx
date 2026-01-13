@@ -112,7 +112,7 @@ const AnimeMovies = () => {
           style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
           className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
         >
-          <div onClick={()=>{navigate(`/anime/${anime?.mal_id}`)}} className="relative h-full overflow-hidden rounded-lg cursor-pointer">
+          <div onClick={()=>{navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)}} className="relative h-full overflow-hidden rounded-lg cursor-pointer">
             {/* Rating */}
             <div className="w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-1">
               <div className="w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>
