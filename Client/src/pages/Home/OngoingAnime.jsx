@@ -125,12 +125,12 @@ const OngoingAnime = () => {
                 </div>
 
                 {/* Info */}
-                <div className="w-full px-3 py-1 bottom-0 bg-transparent sm:h-[25%] md:h-[20%] rounded-b-lg flex">
+                <div className="w-full px-1 py-1 bottom-0 bg-transparent sm:h-[25%] md:h-[20%] rounded-b-lg flex">
                   <div className="flex flex-col items-start w-full h-full justify-around">
-                    <h2 className="text-white text-center text-sm md:text-[0.9rem] mt-1 line-clamp-2 w-full">
+                    <h2 className="text-white font-medium text-start text-sm md:text-[0.9rem] mt-1 line-clamp-2 w-full">
                       {anime?.title?.romaji || ''}
                     </h2>
-                    <h2 className="text-gray-300 text-center w-full text-sm md:text-sm mt-2">
+                    <h2 className="text-gray-400 text-start w-full text-sm md:text-sm mt-2">
                       {anime?.genres.join(', ')}
                     </h2>
                   </div>

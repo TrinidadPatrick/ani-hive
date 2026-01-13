@@ -58,23 +58,20 @@ const AnimeOverView = () => {
         }
     }
 
-    const getAnimeInfo = async (mal_id, option, retries = 10) => {
+    const getAnimeInfo = async (mal_id, retries = 10) => {
         try {
             const result = await axios.get(`https://api.jikan.moe/v4/anime/${mal_id}/full`)
                 if(result.status === 200) {
                     const anime = result.data.data
-                    if(option == 1){
-                        setAnimeInfo(anime)
-                    }else{
-                        return anime
-                    }
+                    setAnimeInfo(anime)
+
                 }
         } catch (error) {
             console.log(error)
             if(retries > 0)
             {
                 setTimeout(()=>{
-                    getAnimeInfo(searchTerm, retries - 1)
+                    getAnimeInfo(id, retries - 1)
                 }, 1000)
             }
         }
@@ -286,12 +283,10 @@ const AnimeOverView = () => {
         // Loader
         <div className='w-full col-span-13 h-[100svh] bg-[#141414] mt-20 z-90  p-4'>
             
-            {/* Header */}
             <div className="flex gap-6">
-                {/* Poster Skeleton */}
+
                 <div className="w-48 h-72 bg-gray-800 animate-pulse rounded"></div>
 
-                {/* Info Skeleton */}
                 <div className="flex-1 space-y-4">
                 <div className="h-6 w-3/4 bg-gray-800 animate-pulse rounded"></div>
                 <div className="h-4 w-1/3 bg-gray-700 animate-pulse rounded"></div>
@@ -303,10 +298,8 @@ const AnimeOverView = () => {
                 </div>
             </div>
 
-            {/* Divider */}
             <div className="my-6 h-0.5 bg-gray-700"></div>
 
-            {/* Synopsis */}
             <div>
                 <div className="h-6 w-32 bg-gray-800 animate-pulse rounded mb-4"></div>
                 <div className="space-y-2">
@@ -315,7 +308,6 @@ const AnimeOverView = () => {
                 </div>
             </div>
 
-            {/* Characters */}
             <div className="mt-10">
         <div className="h-6 w-32 bg-gray-800 animate-pulse rounded mb-4"></div>
         <div className="flex gap-4 flex-wrap">

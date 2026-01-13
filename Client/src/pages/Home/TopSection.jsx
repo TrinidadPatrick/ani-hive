@@ -7,6 +7,7 @@ import ReactPlayer from 'react-player'
 import useSmallScreen from '../../utils/useSmallScreen'
 import getYoutubeId from '../../utils/getYoutubeId'
 import TrailerPlayer from '../../components/TrailerPlayer'
+import { ArrowUpRight, Calendar, Film, Play, Star } from 'lucide-react'
 
 const TopSection = ({topAnimes}) => {
     const isSmallScreen = useSmallScreen()
@@ -81,10 +82,9 @@ const TopSection = ({topAnimes}) => {
               {showTrailer && <TrailerPlayer youtubeId={youtubeId} setShowTrailer={setShowTrailer} />}
               {/* Background Image */}
               <img
-                // src={image_1}
                 src={topAnime?.images?.webp.large_image_url}
-                alt="Top Anime"
-                className="absolute w-full h-full object-cover brightness-30 opacity-70"
+                alt={topAnime?.title}
+                className="absolute w-full h-full object-cover brightness-20 opacity-70"
               />
 
               {/* Overlay (blur + tint) */}
@@ -92,28 +92,46 @@ const TopSection = ({topAnimes}) => {
               <div className="relative mx-3 sm:mx-10 xl:mx-0 z-10 flex flex-col-reverse md:flex-row items-center gap-10 w-full max-w-7xl">
                 
                 {/* Left Side: Anime Info */}
-                <div className="text-white flex-1 space-y-5 p-3 md:p-0">
-                  <div>
-                  <p>#1 Anime</p>
-                  <h1 className="text-4xl md:text-5xl font-bold">{topAnime?.title}</h1>
+                <div className=" flex-1 space-y-5 p-3 md:p-0">
+                  <div className='flex flex-col'>
+                  <p className='text-pink-500'>#1 Anime</p>
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">{topAnime?.title}</h1>
+                    <div className='mt-4 flex gap-3 text-white'>
+                      <div className='flex gap-2 items-center'>
+                        <Star width={17} className='text-amber-300 fill-amber-300' />
+                        {topAnime?.score}
+                      </div>
+                      <div className='flex gap-2 items-center'>
+                        <Film width={17} className='' />
+                        {topAnime?.episodes} Episodes
+                      </div>
+                      <div className='flex gap-2 items-center'>
+                        <Calendar width={17} className='' />
+                        {topAnime?.season[0].toUpperCase()}{topAnime?.season?.slice(1)} {topAnime?.year}
+                      </div>
+                    </div>
+
+                    <div className='flex gap-2 mt-5'>
+                      {topAnime?.genres.map((genre)=> (
+                        <div className='text-sm px-4 py-1 rounded-full bg-themeDark border border-themeLightDark text-white'>
+                          {genre.name}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <p className="text-sm text-gray-300 max-w-prose">{topAnime?.synopsis.substring(0, showMore ? 100000 : 500)}
+                  <p className="text-base text-gray-300 max-w-xl">{topAnime?.synopsis.substring(0, showMore ? 100000 : 300)}
                   <button onClick={()=>{setShowMore(!showMore)}} className='inline px-1 font-medium cursor-pointer'>{showMore ? '...see less' : '...see more'}</button></p>
                   
-
-                  <div className="flex flex-wrap gap-4 text-sm text-gray-200">
-                    <div><span className="font-semibold text-pink-400">Rating:</span> {topAnime?.score} / 10</div>
-                    <div><span className="font-semibold text-pink-400">Episodes:</span> {topAnime?.episodes}</div>
-                    <div><span className="font-semibold text-pink-400">Season:</span> {topAnime?.season[0].toUpperCase()}{topAnime?.season?.slice(1)} {topAnime?.year}</div>
-                    <div><span className="font-semibold text-pink-400">Genre:</span> {topAnime?.genres.map((genre)=>genre.name).join(', ')}</div>
+                  <div className='flex'>
+                    <button onClick={()=>{navigate(`/anime/${topAnime?.mal_id}?title=${topAnime?.title}`)}} className="flex items-center gap-2 mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-lg shadow-lg transition duration-300">
+                      <ArrowUpRight width={17} />
+                      Overview
+                    </button>
+                    <button onClick={()=>{setShowTrailer(true)}} className=" hover:bg-gray-50/2 flex items-center ml-3 mt-4 cursor-pointer bg-transparent border text-white font-semibold py-2 px-5 rounded-lg shadow-lg transition duration-300">
+                      <Play width={17} />
+                      Watch Trailer
+                    </button>
                   </div>
-
-                  <button onClick={()=>{navigate(`/anime/${topAnime?.mal_id}?title=${topAnime?.title}`)}} className="mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
-                    Overview
-                    </button>
-                    <button onClick={()=>{setShowTrailer(true)}} className=" hover:bg-gray-50/2 ml-3 mt-4 cursor-pointer bg-transparent border text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
-                    Watch Trailer
-                    </button>
                 </div>
 
                 {/* Right Side: Anime Poster */}
