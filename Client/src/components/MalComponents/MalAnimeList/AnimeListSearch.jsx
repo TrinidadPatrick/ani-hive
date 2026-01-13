@@ -123,19 +123,19 @@ const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType,
                     stiffness: 300,
                     key:'s'
                     }}
-                    className='bg-themeDarker p-4 w-sm rounded-lg shadow-2xl absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+                    className='bg-themeDark p-4 sm:w-md rounded-lg shadow-2xl absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
                 >
                 <div className=''>
                     <button onClick={()=>setIsOpen(false)} className='text-white absolute right-5 cursor-pointer hover:text-gray-300'><X width={17} /></button>
-                    <h2 className='font-bold text-xl text-white text-center pb-3'>Select Filter</h2>{selectedGenres.join("")}ss
+                    <h2 className='font-bold text-xl text-white text-center pb-3'>Select Filter</h2>{selectedGenres.join("")}
                     <div ref={ref} className='flex flex-col gap-2 w-fit'>
                       {/* Genres */}
                       <div className='flex gap-3'>
-                        <h3 className='text-white font-medium w-20'>Genre</h3>
+                        <h3 className='text-white font-medium w-15 sm:w-20 text-sm sm:text-base'>Genre</h3>
                         <span className='text-white'> - </span>
                           <div className=' relative'>
-                            <button onClick={()=>setDropdownOpen(dropdownOpen === 'genre' ? '' : 'genre')} className='bg-themeDark hover:bg-themeDark/30 cursor-pointer flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-sm'>{genres[0]?.name} <ChevronDown className='text-white' width={17} /></button>
-                            <div className={`z-90 ${dropdownOpen === 'genre' ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDark top-10 max-h-80 overflow-y-scroll`}>
+                            <button onClick={()=>setDropdownOpen(dropdownOpen === 'genre' ? '' : 'genre')} className='bg-themeDarker border border-themeLightDark hover:bg-themeDark/30 cursor-pointer flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-sm'>{genres[0]?.name} <ChevronDown className='text-white' width={17} /></button>
+                            <div className={`z-90 ${dropdownOpen === 'genre' ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
                               {
                                 genres.length !== 0 && genres.map((genre, index) => {
                                   return (
@@ -151,11 +151,11 @@ const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType,
                       </div>
                       {/* Themes */}
                       <div className='flex gap-3'>
-                        <h3 className='text-white font-medium w-20'>Themes</h3>
+                        <h3 className='text-white font-medium w-15 sm:w-20 text-sm sm:text-base'>Themes</h3>
                         <span className='text-white'> - </span>
                           <div className=' relative'>
-                            <button onClick={()=>setDropdownOpen(dropdownOpen === 'theme' ? '' : 'theme')} className='bg-themeDark hover:bg-themeDark/30 cursor-pointer flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-sm'>{themes[0]?.name} <ChevronDown className='text-white' width={17} /></button>
-                            <div className={`z-90 ${dropdownOpen === 'theme' ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDark top-10 max-h-80 overflow-y-scroll`}>
+                            <button onClick={()=>setDropdownOpen(dropdownOpen === 'theme' ? '' : 'theme')} className='bg-themeDarker border border-themeLightDark hover:bg-themeDark/30 cursor-pointer flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-sm'>{themes[0]?.name} <ChevronDown className='text-white' width={17} /></button>
+                            <div className={`z-90 ${dropdownOpen === 'theme' ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
                               {
                                 themes.length !== 0 && themes.map((theme, index) => {
                                   return (
@@ -171,14 +171,14 @@ const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType,
                       </div>
                       {/* Air Date */}
                       <div className='flex gap-3'>
-                        <h3 className='text-white font-medium w-20'>Start Date</h3>
+                        <h3 className='text-white font-medium w-15 sm:w-20 text-sm sm:text-base'>Start Date</h3>
                         <span className='text-white'> - </span>
                           {
                             Object.entries(dates).map(([key, value], index) => {
                               return (
                                 <div key={index} className='relative'>
-                                  <button onClick={()=>setDropdownOpen(dropdownOpen === key ? '' : key)} className='bg-themeDark hover:bg-themeDark/30 flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-sm cursor-pointer'>{selectedDate['startDate'][key] || '--'} <ChevronDown className='text-white' width={17} /></button>
-                                  <div className={`z-90 ${dropdownOpen === key ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDark top-10 max-h-80 overflow-y-scroll`}>
+                                  <button onClick={()=>setDropdownOpen(dropdownOpen === key ? '' : key)} className='bg-themeDarker border border-themeLightDark hover:bg-themeDark/30 flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-sm cursor-pointer'>{selectedDate['startDate'][key] || '--'} <ChevronDown className='text-white' width={17} /></button>
+                                  <div className={`z-90 ${dropdownOpen === key ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
                                     {
                                       value.map((item, index) => {
                                         return (
@@ -197,15 +197,15 @@ const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType,
                       </div>
                       {/* End Date */}
                       <div className='flex gap-3'>
-                        <h3 className='text-white font-medium w-20'>End Date</h3>
+                        <h3 className='text-white font-medium w-15 sm:w-20 text-sm sm:text-base'>End Date</h3>
                         <span className='text-white'> - </span>
                           {
                             Object.entries(dates).map(([key, value], index) => {
                               return (
                                 <div key={index} className=' relative'>
                                   {/* Year */}
-                                  <button onClick={()=>setDropdownOpen(dropdownOpen === key + '1' ? '' : key + '1')} className='bg-themeDark hover:bg-themeDark/30 flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-sm cursor-pointer'>{selectedDate['endDate'][key] || '--'} <ChevronDown className='text-white' width={17} /></button>
-                                  <div className={`z-90 ${dropdownOpen === key + '1' ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDark top-10 max-h-80 overflow-y-scroll`}>
+                                  <button onClick={()=>setDropdownOpen(dropdownOpen === key + '1' ? '' : key + '1')} className='bg-themeDarker border border-themeLightDark hover:bg-themeDark/30 flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-sm cursor-pointer'>{selectedDate['endDate'][key] || '--'} <ChevronDown className='text-white' width={17} /></button>
+                                  <div className={`z-90 ${dropdownOpen === key + '1' ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
                                     {
                                       value.map((item, index) => {
                                         return (
