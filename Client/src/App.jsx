@@ -1,5 +1,6 @@
-import { RouterProvider, ScrollRestoration } from "react-router-dom"
+import { RouterProvider } from "react-router-dom"
 import router from "./router"
+import { useEffect } from "react"
 
 function App() {
 

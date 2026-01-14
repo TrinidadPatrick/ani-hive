@@ -1,17 +1,19 @@
 import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import http from '../../http'
 
 const MalCallback = () => {
     const [searchParams, setSeachParams] = useSearchParams()
+    const hasLoggedIn = useRef(false)
 
     const handleCallback = async () => {
         const return_url = searchParams.get("state")
         const code = searchParams.get("code")
         const code_verifier = localStorage.getItem("code_verifier")
 
-        if(code && code_verifier){
+        if(code && code_verifier && !hasLoggedIn.current){
+            hasLoggedIn.current = true;
             try {
                 const result = await http.post("auth/mal/token", {code, codeVerifier : code_verifier}, {
                     withCredentials: true

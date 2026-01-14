@@ -8,11 +8,14 @@ import { ToastContainer } from 'react-toastify';
 import MalProfileDropdown from '../../components/MalComponents/MalProfile/MalProfileHeading.jsx';
 import useAuthStore from '../../stores/AuthStore.js';
 import { useRegisterSW } from 'virtual:pwa-register/react'
+import { useRef } from 'react';
 
 const UserLayout = () => {
   const checkAuth = useAuthStore((s) => s.checkAuth)
+  const authenticated = useAuthStore((s) => s.authenticated)
   const navigate = useNavigate()
   const location = useLocation()
+  const hasAttemptedRedirect = useRef(false);
   const path = location.pathname
   const [searchinput, setSearchInput] = useState('')
   const [showSidebar, setShowSidebar] = useState(false)
@@ -46,6 +49,24 @@ const UserLayout = () => {
     setShowSidebar(false)
     navigate(`/explore?page=1&q=${searchinput}`)
   }
+
+  useEffect(() => {
+    const savedPath = localStorage.getItem('last_visited_path');
+
+    if (!hasAttemptedRedirect.current && savedPath && location.pathname === '/' && authenticated) {
+      console.log(savedPath)
+      hasAttemptedRedirect.current = true;
+      navigate(savedPath, { replace: true });
+    }
+  }, [authenticated])
+
+    useEffect(() => {
+      const excludedPaths = ['/auth/mal/callback'];
+
+      if (!excludedPaths.includes(location.pathname) && authenticated) {
+      localStorage.setItem('last_visited_path', location.pathname + location.search);
+    }
+  }, [location, authenticated])
 
   return (
     <div>

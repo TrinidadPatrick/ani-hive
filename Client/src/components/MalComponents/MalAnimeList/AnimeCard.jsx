@@ -39,6 +39,7 @@ const AnimeCard = ({anime, animeInfo}) => {
         const formatted = formatTimeLeft(airedEps?.timeUntilAiring || 0 )
         const ep = airedEps?.episode
         anime.airInfo = !airedEps?.timeUntilAiring ? 'Airing' : `EP ${ep} in ${formatted}`
+        anime.currentEps = airedEps?.episode - 1 || 0
         
         setRerender(rerender + 1)
       }
@@ -71,11 +72,20 @@ const AnimeCard = ({anime, animeInfo}) => {
         {/* Episode progress bar */}
         <div className='flex items-center gap-0 my-2'>
         <div className="w-full bg-[#25252D] rounded-full mt-0.5">
-          <div className="bg-pink-600 text-xs font-medium text-white text-center p-0.5 leading-none rounded-full h-2 flex items-center justify-center" style={{width: `${(epStatus / total_ep) * 100}%`}} />
+          <div className="bg-pink-600 text-xs font-medium text-white text-center p-0.5 leading-none rounded-full h-2 flex items-center justify-center" style={{width: `${(epStatus / (anime.currentEps || total_ep)) * 100}%`}} />
         </div>
         <div className="w-fit flex items-center py-1.5">
             <div className="min-w-[60px] text-center text-sm font-semibold text-white">
-              <span>{epStatus}</span> / <span className='text-gray-400'>{total_ep}</span>
+              {
+                anime.status === 'currently_airing' ?
+                (
+                  <span>{epStatus} / <span className='text-gray-400'> { anime.currentEps || '??'}</span> <span className='text-gray-400'> / {total_ep}</span> </span>
+                )
+                :
+                (
+                  <span>{epStatus} / <span className='text-gray-400'>{total_ep}</span> </span>
+                )
+              }
             </div>
           </div>
         </div>

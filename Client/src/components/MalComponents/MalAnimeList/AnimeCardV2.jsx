@@ -86,6 +86,7 @@ const AnimeCardV2 = ({anime, animeInfo}) => {
         const formatted = formatTimeLeft(airedEps?.timeUntilAiring || 0 )
         const ep = airedEps?.episode
         anime.airInfo = !airedEps?.timeUntilAiring ? 'Airing' : `EP ${ep} in ${formatted}`
+        anime.currentEps = airedEps?.episode - 1 || 0
         
         setRerender(rerender + 1)
       }
@@ -123,7 +124,7 @@ const AnimeCardV2 = ({anime, animeInfo}) => {
             <div className="absolute bottom-0 left-0 right-0 h-1 bg-muted">
                 <div
                 className="h-full bg-pink-500 transition-all duration-300"
-                style={{ width: `${(epStatus / total_ep) * 100}%` }}
+                style={{ width: `${(epStatus / (anime.currentEps || total_ep)) * 100}%` }}
                 />
             </div>
             )}
@@ -164,15 +165,17 @@ const AnimeCardV2 = ({anime, animeInfo}) => {
 
           {/* Episodes Info */}
           {total_ep && (
-          <p className="text-sm text-muted-foreground">
-                {epStatus !== undefined ? (
-                <>
-                    <span className="text-pink-600 font-medium">{epStatus}</span>
-                    <span className='text-gray-400'> / {total_ep} episodes</span>
-                </>
-                ) : (
-                <span>{total_ep} episodes</span>
-                )}
+          <p className="text-sm text-white font-medium">
+                {
+                anime.status === 'currently_airing' ?
+                (
+                  <span>{epStatus} / <span className='text-gray-400'> { anime.currentEps || '??'}</span> <span className='text-gray-400'> / {total_ep}</span> </span>
+                )
+                :
+                (
+                  <span>{epStatus} / <span className='text-gray-400'>{total_ep}</span> </span>
+                )
+              }
           </p>
           )}
 
