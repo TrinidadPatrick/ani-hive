@@ -12,7 +12,7 @@ const createSession = async (user_id, access_token, access_token_expires_at) => 
     if(!user_id || !access_token || !access_token_expires_at) return null
     // Create session expire within 2 hr inactive
     const session_id = generateSessionId()
-    const expires_at = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2hrs;
+    const expires_at = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24hrs;
     
     try {
         // Create session in db
@@ -91,7 +91,7 @@ module.exports.refresh = async (session, res) => {
                 httpOnly: true,
                 secure: ENVIRONMENT === "LOCAL" ? false : true,
                 sameSite: ENVIRONMENT === "LOCAL" ? "strict" : "None",
-                maxAge: 1440 * 60 * 1000, //2hrs and 1 minute
+                maxAge: 24 * 60 * 60 * 1000 //24 hrs
             })
 
             // delete old session since its redundantt nwo

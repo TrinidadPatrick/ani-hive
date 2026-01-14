@@ -36,7 +36,7 @@ module.exports.sessionMiddleware = async (req, res, next) => {
         }
 
         // Add another 1 hr to expiration active
-        session.expires_at = Date.now() + 60 * 60 * 1000; // 1 hour in ms;
+        session.expires_at = Date.now() + 24 * 60 * 60 * 1000 //24 hrs
         await session.save();
 
         req.session = session

@@ -48,14 +48,14 @@ module.exports.token = async (req, res) => {
             )
 
             const session_id = await createSession(user_data.id, access_token, access_token_expires_at)
-
+            console.log(code, codeVerifier)
             console.log("User refresh stored in DB")
 
             res.cookie("session_id", session_id, {
                 httpOnly: true,
                 secure: ENVIRONMENT === "LOCAL" ? false : true,
                 sameSite: ENVIRONMENT === "LOCAL" ? "strict" : "None",
-                maxAge: 1440 * 60 * 1000 //2hrs and 1 min
+                maxAge: 24 * 60 * 60 * 1000 //24 hrs
             })
 
             return res.status(200).json({message: "Login successfull"})
