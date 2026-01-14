@@ -12,18 +12,19 @@ const MalCallback = () => {
         const code = searchParams.get("code")
         const code_verifier = localStorage.getItem("code_verifier")
 
-        if(code && code_verifier && !hasLoggedIn.current){
-            hasLoggedIn.current = true;
-            try {
-                const result = await http.post("auth/mal/token", {code, codeVerifier : code_verifier}, {
-                    withCredentials: true
-                })
-                console.log(result.data)
-            } catch (error) {
-                console.log(error)
-            } finally {
-                localStorage.removeItem("code_verifier")
-                window.location.href = return_url || '/'
+        if(code && code_verifier){
+            if(!hasLoggedIn.current){
+              hasLoggedIn.current = true;
+              try {
+                  const result = await http.post("auth/mal/token", {code, codeVerifier : code_verifier}, {
+                      withCredentials: true
+                  })
+              } catch (error) {
+                  console.log(error)
+              } finally {
+                  localStorage.removeItem("code_verifier")
+                  window.location.href = return_url || '/'
+              }
             }
         }else{
             window.location.href = return_url || '/'

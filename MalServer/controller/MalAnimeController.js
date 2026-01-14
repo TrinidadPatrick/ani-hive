@@ -13,7 +13,6 @@ module.exports.me = async (req, res) => {
       if(session){
 
         let access_token = session.access_token ? session.access_token : await refresh(session, res)
-        
         // get user profile using old unexpired access token or new access token
         const response = await fetch("https://api.myanimelist.net/v2/users/@me?fields=anime_statistics", {
           headers: { Authorization: `Bearer ${access_token}` },

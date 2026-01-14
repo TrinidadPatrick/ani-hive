@@ -5,6 +5,7 @@ const {Schema} = mongoose
 const userRefreshSchema = new Schema({
     user_id: {type: String, required: true, unique: true},
     refresh_token: {type: String, required: true},
+    is_refreshing: {type: Boolean, default: false}
     
 },{ timestamps: true })
 

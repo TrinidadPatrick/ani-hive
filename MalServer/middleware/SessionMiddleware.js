@@ -6,7 +6,6 @@ const ENVIRONMENT = process.env.ENVIRONMENT
 
 module.exports.sessionMiddleware = async (req, res, next) => {
     const session_id = req.cookies.session_id;
-
     // If no session from FE then logout
     if (!session_id) return res.status(401).json({ error: "Not logged in" });
 
@@ -18,13 +17,16 @@ module.exports.sessionMiddleware = async (req, res, next) => {
         
         // If session expired or not found logout the user
         if (!session || session.expires_at < Date.now()) {
-            res.clearCookie("session_id", {
+            // console.log(session)
+            // Only delete session if its expired
+            if(session) {
+                // await session.deleteOne()
+                res.clearCookie("session_id", {
                 httpOnly: true,
                 secure: ENVIRONMENT !== "LOCAL",
                 sameSite: ENVIRONMENT === "LOCAL" ? "strict" : "None",
             })
-            // Only delete session if its expired
-            if(session) await session.deleteOne()
+            }
             return res.status(401).json({ message: "Session expired" });
         }
         

@@ -48,7 +48,6 @@ module.exports.token = async (req, res) => {
             )
 
             const session_id = await createSession(user_data.id, access_token, access_token_expires_at)
-            console.log(code, codeVerifier)
             console.log("User refresh stored in DB")
 
             res.cookie("session_id", session_id, {

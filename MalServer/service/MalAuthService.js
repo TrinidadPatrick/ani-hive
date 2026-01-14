@@ -33,11 +33,47 @@ const createSession = async (user_id, access_token, access_token_expires_at) => 
 
 module.exports.createSession = createSession
 
+const waitTimer = async () => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve()
+        }, 500)
+    })
+}
+
 
 module.exports.refresh = async (session, res) => {
     // Only run if theres sesssion
     if(session && session.user_id){
+
+        // Check if refresh_token is refreshing
+        //if its not then this is the leader
+        const user_refresh =  await UserRefreshToken.findOne({
+                user_id: session.user_id
+        })
+
+        if(user_refresh.is_refreshing){
+            let attempts = 0;
+            const maxAttempts = 10;
+
+            while(attempts <= maxAttempts){
+                const latestSession = await Session.findOne({user_id:session.user_id}).lean()
+
+                // Meaning not expired now
+                if (latestSession.access_token_expires_at > Date.now()) {
+                    console.log("Still waiting")
+                    return latestSession.access_token;
+                }
+
+                await waitTimer();
+                attempts++;
+            }
+        }
+
         try {
+            // If this is the leader then set it to true
+            user_refresh.is_refreshing = true
+            await user_refresh.save();
             // Find the user refresh token using session user id
             const {refresh_token : old_refresh_token} = await UserRefreshToken.findOne({
                 user_id: session.user_id
@@ -82,8 +118,7 @@ module.exports.refresh = async (session, res) => {
             
             // create session id and store in DB agin
             const session_id = await createSession(session.user_id, access_token, access_token_expires_at)
-            
-            // Meaning access_token is invalid so relogin
+            // Meaning access_token is i    nvalid so relogin
             if(!session_id) return res.status(401).json({ error: "Unauthorized"});
 
             // Refresh is valid so got new session_id
@@ -95,7 +130,18 @@ module.exports.refresh = async (session, res) => {
             })
 
             // delete old session since its redundantt nwo
-            await Session.deleteOne({session_id: session.session_id})
+            setTimeout(async () => {
+                try {
+                    console.log("Hmmmm");
+                    console.log(session);
+                    
+                    const result = await Session.deleteOne({ session_id: session.session_id });
+                    
+                    console.log("Delete result:", result);
+                } catch (err) {
+                    console.error("Delayed delete failed:", err);
+                }
+            }, 10000);
 
             return access_token
 
@@ -103,6 +149,9 @@ module.exports.refresh = async (session, res) => {
         } catch (error) {
             console.log(error)
             return error
+        } finally {
+            user_refresh.is_refreshing = false
+            await user_refresh.save();
         }
     }else{
         return null
