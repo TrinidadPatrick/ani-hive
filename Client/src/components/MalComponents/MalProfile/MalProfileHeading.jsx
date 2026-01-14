@@ -53,8 +53,8 @@ const ProfileDropdown = ({profile, setOpen, logout}) => {
     const navigate = useNavigate()
     const menuItems = [
         { icon: Eye, label: 'Watching', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/watching')}, className: 'text-gray-400' },
-        { icon: CheckCircle, label: 'Completed', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/completed')}, className: 'text-gray-400' },
         { icon: Clock, label: 'Plan to Watch', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/plan_to_watch')}, className: 'text-gray-400' },
+        { icon: CheckCircle, label: 'Completed', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/completed')}, className: 'text-gray-400' },
         { icon: PauseCircle, label: 'On Hold', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/on_hold')}, className: 'text-gray-400' },
         { icon: TicketX, label: 'Dropped', action: () => {setScrollPosition({...scrollPosition, userList: null});navigate('/user/anime-list/dropped')} , className: 'text-gray-400' },
         { icon: LogOut, label: 'Logout', action: () => {setScrollPosition({...scrollPosition, userList: null});logout()}, className: 'text-red-500' },

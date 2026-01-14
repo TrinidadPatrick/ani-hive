@@ -107,7 +107,6 @@
                 {
                     if(recommendation?.mediaRecommendation)
                     {
-                        console.log(recommendation)
                         return (
                         <div onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.idMal}?title=${recommendation.mediaRecommendation.title.romaji}`} key={index} className='w-full hover:bg-[#212121] flex gap-2 cursor-pointer'>
                             <div className='w-[90px] aspect-[2/2.3] flex-none'>

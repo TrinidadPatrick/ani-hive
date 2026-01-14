@@ -50,23 +50,22 @@ const UserLayout = () => {
     navigate(`/explore?page=1&q=${searchinput}`)
   }
 
-  useEffect(() => {
-    const savedPath = localStorage.getItem('last_visited_path');
+  // useEffect(() => {
+  //   const savedPath = localStorage.getItem('last_visited_path');
 
-    if (!hasAttemptedRedirect.current && savedPath && location.pathname === '/' && authenticated) {
-      console.log(savedPath)
-      hasAttemptedRedirect.current = true;
-      navigate(savedPath, { replace: true });
-    }
-  }, [authenticated])
+  //   if (!hasAttemptedRedirect.current && savedPath && location.pathname === '/' && authenticated) {
+  //     hasAttemptedRedirect.current = true;
+  //     navigate(savedPath, { replace: true });
+  //   }
+  // }, [authenticated])
 
-    useEffect(() => {
-      const excludedPaths = ['/auth/mal/callback'];
+  //   useEffect(() => {
+  //     const excludedPaths = ['/auth/mal/callback'];
 
-      if (!excludedPaths.includes(location.pathname) && authenticated) {
-      localStorage.setItem('last_visited_path', location.pathname + location.search);
-    }
-  }, [location, authenticated])
+  //     if (!excludedPaths.includes(location.pathname) && authenticated) {
+  //     localStorage.setItem('last_visited_path', location.pathname + location.search);
+  //   }
+  // }, [location, authenticated])
 
   return (
     <div>
