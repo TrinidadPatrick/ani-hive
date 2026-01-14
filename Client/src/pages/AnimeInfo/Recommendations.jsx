@@ -14,20 +14,16 @@
         const [searchParams, setSearchParams] = useSearchParams()
         const recommendations = usePublicAnimeInfo((s) => s.recommendations)
         const setRecommendations = usePublicAnimeInfo((s) => s.setRecommendations)
-        const animeRelations = usePublicAnimeInfo((s) => s.animeRelations)
         const setAnimeRelations = usePublicAnimeInfo((s) => s.setAnimeRelations)
 
         const animeTitle = searchParams.get('title')
-
-        const prevRef = useRef(null);
-        const nextRef = useRef(null);
 
         const getRecommendations = async (searchTerm) => {
         const query = `
         query ($search: String) {
             Media(search: $search, type: ANIME) {
             id
-            recommendations(sort: RATING_DESC, perPage: 10) {
+            recommendations(sort: RATING_DESC, perPage: 20) {
                 nodes {
                 mediaRecommendation {
                     id
@@ -109,7 +105,10 @@
                 recommendations && recommendations?.length !== 0 ?
                 recommendations?.map((recommendation, index, array) =>
                 {
-                    return (
+                    if(recommendation?.mediaRecommendation)
+                    {
+                        console.log(recommendation)
+                        return (
                         <div onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.idMal}?title=${recommendation.mediaRecommendation.title.romaji}`} key={index} className='w-full hover:bg-[#212121] flex gap-2 cursor-pointer'>
                             <div className='w-[90px] aspect-[2/2.3] flex-none'>
                                 <img src={recommendation?.mediaRecommendation?.coverImage?.large} alt={recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji} className='w-full h-full object-cover rounded-lg' />
@@ -123,6 +122,7 @@
                             </div>
                         </div>
                     )
+                    }
                 })
                 :
                 recommendations && recommendations?.length === 0 &&
