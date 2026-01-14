@@ -50,7 +50,7 @@ const Characters = ({mal_id}) => {
                 <div className='relative'>
                 <Swiper
                 modules={[FreeMode, Navigation]}
-                freeMode={true}
+                // freeMode={true}
                 spaceBetween={20}
                 slidesPerView={2}
                 slidesPerGroup={1}  grabCursor={true}

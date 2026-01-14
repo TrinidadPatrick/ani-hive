@@ -1,5 +1,5 @@
 import React, { use, useEffect, useState } from 'react'
-import { Link, Outlet, matchPath, useLocation } from 'react-router-dom'
+import { Link, Outlet, ScrollRestoration, matchPath, useLocation } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -33,7 +33,6 @@ const UserLayout = () => {
 
     window.addEventListener('resize', handleResize);
 
-    // Cleanup event listener on unmount
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -49,7 +48,7 @@ const UserLayout = () => {
   }
 
   return (
-    <>
+    <div>
     {/* sidebar */}
     {
       showSidebar &&
@@ -169,7 +168,8 @@ const UserLayout = () => {
         </nav>
         <ToastContainer />
         <Outlet />
-    </>
+        <ScrollRestoration />
+    </div>
   )
 }
 

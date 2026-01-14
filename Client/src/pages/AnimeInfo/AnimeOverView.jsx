@@ -13,6 +13,7 @@ import Characters from './Characters.jsx';
 import Recommendations from './Recommendations.jsx';
 import RelatedAnime from './RelatedAnime.jsx';
 import Reviews from './Reviews.jsx';
+import MobileRecommendations from './MobileRecommendations.jsx';
 
 const AnimeOverView = () => {
     const authenticated = useAuthStore((s) => s.authenticated)
@@ -52,9 +53,12 @@ const AnimeOverView = () => {
     }
 
     const handleDeleteAnime = async (id) => {
-        const result = await deleteAnime(id)
-        if(result.status === 200){
-            checkAnimeForUser(id)
+        const shouldDelete = window.confirm(`Delete ${animeInfo?.title} ?`)
+        if(shouldDelete){
+            const result = await deleteAnime(id)
+            if(result.status === 200){
+                checkAnimeForUser(id)
+            }
         }
     }
 
@@ -105,11 +109,8 @@ const AnimeOverView = () => {
     }, [])
 
   return (
-  <main className='w-full grid grid-cols-13 h-fit relative overflow-x-hidden'>
-    <div 
-    className="absolute inset-0 bg-[url(https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&q=80)] z-0 brightness-60 opacity-70" 
-    aria-hidden="true"
-  />
+  <main className='w-full grid grid-cols-13 h-fit relative overflow-hidden p-3'>
+    <div className="absolute inset-0 bg-[url(https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&q=80)] z-0 brightness-60 opacity-70" aria-hidden="true"/>
     
     {showTrailer && <TrailerPlayer youtubeId={youtubeId} setShowTrailer={setShowTrailer} />}
     {
@@ -260,7 +261,7 @@ const AnimeOverView = () => {
                 <div className='w-full h-fit  py-0 px-0 flex flex-col'>
                     <div className='flex-1 h-fit flex flex-col gap-2'>
                         <h1 className='text-white text-xl md:text-2xl font-bold'>Synopsis</h1>
-                        <div className='text-gray-400 text-[0.8rem] md:text-sm lg:text-base bg-themeDarker border border-themeLightDark rounded-lg p-3'>{animeInfo?.synopsis.replace('[Written by MAL Rewrite]', '')}</div>
+                        <div className='text-gray-400 text-[0.8rem] md:text-sm lg:text-base bg-themeDarker border border-themeLightDark rounded-lg p-3'>{animeInfo?.synopsis?.replace('[Written by MAL Rewrite]', '')}</div>
                     </div>
                 </div>
             </div>
@@ -269,11 +270,13 @@ const AnimeOverView = () => {
             <Characters mal_id={id} />
 
             {/* Related */}
+            <section className='max-h-[370px]'>
             <RelatedAnime />
+            </section>
 
-            {/* Recommendations */}
-            <section className='flex xl:hidden'>
-            <Recommendations title={animeInfo?.title} />
+            {/* Recommendations got mobile */}
+            <section className=''>
+            <MobileRecommendations title={animeInfo?.title} />
             </section>
 
             {/* Reviews */}
@@ -321,8 +324,10 @@ const AnimeOverView = () => {
       </div>
         </div>
     }
-        {/* Recommendations */}
+        {/* Recommendations right side */}
+        <section className='col-span-3'>
         <Recommendations title={animeInfo?.title} />
+        </section>
   </main>
   )
 }

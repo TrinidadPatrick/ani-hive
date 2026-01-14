@@ -24,7 +24,7 @@ const Reviews = ({mal_id}) => {
             if(retries > 0)
             {
                 setTimeout(()=>{
-                    getUserReviews(id, retries - 1)
+                    getUserReviews(mal_id, retries - 1)
                 }, 1000)
             }
         }
