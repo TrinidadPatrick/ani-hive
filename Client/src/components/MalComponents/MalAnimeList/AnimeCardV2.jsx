@@ -95,14 +95,7 @@ const AnimeCardV2 = ({anime, animeInfo}) => {
   },[anime, animeStatuses])
 
   return (
-    <div className="anime-card bg-themeDarker rounded-lg group overflow-hidden relative h-full flex flex-col">
-        {/* Edit button */}
-        <button
-            onClick={(e) => {e.stopPropagation();setIsOpen(true)}}
-            className="cursor-pointer z-90 absolute top-2 right-2 p-2 rounded-lg backdrop-blur-md bg-themeDark/60  hover:bg-primary hover:text-primary-foreground transition-all duration-200"
-        >
-            <Pencil className="w-4 h-4 text-gray-300" />
-        </button>
+    <div onClick={() => setIsOpen(true)} className="anime-card cursor-pointer bg-themeDarker rounded-lg group overflow-hidden relative h-full flex flex-col">
 
         {/* Image Container */}
         <div className="flex-none relative aspect-[3/4] overflow-hidden">
@@ -130,8 +123,8 @@ const AnimeCardV2 = ({anime, animeInfo}) => {
             </div>
             )}
 
-            <div className='w-full flex flex-row xs:flex-row justify-start gap-1 absolute bottom-2 left-2'>
-              <div className='h-full cursor-default px-1.5 sm:px-3 border border-pink-700 flex justify-center items-center rounded-md bg-pink-600 py-0.5'>
+            <div className='w-full flex flex-row justify-start gap-1 absolute bottom-2 left-2'>
+              <div className='hidden xs:flex h-full cursor-default px-1.5 sm:px-3 border border-pink-700 justify-center items-center rounded-md bg-pink-600 py-0.5'>
                   <span className='text-gray-100 capitalize text-[0.7rem] sm:text-[0.8rem] text-center'>{selectedWatchStatus.replaceAll("_", " ")}</span>
               </div>
                   {

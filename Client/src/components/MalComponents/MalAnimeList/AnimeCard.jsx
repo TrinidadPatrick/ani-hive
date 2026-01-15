@@ -48,10 +48,10 @@ const AnimeCard = ({anime, animeInfo}) => {
   },[anime, animeStatuses])
 
   return (
-    <div className='anime_card cursor-pointer flex gap-3 relative border border-gray-800/20 justify-start p-2 sm:p-4 bg-themeDarker rounded-lg'>
+    <div onClick={() => setIsOpen(true)} className='anime_card cursor-pointer group flex gap-3 relative border border-gray-800/20 justify-start p-2 sm:p-4 bg-themeDarker hover:bg-themeLightDark rounded-lg'>
       {/* Image Contianer */}
       <div className='overflow-hidden flex-none w-20 aspect-[2/2] lg:w-22 bg-white rounded-md'>
-        <img src={anime.main_picture.medium} className='w-full h-full object-cover object-center brightness-75' />
+        <img src={anime.main_picture.medium} className='w-full h-full object-cover object-center brightness-75 group-hover:scale-105' />
       </div>
 
       {/* Info Container */}
@@ -101,7 +101,7 @@ const AnimeCard = ({anime, animeInfo}) => {
           {
             anime.status === 'currently_airing' && 
             (
-            <div className='h-full cursor-default min-w-23 justify-center border border-themeDark flex items-center rounded-md bg-themeDark'>
+            <div className='h-full cursor-default min-w-23 px-2 justify-center border border-themeDark flex items-center rounded-md bg-themeDark'>
               {
                 anime?.airInfo ? <span className='text-gray-100 capitalize text-[0.8rem]'>{anime?.airInfo}</span>
                 :
@@ -110,11 +110,6 @@ const AnimeCard = ({anime, animeInfo}) => {
             </div>
             )
           }
-
-          {/* Update btn */}
-          <button onClick={(e)=>{e.stopPropagation();setIsOpen(true)}} title='update' className='bg-pink-600 hover:bg-pink-500 cursor-pointer px-2.5 rounded-md h-full'>
-            <Pencil width={17} className='text-white' />
-          </button>
         </div>
 
       </div>
