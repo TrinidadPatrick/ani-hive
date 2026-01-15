@@ -116,7 +116,7 @@ const OngoingAnime = () => {
                 <img
                   src={anime?.coverImage?.large}
                   alt={anime?.title?.romaji}
-                  className=" w-full h-full hover:scale-105 object-cover rounded-lg brightness-80 aspect-[2/2.3]"
+                  className=" w-full h-full hover:scale-105 object-cover rounded-lg aspect-[2/2.3]"
                 />
                 </div>
 

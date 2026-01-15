@@ -138,7 +138,7 @@ const UpcomingAnime = () => {
                 <img
                     src={anime?.images?.webp.large_image_url}
                     alt={anime?.title}
-                    className="w-full h-full object-cover brightness-80"
+                    className="w-full h-full object-cover "
                 />
                 </div>
     
