@@ -4,21 +4,23 @@ import AnimeMoviesStore from '../../stores/AnimeMoviesStore';
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useNavigate } from 'react-router';
 import { Star } from 'lucide-react';
+import localforage from 'localforage';
 
 const AiringToday = () => {
   const [hovered, setHovered] = useState(false);
-  const AnimeMovies = AnimeMoviesStore((state) => state.AnimeMovies)
   const today = new Date().toLocaleString('en-US', { weekday: 'long' })
   const [airingToday, setAiringToday] = useState(null)
   const navigate = useNavigate()
   
   const getAiringToday = async (page, retries = 10) => {
-    
+    const cachedList = await localforage.getItem('airingToday');
+    if(cachedList) setAiringToday(cachedList)
     try {
         const result = await axios.get(`https://api.jikan.moe/v4/schedules?filter=${today}&limit=20&sfw=true`)
         if(result.status === 200) {
             const animes = result.data.data.filter((obj, index, self) => index === self.findIndex((t) => t.mal_id === obj.mal_id))
             setAiringToday(animes)
+            await localforage.setItem('airingToday', animes);
         }
     } catch (error) {
         console.log(error)
@@ -32,12 +34,8 @@ const AiringToday = () => {
   }
 
   useEffect(() => {
-    if(airingToday === null && AnimeMovies != null) {
-      setTimeout(()=>{
         getAiringToday()
-      }, 500)
-    }
-  }, [AnimeMovies])
+  }, [])
 
   return (
     <main id='airing-today'>

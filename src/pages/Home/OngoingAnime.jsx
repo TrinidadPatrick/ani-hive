@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router'
 import OngoingAnimeStore from '../../stores/OngoingAnimeStore'
 import { Star, Tv } from 'lucide-react'
+import localforage from 'localforage'
 
 const OngoingAnime = () => {
   const navigate = useNavigate()
@@ -10,6 +11,8 @@ const OngoingAnime = () => {
   const s_setOngoingAnime = OngoingAnimeStore((state) => state.s_setOngoingAnime)
 
   const getOngoingAnime = async (page, retries = 10) => {
+    const cachedList = await localforage.getItem('ongoingAnime');
+    if(cachedList) s_setOngoingAnime(cachedList)
     try {
       const query = `
       query {
@@ -53,6 +56,7 @@ const OngoingAnime = () => {
     if(response.status === 200) {
       const animes = response.data.data.Page.media
       s_setOngoingAnime(animes)
+      await localforage.setItem('ongoingAnime', animes);
     }
   
   } catch (error) {
@@ -70,7 +74,7 @@ const OngoingAnime = () => {
   useEffect(() => {
     getOngoingAnime()
   }, [])
-
+  
     
   return (
   <main id='ongoing'>

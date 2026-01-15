@@ -6,6 +6,7 @@ import 'swiper/css/navigation';
 import { FreeMode, Navigation } from 'swiper/modules';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import localforage from 'localforage';
 
 const UpcomingAnime = () => {
   const navigate = useNavigate()
@@ -14,11 +15,14 @@ const UpcomingAnime = () => {
   const nextRef = useRef(null);
 
     const getUpcomingAnime = async (page, retries = 10) => {
+        const cachedList = await localforage.getItem('upcomingAnimes');
+        if(cachedList) setUpcomingAnime(cachedList)
         try {
             const result = await axios.get(`https://api.jikan.moe/v4/seasons/upcoming?page=${page || 1}`)
             if(result.status === 200) {
                 const animes = result.data
                 setUpcomingAnime(animes)
+                await localforage.setItem('upcomingAnimes', animes);
             }
         } catch (error) {
             console.log(error)
@@ -32,9 +36,7 @@ const UpcomingAnime = () => {
     }
 
     useEffect(() => {
-        if(upcomingAnime === null) {
-            getUpcomingAnime()
-        }
+        getUpcomingAnime()
     }, [])
 
 

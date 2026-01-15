@@ -26,18 +26,18 @@ const TopSection = ({topAnimes}) => {
         }
     }, [topAnimes])
 
-  useEffect(() => {
-    if (showTrailer) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-  
-    // Clean up on unmount
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [showTrailer]);
+    useEffect(() => {
+      if (showTrailer) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    
+      // Clean up on unmount
+      return () => {
+        document.body.style.overflow = '';
+      };
+    }, [showTrailer]);
 
     return (
       <main id='top'>
