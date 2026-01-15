@@ -104,7 +104,7 @@ const AiringToday = () => {
                             </div>
                             
                             {hovered === index && (
-                              <button onClick={()=>navigate(`/anime/${anime?.mal_id}`)} className="cursor-pointer mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105">
+                              <button onClick={()=>navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)} className="cursor-pointer mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105">
                                 View Details
                               </button>
                             )}

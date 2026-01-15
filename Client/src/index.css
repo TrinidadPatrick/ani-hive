@@ -75,12 +75,32 @@
     line-height: 1 !important;
   }
 
-  /* .recoList::-webkit-scrollbar-thumb */
+  .statusList::-webkit-scrollbar {
+    width: 0px; /* or height if horizontal */
+    height: 0px;
+  }
+  
+  .statusList::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+  }
+  
+  .statusList::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
 
 @import "tailwindcss";
 
+
+
 @theme {
-  /* --semiMd: 768px; */
+  --breakpoint-semiMd: 850px;
   --breakpoint-xs: 30rem;
   --breakpoint-xxs: 20rem;
+
+  --color-themeDarkest: #141414;
+  --color-themeDarker: #1b1b1b;
+  --color-themeDark: #25252D;
+  --color-themeLightDark: #2e2e35;
 }

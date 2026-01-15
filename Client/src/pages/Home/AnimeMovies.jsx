@@ -61,10 +61,10 @@ const AnimeMovies = () => {
       </button>
     <Swiper
     modules={[FreeMode, Navigation]}
-    freeMode={true}
     spaceBetween={20}
     slidesPerView={2}
-    slidesPerGroup={1}  grabCursor={true}
+    slidesPerGroup={1} 
+    grabCursor={true}
     navigation={{
       nextEl: nextRef.current,
       prevEl: prevRef.current,
@@ -73,32 +73,32 @@ const AnimeMovies = () => {
       swiper.params.navigation.prevEl = prevRef.current;
       swiper.params.navigation.nextEl = nextRef.current;
     }}
-    breakpoints={{
-      0: {
-        slidesPerView: 2,
-        slidesPerGroup: 2,
-      },
-      481: {
-        slidesPerView: 3,
-        slidesPerGroup: 3,
-      },
-      630: {
-        slidesPerView: 4,
-        slidesPerGroup: 4,
-      },
-      769: {
-        slidesPerView: 4,
-        slidesPerGroup: 4,
-      },
-      890: {
-        slidesPerView: 5,
-        slidesPerGroup: 5,
-      },
-      1280: {
-        slidesPerView: 7,
-        slidesPerGroup: 7,
-      },
-    }}
+     breakpoints={{
+          0: {
+            slidesPerView: 1,
+            slidesPerGroup: 1,
+          },
+          430: {
+            slidesPerView: 2,
+            slidesPerGroup: 2,
+          },
+          630: {
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+          },
+          769: {
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+          },
+          890: {
+            slidesPerView: 4,
+            slidesPerGroup: 4,
+          },
+          1280: {
+            slidesPerView: 6,
+            slidesPerGroup: 6,
+          },
+        }}
     className="w-[95%] md:w-[90%] mx-auto "
   >
     {AnimeMovies?.length > 0 &&
@@ -112,7 +112,7 @@ const AnimeMovies = () => {
           style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
           className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
         >
-          <div onClick={()=>{navigate(`/anime/${anime?.mal_id}`)}} className="relative h-full overflow-hidden rounded-lg cursor-pointer">
+          <div onClick={()=>{navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)}} className="relative h-full overflow-hidden rounded-lg cursor-pointer">
             {/* Rating */}
             <div className="w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-1">
               <div className="w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>
@@ -141,9 +141,9 @@ const AnimeMovies = () => {
             </div>
 
             {/* Info */}
-            <div className="w-full absolute px-3 py-1 bottom-0 bg-transparent backdrop-blur h-[20%] sm:h-[25%] md:h-[20%] rounded-b-lg flex">
+            <div className="w-full absolute px-3 py-1 bottom-0 bg-transparent backdrop-blur h-fit rounded-b-lg flex">
               <div className="flex flex-col items-start w-full h-full justify-around">
-                <h2 className="text-white text-sm md:text-base truncate w-full">
+                <h2 className="text-white text-lg sm:text-sm md:text-base truncate w-full">
                   {anime?.title_english?.replace(/;/g, ' ') || anime?.title_english?.replace(/;/g, ' ')}
                 </h2>
                 <h2 className="text-gray-300 text-sm md:text-sm">

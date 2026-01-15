@@ -85,39 +85,37 @@ const UpcomingAnime = () => {
             </button>
         <Swiper
         modules={[FreeMode, Navigation]}
-        freeMode={true}
         spaceBetween={20}
-        slidesPerView={2}
         slidesPerGroup={1}  grabCursor={true}
         navigation={{
         nextEl: nextRef.current,
         prevEl: prevRef.current,
         }}
-        breakpoints={{
-        0: {
+         breakpoints={{
+          0: {
+            slidesPerView: 1,
+            slidesPerGroup: 1,
+          },
+          430: {
             slidesPerView: 2,
             slidesPerGroup: 2,
-        },
-        481: {
+          },
+          630: {
             slidesPerView: 3,
             slidesPerGroup: 3,
-        },
-        630: {
+          },
+          769: {
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+          },
+          890: {
             slidesPerView: 4,
             slidesPerGroup: 4,
-        },
-        769: {
-            slidesPerView: 4,
-            slidesPerGroup: 4,
-        },
-        890: {
-            slidesPerView: 5,
-            slidesPerGroup: 5,
-        },
-        1280: {
-            slidesPerView: 7,
-            slidesPerGroup: 7,
-        },
+          },
+          1280: {
+            slidesPerView: 6,
+            slidesPerGroup: 6,
+          },
         }}
         onBeforeInit={(swiper) => {
         swiper.params.navigation.prevEl = prevRef.current;
@@ -134,7 +132,7 @@ const UpcomingAnime = () => {
             style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
             className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
             >
-            <div onClick={()=>{navigate(`/anime/${anime?.mal_id}`)}} className="relative h-full overflow-hidden rounded-lg cursor-pointer">
+            <div onClick={()=>{navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)}} className="relative h-full overflow-hidden rounded-lg cursor-pointer">
                 {/* Image */}
                 <div className="w-full bg-red-100 h-full rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
                 <img
@@ -145,9 +143,9 @@ const UpcomingAnime = () => {
                 </div>
     
                 {/* Info */}
-                <div className="w-full absolute px-3 py-1 bottom-0 bg-transparent backdrop-blur h-[20%] sm:h-[25%] md:h-[20%] rounded-b-lg flex">
+                <div className="w-full absolute px-3 py-1 bottom-0 bg-transparent backdrop-blur h-fit rounded-b-lg flex">
                 <div className="flex flex-col items-start w-full h-full justify-around">
-                    <h2 className="text-white text-sm md:text-base truncate w-full">
+                    <h2 className="text-white text-lg sm:text-sm md:text-base truncate w-full">
                     {anime?.title_english?.replace(/;/g, ' ') || anime?.title?.replace(/;/g, ' ')}
                     </h2>
                     <h2 className="text-gray-300 text-sm md:text-sm">

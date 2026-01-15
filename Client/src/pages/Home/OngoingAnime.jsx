@@ -108,11 +108,12 @@ const OngoingAnime = () => {
         OngoingAnime.map((anime, index, array) =>
         {
           if(array[index - 1]?.id != anime?.id){
+            console.log(anime)
             return (
-              <div  key={index} onClick={()=> {navigate('/anime/'+anime?.idMal)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
+              <div  key={index} onClick={()=> {navigate(`/anime/${anime?.idMal}?title=${anime?.title?.romaji || ''}`)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
                 <div className='absolute z-[999] top-1 left-1 bg-pink-600 px-1 py-0.5 rounded'>
                   <h2 className="text-gray-300 text-center w-full text-sm md:text-sm">
-                      Ep {(anime?.nextAiringEpisode?.episode || '??') + '/'}{anime?.episodes || '??'}
+                      Ep {(anime?.nextAiringEpisode?.episode - 1 || '??') + '/'}{anime?.episodes || '??'}
                   </h2>
                 </div>
                 {/* Image */}
@@ -125,12 +126,12 @@ const OngoingAnime = () => {
                 </div>
 
                 {/* Info */}
-                <div className="w-full px-3 py-1 bottom-0 bg-transparent sm:h-[25%] md:h-[20%] rounded-b-lg flex">
+                <div className="w-full px-1 py-1 bottom-0 bg-transparent sm:h-[25%] md:h-[20%] rounded-b-lg flex">
                   <div className="flex flex-col items-start w-full h-full justify-around">
-                    <h2 className="text-white text-center text-sm md:text-[0.9rem] mt-1 line-clamp-2 w-full">
+                    <h2 className="text-white font-medium text-start text-sm md:text-[0.9rem] mt-1 line-clamp-2 w-full">
                       {anime?.title?.romaji || ''}
                     </h2>
-                    <h2 className="text-gray-300 text-center w-full text-sm md:text-sm mt-2">
+                    <h2 className="text-gray-400 text-start w-full text-sm md:text-sm mt-2">
                       {anime?.genres.join(', ')}
                     </h2>
                   </div>

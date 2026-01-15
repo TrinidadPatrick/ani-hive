@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react'
 import SeasonNowAnimeProvider from '../../providers/SeasonNowAnimeProvider'
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import ReactPlayer from 'react-player';
-import Youtube from 'react-youtube'
 import { useNavigate } from 'react-router';
-import NoTrailerAvailable from '../../components/NoTrailerAvailable';
 import useSmallScreen from '../../utils/useSmallScreen';
 import TrailerPlayer from '../../components/TrailerPlayer';
 import getYoutubeId from '../../utils/getYoutubeId';
@@ -45,8 +42,6 @@ const SeasonNowAnime = () => {
           slidesToSlide: 1,
         }
     };
-
-
 
   return (
     <>
@@ -142,16 +137,16 @@ const SeasonNowAnime = () => {
                     <div><span className="font-semibold text-pink-400">Type:</span> {anime?.type}</div>
                   </div>
             
-                  <button onClick={()=>{navigate(`/anime/${anime?.mal_id}`)}} className="mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
+                  <button onClick={()=>{navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)}} className="mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
                     Overview
                   </button>
-                  <button onClick={()=>{setShowTrailer(true);setYoutubeId(yt_id)}} className=" hover:bg-gray-50/2 ml-3 mt-4 cursor-pointer bg-transparent border text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
+                  <button onClick={()=>{setShowTrailer(true);setYoutubeId(yt_id)}} className=" hover:bg-gray-50/2 md:hidden ml-3 mt-4 cursor-pointer bg-transparent border text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
                     Watch Trailer
                   </button>
                 </div>
             
                 {/* Right Side: Anime Trailer */}
-                  <div className="relative hidden md:block aspect-video rounded-lg overflow-hidden w-full md:w-fit md:h-[63svh] lg:h-[40vh]">
+                  <div className="relative hidden md:block aspect-video rounded-lg overflow-hidden w-2xl lg:w-md xl:w-xl">
                       <img src={`https://img.youtube.com/vi/${yt_id}/sddefault.jpg`} alt={anime?.title_english || anime?.title} className='w-full h-full object-cover relative z-10' />
                       <button onClick={()=>{setShowTrailer(true);setYoutubeId(yt_id)}} className='absolute bg-red-500 text-white text-4xl px-6 py-2 rounded-xl hover:bg-red-400 cursor-pointer z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                         ▶
