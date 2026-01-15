@@ -58,7 +58,6 @@ const useUserAnimeStore = create((set, get) => ({
                 nextPageLink: nextPageLink || ''
             }})
             await localforage.setItem(status, animeList);
-            console.log("Saved 400+ items successfully!");
         } catch (error) {
             console.log(error)
         } finally {
