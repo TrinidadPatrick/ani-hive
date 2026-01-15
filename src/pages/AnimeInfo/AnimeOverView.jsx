@@ -106,8 +106,6 @@ const AnimeOverView = () => {
         window.scrollTo(0, 0);
     }, [])
 
-    console.log(animeInfo)
-
   return (
   <main className='w-full grid grid-cols-13 h-fit relative overflow-hidden sm:p-3'>
     <div className="absolute inset-0 bg-[url(https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&q=80)] z-0 brightness-60 opacity-70" aria-hidden="true"/>
@@ -119,8 +117,11 @@ const AnimeOverView = () => {
 
             {/* Top Section */}
             <div className='flex-none h-full flex flex-col sm:flex-row gap-2'>
-                <div className='w-full aspect-video sm:aspect-auto sm:w-[220px]'>
-                    <img src={animeInfo?.images?.jpg.large_image_url} alt={animeInfo?.title_english || animeInfo?.title} className='w-full sm:h-full aspect-video object-cover rounded-lg' />
+                <div className='w-full aspect-square xs:aspect-auto sm:w-[220px] relative'>
+                    <img src={animeInfo?.images?.jpg.large_image_url} alt={animeInfo?.title_english || animeInfo?.title} 
+                    className='w-full h-full sm:h-full aspect-video object-cover object-center rounded-lg brightness-40 sm:brightness-100 blur-xs sm:blur-none' />
+                    <img src={animeInfo?.images?.jpg.large_image_url} alt={animeInfo?.title_english || animeInfo?.title} 
+                    className='w-40 object-cover object-center rounded-lg sm:hidden border border-gray-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2' />
                 </div>
                 <div className='flex-1 h-full  flex flex-col gap-2 px-2'>
                     {/* Badges */}
@@ -226,7 +227,7 @@ const AnimeOverView = () => {
                                 : '???'}{' '}
                                 {animeInfo?.year || '???'}
                             </InfoRow>
-                            
+
                             <InfoRow label="Studios:">
                                 {animeInfo?.studios?.map((studio) => studio.name).join(', ') || '???'}
                             </InfoRow>
