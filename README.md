@@ -10,7 +10,14 @@
 -  **Character Lists** — View characters for each anime, including names, images, and voice actors  
 -  **Anime Details Page** with synopsis, ratings, airing status, and more  
 -  **Responsive Design** optimized for desktop and mobile  
--  **Fast and Intuitive UI** using modern React features 
+-  **Fast and Intuitive UI** using modern React features
+
+## New Features
+-  Users can now login via MAL account
+-  Users can add/update/delete their anime list
+-  Users can now keep track of their anime list (watching, plan to watch, completed, on hold, and dropped
+-  List updates made in Anihive are reflected in real time on MAL
+-  Secure OAuth authentication ensures safe MAL account access
 
 ##  Tech Stack
 
