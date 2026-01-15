@@ -106,6 +106,8 @@ const AnimeOverView = () => {
         window.scrollTo(0, 0);
     }, [])
 
+    console.log(animeInfo)
+
   return (
   <main className='w-full grid grid-cols-13 h-fit relative overflow-hidden sm:p-3'>
     <div className="absolute inset-0 bg-[url(https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&q=80)] z-0 brightness-60 opacity-70" aria-hidden="true"/>
@@ -184,13 +186,6 @@ const AnimeOverView = () => {
                                 </span>
                             </InfoRow>
 
-                            <InfoRow label="Premiered:">
-                                {animeInfo?.season
-                                ? animeInfo.season.charAt(0).toUpperCase() + animeInfo.season.slice(1)
-                                : '???'}{' '}
-                                {animeInfo?.year || '???'}
-                            </InfoRow>
-
                             <InfoRow label="Date Aired:">
                                 {new Date(animeInfo?.aired?.from || '').toLocaleDateString('en-US', {
                                 month: 'short',
@@ -203,6 +198,10 @@ const AnimeOverView = () => {
                                 day: 'numeric',
                                 year: 'numeric',
                                 }): 'TBA'}
+                            </InfoRow>
+
+                            <InfoRow label="Broadcast:">
+                                {animeInfo.broadcast.string || '??'}
                             </InfoRow>
 
                             <InfoRow label="Status:">
@@ -221,6 +220,13 @@ const AnimeOverView = () => {
                         </div>
                         <div className='h-full w-full'>
                         <ul className="h-full flex flex-col gap-3 justify-start">
+                            <InfoRow label="Premiered:">
+                                {animeInfo?.season
+                                ? animeInfo.season.charAt(0).toUpperCase() + animeInfo.season.slice(1)
+                                : '???'}{' '}
+                                {animeInfo?.year || '???'}
+                            </InfoRow>
+                            
                             <InfoRow label="Studios:">
                                 {animeInfo?.studios?.map((studio) => studio.name).join(', ') || '???'}
                             </InfoRow>
@@ -236,7 +242,9 @@ const AnimeOverView = () => {
                             </InfoRow>
 
                             <InfoRow label="Genre:">
+                                <span className="line-clamp-4 ps-0">
                                 {animeInfo?.genres?.map((genre) => genre.name).join(', ') || '???'}
+                                </span>
                             </InfoRow>
                         </ul>
                         </div>
