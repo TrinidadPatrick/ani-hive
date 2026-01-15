@@ -1,6 +1,8 @@
 import {create} from 'zustand'
 import http from '../http.js'
 import {toast} from 'react-toastify'
+import localforage from "localforage";
+
 
 const handleToast = (type, message) => {
     toast[type](message, {
@@ -42,6 +44,11 @@ const useUserAnimeStore = create((set, get) => ({
 
     getList: async (status, offset = 0, isFetching = true) => {
         try {
+            const cachedList = await localforage.getItem(status);
+            set({[status] : {
+                animeList: cachedList,
+                nextPageLink: ''
+            }})
             set({isFetching: get()[status] === null})
             const response = await http.get(`mal/anime/${status}?offset=${offset}`)
             const animeList = response.data.data
@@ -49,7 +56,9 @@ const useUserAnimeStore = create((set, get) => ({
             set({[status] : {
                 animeList: animeList,
                 nextPageLink: nextPageLink || ''
-            }}) 
+            }})
+            await localforage.setItem(status, animeList);
+            console.log("Saved 400+ items successfully!");
         } catch (error) {
             console.log(error)
         } finally {
