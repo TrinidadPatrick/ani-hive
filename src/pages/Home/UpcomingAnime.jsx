@@ -39,7 +39,7 @@ const UpcomingAnime = () => {
 
 
   return (
-    <>
+    <main id='upcoming'>
     {
         UpcomingAnime == null ?
         (
@@ -163,7 +163,7 @@ const UpcomingAnime = () => {
             </section>
         )
     }
-    </>
+    </main>
     
   )
 }

@@ -15,7 +15,7 @@ const AnimeMovies = () => {
 
 
   return (
-    <>
+    <main id='movies'>
     {
       AnimeMovies == null ?
       (
@@ -163,7 +163,7 @@ const AnimeMovies = () => {
       )
     }
     
-    </>
+    </main>
   )
 }
 

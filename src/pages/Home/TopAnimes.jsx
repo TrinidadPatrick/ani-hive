@@ -18,11 +18,11 @@ const TopAnimes = ({topAnimes}) => {
 
 
   return (
-    <>
+  <main id='top-animes'>
       {
         topAnimes == null ?
         (
-          <section className="px-6 py-8 text-white animate-pulse">
+    <section className="px-6 py-8 text-white animate-pulse">
       {/* Title */}
       <div className="flex justify-between items-center mb-4">
         <div>
@@ -42,11 +42,11 @@ const TopAnimes = ({topAnimes}) => {
           </div>
         ))}
       </div>
-          </section>
+    </section>
         )
         :
         (
-        <section className="w-full h-full md:h-[65svh] bg-[#141414] py-10">
+    <section className="w-full h-full md:h-[65svh] bg-themeDarkest py-10">
         <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3">
           <h1  className="text-2xl md:text-3xl font-bold text-white">Top Rated Anime</h1>
           <div className='flex justify-between'>
@@ -149,11 +149,11 @@ const TopAnimes = ({topAnimes}) => {
           
       </Swiper>
         </div>
-        </section>
+    </section>
         )
       }
       
-    </>
+  </main>
   )
 }
 

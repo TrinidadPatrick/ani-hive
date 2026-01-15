@@ -44,11 +44,11 @@ const SeasonNowAnime = () => {
     };
 
   return (
-    <>
+    <main id='season-now'>
     {
       SeasonNowAnime == null ?
       (
-        <section className="relative w-full min-h-[400px] bg-gradient-to-r from-black/90 to-black/70 px-6 py-10 animate-pulse text-white">
+    <section className="relative w-full min-h-[400px] bg-gradient-to-r from-black/90 to-black/70 px-6 py-10 animate-pulse text-white">
       <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
         {/* Left text section */}
         <div className="flex-1 space-y-4">
@@ -162,7 +162,7 @@ const SeasonNowAnime = () => {
         </section>
       )
     }
-    </>
+    </main>
     
   )
 }

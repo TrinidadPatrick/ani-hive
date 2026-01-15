@@ -40,7 +40,7 @@ const AiringToday = () => {
   }, [AnimeMovies])
 
   return (
-    <>
+    <main id='airing-today'>
     {
       AiringToday == null ?
       (
@@ -124,7 +124,7 @@ const AiringToday = () => {
         </section>
       )
     }
-    </>
+    </main>
   )
 }
 

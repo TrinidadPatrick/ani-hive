@@ -40,7 +40,7 @@ const TopSection = ({topAnimes}) => {
   }, [showTrailer]);
 
     return (
-      <>
+      <main id='top'>
         {
           topAnime == null ?
           (
@@ -148,7 +148,7 @@ const TopSection = ({topAnimes}) => {
           )
         }
         
-      </>
+      </main>
     )
 }
 

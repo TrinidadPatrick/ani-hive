@@ -73,7 +73,7 @@ const OngoingAnime = () => {
 
     
   return (
-    <>
+  <main id='ongoing'>
     {
       OngoingAnime == null ?
       (
@@ -145,7 +145,7 @@ const OngoingAnime = () => {
     </section>
       )
     }
-    </>
+  </main>
   )
 }
 
