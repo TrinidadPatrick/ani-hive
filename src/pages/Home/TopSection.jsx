@@ -78,7 +78,7 @@ const TopSection = ({topAnimes}) => {
           )
           :
           (
-            <section className="w-full md:h-[100svh] bg-gray-900 relative overflow-hidden flex items-center justify-center px-6">
+            <section className="w-full md:h-[100svh] bg-gray-900 relative overflow-hidden flex items-center justify-center lg:px-6">
               {showTrailer && <TrailerPlayer youtubeId={youtubeId} setShowTrailer={setShowTrailer} />}
               {/* Background Image */}
               <img

@@ -41,7 +41,7 @@ const Characters = ({mal_id}) => {
             getCharacters(mal_id)
         }
     }, [mal_id])
-    
+
     return (
     <div className='w-full  h-fit flex flex-col gap-3'>
                 <div>
