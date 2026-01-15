@@ -108,7 +108,6 @@ const OngoingAnime = () => {
         OngoingAnime.map((anime, index, array) =>
         {
           if(array[index - 1]?.id != anime?.id){
-            console.log(anime)
             return (
               <div  key={index} onClick={()=> {navigate(`/anime/${anime?.idMal}?title=${anime?.title?.romaji || ''}`)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
                 <div className='absolute z-[999] top-1 left-1 bg-pink-600 px-1 py-0.5 rounded'>

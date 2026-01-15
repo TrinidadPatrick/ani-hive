@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+.vercel
+=======
 # Logs
 logs
 *.log
@@ -26,3 +29,4 @@ dist-ssr
 *.sw?
 .vercel
 .env*.local
+>>>>>>> main
