@@ -43,9 +43,14 @@ const AnimeOverView = () => {
         }
     }
 
-    const handleAction = async (status = 'plan_to_watch') => {
+    const handleAction = async (status) => {
+        console.log(status)
         if(authenticated === false){
             return login()
+        }
+        if(status){
+            const result = await updateAnime({id, num_watched_episodes: 0, score: 0, status})
+            return checkAnimeForUser(id)
         }
         window.location.href = `/user/anime-list/${selectedWatchStatus}?id=${id}`
     }
@@ -153,14 +158,14 @@ const AnimeOverView = () => {
                             </button>
                             {
                                 animeUserStatus ? (
-                                <button onClick={handleAction} className='bg-pink-600  flex-grow-1 sm:flex-grow-0 flex justify-center capitalize py-2 text-white text-sm h-full px-2 sm:px-5 items-center rounded-lg relative gap-2 cursor-pointer hover:bg-pink-500'>
+                                <button onClick={()=>handleAction()} className='bg-pink-600  flex-grow-1 sm:flex-grow-0 flex justify-center capitalize py-2 text-white text-sm h-full px-2 sm:px-5 items-center rounded-lg relative gap-2 cursor-pointer hover:bg-pink-500'>
                                 <ExternalLink width={16} />
                                 <span>{selectedWatchStatus.replaceAll("_", " ")}</span>
                                 </button>
                                 )
                                 :
                                 (
-                                <button disabled={(authenticated === null)} onClick={()=>{handleAction()}} className='flex gap-2 text-white whitespace-nowrap text-xs md:text-sm w-37 justify-center items-center py-2 bg-pink-600 rounded-lg font-medium cursor-pointer hover:bg-pink-500'>
+                                <button disabled={(authenticated === null)} onClick={()=>{handleAction('plan_to_watch')}} className='flex gap-2 text-white whitespace-nowrap text-xs md:text-sm w-37 justify-center items-center py-2 bg-pink-600 rounded-lg font-medium cursor-pointer hover:bg-pink-500'>
                                     {
                                         isUpdating ? (<LoaderV2 width={7} height={7} color={'bg-gray-100'} />) : (<div className='flex gap-2 items-center'><Plus width={17} />Add to library</div>)
                                     }
