@@ -63,7 +63,14 @@ const ExploreNavbar = (props) => {
       }
   }
 
+  const handleHideDropdowns = () => {
+      setShowState('')
+      setShowOtherFilter(false)
+      setShowSort(false)
+  }
+
   const handleClear = () => {
+        setSearching(true)
         setScrollPosition({...scrollPosition, explore : null})
         handleSearch(searchValue, [], '', '', '', '','','', 1)
         setShowState('')
@@ -76,17 +83,18 @@ const ExploreNavbar = (props) => {
         setSelectedSeason('')
         setSelectedYear('') 
         setSelectedType('')
+        setShowOtherFilter(false)
   }
 
   return (
     <div onClick={(e)=> e.stopPropagation()} className=" w-[95%]  lg:w-[90%] flex gap-y-7 gap-x-2 py-2 z-[9999]">
             {/* Search Bar */}
             <div className='flex w-full gap-3 items-center relative'>
-              <button onClick={()=>{setSearching(true);setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}} className="text-gray-400 absolute left-3 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
+              <button onClick={()=>{handleHideDropdowns();setSearching(true);setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}} className="text-gray-400 absolute left-3 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"><g fill="none" stroke="#99a1af" strokeLinejoin="round" strokeWidth="4"><path d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z"/><path strokeLinecap="round" d="M26.657 14.343A7.98 7.98 0 0 0 21 12a7.98 7.98 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485"/></g></svg>
               </button>
-              <input onKeyDown={(e)=>{if(e.key === 'Enter') {setSearching(true);setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}}} value={searchValue} onChange={(e)=>{setSearchValue(e.target.value)}} type="text" className=" outline-0 w-full ps-10 h-10 bg-themeDarker border border-themeDark rounded-lg text-white placeholder:text-gray-400 placeholder:text-sm" placeholder="Search anime..." />
-              <button onClick={()=>{setSearching(true);setSearchValue('');setScrollPosition({...scrollPosition, explore : null});handleSearch('', selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}} className="text-gray-400 absolute right-3 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
+              <input onClick={handleHideDropdowns} onKeyDown={(e)=>{if(e.key === 'Enter') {handleHideDropdowns();setSearching(true);setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}}} value={searchValue} onChange={(e)=>{setSearchValue(e.target.value)}} type="text" className=" outline-0 w-full ps-10 h-10 bg-themeDarker border border-themeDark rounded-lg text-white placeholder:text-gray-400 placeholder:text-sm" placeholder="Search anime..." />
+              <button onClick={()=>{handleHideDropdowns();setSearching(true);setSearchValue('');setScrollPosition({...scrollPosition, explore : null});handleSearch('', selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}} className={`text-gray-400 absolute right-3 ${searchValue.length === 0 && 'hidden'} cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200`}>
                 <X width={17} />
               </button>
             </div>
@@ -190,7 +198,7 @@ const ExploreNavbar = (props) => {
                       sortItems.map((item, index) => {
                         return (
                           <div onClick={()=>handleSelectedOrderBy(item.value)} key={index} className={`flex gap-1 z-[999999999] w-full items-center relative py-2 px-2 rounded-lg cursor-pointer`}>
-                            <input type='checkbox' checked={selectedSortItem.order_by === item.value} />
+                            <input readOnly type='checkbox' checked={selectedSortItem.order_by === item.value} />
                             <p className='text-gray-400 text-sm text-start w-full'>{item.key}</p>
                           </div>
                         );
@@ -339,9 +347,9 @@ const ExploreNavbar = (props) => {
             </div>
     
             {/* Search button */}
-            <button onClick={()=>{setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1);setShowState('')}} 
+            <button onClick={()=>{handleHideDropdowns();setSearching(true);setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1);setShowState('')}} 
             className='flex w-fit px-4 md:px-10 lg:w-fit text-center justify-center text-white items-center relative bg-pink-600 hover:bg-pink-500 rounded-lg cursor-pointer'>
-              Search
+              Apply
             </button>
             {/* Clear Filter button */}
             <button disabled={isClearFilterDisabled()} onClick={()=>{handleClear()}} 
