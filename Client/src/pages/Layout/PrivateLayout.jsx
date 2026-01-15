@@ -23,7 +23,7 @@ const PrivateLayout = () => {
         <div onClick={()=>{window.scrollTo({
           top: 0,
           behavior: 'smooth'
-        })}} className='fixed w-[100px] md:w-[150px] aspect-square cursor-pointer bottom-2 right-0 z-[999999999]'>
+        })}} className='fixed w-[100px] md:w-[150px] aspect-square cursor-pointer bottom-2 left-0 sm:left-auto sm:right-0 z-[999999999]'>
           <img src={chibi} alt="chibi" className='peer w-full h-full object-cover' />
           <div className="absolute hidden peer-hover:block top-0 left-1/2 transform -translate-x-1/2">
           <div className="relative bg-white text-black px-3 py-1 rounded-full shadow-lg">

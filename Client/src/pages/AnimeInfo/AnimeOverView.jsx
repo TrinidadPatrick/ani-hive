@@ -5,7 +5,7 @@ import 'video.js/dist/video-js.css';
 import getYoutubeId from '../../utils/getYoutubeId.js';
 import TrailerPlayer from '../../components/TrailerPlayer.jsx';
 import useUserAnimeStore from '../../stores/UserAnimeStore.js';
-import { Play, Plus, Star, Trash2 } from 'lucide-react';
+import { ExternalLink, Play, Plus, Star, Trash2 } from 'lucide-react';
 import StatusDrodown from '../../components/MalComponents/MalAnimeList/StatusDrodown.jsx';
 import useAuthStore from '../../stores/AuthStore.js';
 import LoaderV2 from '../../components/LoaderV2.jsx';
@@ -16,6 +16,7 @@ import Reviews from './Reviews.jsx';
 import MobileRecommendations from './MobileRecommendations.jsx';
 
 const AnimeOverView = () => {
+    const navigate = useNavigate()
     const authenticated = useAuthStore((s) => s.authenticated)
     const login = useAuthStore((s) => s.login)
     const isUpdating = useUserAnimeStore((s) => s.isUpdating)
@@ -46,10 +47,7 @@ const AnimeOverView = () => {
         if(authenticated === false){
             return login()
         }
-
-        const {num_episodes_watched, score} = animeUserStatus ? animeUserStatus : {num_episodes_watched : 0, score: 0}
-        const result = await updateAnime({id, num_watched_episodes : num_episodes_watched, score, status})
-        await checkAnimeForUser(id)
+        window.location.href = `/user/anime-list/${selectedWatchStatus}?id=${id}`
     }
 
     const handleDeleteAnime = async (id) => {
@@ -109,7 +107,7 @@ const AnimeOverView = () => {
     }, [])
 
   return (
-  <main className='w-full grid grid-cols-13 h-fit relative overflow-hidden p-3'>
+  <main className='w-full grid grid-cols-13 h-fit relative overflow-hidden sm:p-3'>
     <div className="absolute inset-0 bg-[url(https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&q=80)] z-0 brightness-60 opacity-70" aria-hidden="true"/>
     
     {showTrailer && <TrailerPlayer youtubeId={youtubeId} setShowTrailer={setShowTrailer} />}
@@ -145,26 +143,28 @@ const AnimeOverView = () => {
                         <div className=''>
                         <h1 className='text-white text-2xl lg:text-4xl font-bold line-clamp-2'>{animeInfo?.title_english || animeInfo?.title}</h1>
                         </div>
-                        <div className='flex gap-2 my-2 '>
-                            <button onClick={()=>{setShowTrailer(true)}} className='flex items-center gap-2 text-white whitespace-nowrap text-xs md:text-sm px-5 py-2 bg-themeDark rounded-lg font-medium cursor-pointer hover:bg-themeDarker'>
+                        <div className='flex gap-2 my-2 h-10 '>
+                            <button onClick={()=>{setShowTrailer(true)}} className='flex flex-grow-1 sm:flex-grow-0 justify-center items-center gap-2 text-white whitespace-nowrap text-sm px-5 py-2 bg-themeDark rounded-lg font-medium cursor-pointer hover:bg-themeDarker'>
                                 <Play width={16} />
                                 Watch Trailer
                             </button>
                             {
                                 animeUserStatus ? (
-                                <div className=''>
-                                <StatusDrodown 
+                                <div onClick={handleAction} className='bg-pink-600  flex-grow-1 sm:flex-grow-0 flex justify-center capitalize py-2 text-white text-sm h-full px-2 sm:px-5 items-center rounded-lg relative gap-2 cursor-pointer hover:bg-pink-500'>
+                                <ExternalLink width={16} />
+                                {/* <StatusDrodown 
                                 selectedWatchStatus={selectedWatchStatus} 
                                 setSelectedWatchStatus={setSelectedWatchStatus} 
-                                buttonClassname='bg-pink-600 h-full px-3 flex items-center justify-between rounded-lg relative gap-2 cursor-pointer hover:bg-pink-500'
+                                buttonClassname='bg-pink-600 h-full px-2 sm:px-3 flex items-center justify-between rounded-lg relative gap-2 cursor-pointer hover:bg-pink-500'
                                 titleClassname='text-gray-100 text-sm'
                                 arrowClassname='text-gray-100'
                                 dropdownClassname='bg-themeDark border border-themeLightDark shadow'
                                 textClassname='text-gray-200 text-sm'
                                 dropdownButtonClassname='hover:bg-themeDarker'
-                                arrowSize={20}
+                                arrowSize={18}
                                 action={handleAction}
-                                />
+                                /> */}
+                                <span>{selectedWatchStatus.replaceAll("_", " ")}</span>
                                 </div>
                                 )
                                 :

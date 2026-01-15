@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import useUserAnimeStore from '../../../stores/UserAnimeStore'
 import AnimeCard from '../../../components/MalComponents/MalAnimeList/AnimeCard.jsx';
 import StatusBar from '../../../components/MalComponents/MalAnimeList/StatusBar.jsx';
@@ -11,6 +11,8 @@ import AnimeCardV2 from '../../../components/MalComponents/MalAnimeList/AnimeCar
 import AnimeListSkeleton from '../../../components/MalComponents/Skeletons/AnimeListSkeleton.jsx';
 
 const AnimeList = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const location = useLocation()
   const navigate = useNavigate()
   const validStatuses = ['watching', 'completed', 'on_hold', 'dropped', 'plan_to_watch'];
   const {status} = useParams()
@@ -18,10 +20,13 @@ const AnimeList = () => {
   const setScrollPosition = useScrollPosition((s) => s.setScrollPosition)
   const getList = useUserAnimeStore((s) => s.getList)
   const list = useUserAnimeStore((s) => s[status])
-  const isFetching = useUserAnimeStore((s) => s.isFetching)
   const fetchAiringData = useUserAnimeStore((s) => s.fetchAiringData)
+
+  const animeId = searchParams.get('id')
+
   const [displayLimit, setDisplayLimit] = useState(20);
   const observerTarget = useRef(null);
+  const scrollRefMap = useRef(new Map());
 
   const [listType, setListType] = useState(localStorage.getItem('listType') || 'grid')
   const [searchValue, setSearchValue] = useState('')
@@ -33,7 +38,7 @@ const AnimeList = () => {
           endDate: {
             year: null, month: null, day: null
           }
-      });
+  });
 
   if (!validStatuses.includes(status)) {
     return <Navigate to="/" replace />;
@@ -41,7 +46,6 @@ const AnimeList = () => {
 
   useEffect(() => {
     getList(status)
-    setDisplayLimit(20)
   }, [status])
 
   useEffect(() => {
@@ -57,7 +61,7 @@ const AnimeList = () => {
       (entries) => {
        if(!scrollPosition?.userList){
          if (entries[0].isIntersecting) {
-          setDisplayLimit((prev) => prev + 10);
+          setDisplayLimit((prev) => prev + (10));
         }
        }else{
         setDisplayLimit(100000)
@@ -78,6 +82,22 @@ const AnimeList = () => {
       fetchAiringData(list.animeList, status)
     }
   },[list])
+
+  useEffect(() => {
+    if(animeId){
+      setDisplayLimit(10000)
+      if(animeId && list){
+        setTimeout(() => {
+          const element = scrollRefMap.current.get(animeId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 500)
+      }
+    }else {
+      setDisplayLimit(20)
+    }
+  },[location, list])
 
   const handleSelect = (url) => {
     setScrollPosition({...scrollPosition, userList: window.pageYOffset})
@@ -128,6 +148,9 @@ const AnimeList = () => {
                 const animeInfo = item.list_status
                 return (
                   <motion.div
+                  ref={(node) => {
+                    if (node) scrollRefMap.current.set(anime.id.toString(), node);
+                  }}
                   key={anime.id}
                   layout="position"
                   className=""
@@ -135,7 +158,7 @@ const AnimeList = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: (index % 10) * 0.05 }}
                   >
-                  <div className='overflow-visible h-full' key={anime.id}>
+                  <div className={`overflow-visible h-full ${animeId == anime.id && 'border rounded-lg border-pink-600'}`} key={anime.id}>
                     {
                       listType === 'grid' ? <AnimeCard anime={anime} animeInfo={animeInfo} status={status} handleSelect={handleSelect} /> : <AnimeCardV2 anime={anime} animeInfo={animeInfo} status={status} />
                     }
