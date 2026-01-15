@@ -108,11 +108,12 @@ const OngoingAnime = () => {
         OngoingAnime.map((anime, index, array) =>
         {
           if(array[index - 1]?.id != anime?.id){
+            console.log(anime)
             return (
               <div  key={index} onClick={()=> {navigate(`/anime/${anime?.idMal}?title=${anime?.title?.romaji || ''}`)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
                 <div className='absolute z-[999] top-1 left-1 bg-pink-600 px-1 py-0.5 rounded'>
                   <h2 className="text-gray-300 text-center w-full text-sm md:text-sm">
-                      Ep {(anime?.nextAiringEpisode?.episode || '??') + '/'}{anime?.episodes || '??'}
+                      Ep {(anime?.nextAiringEpisode?.episode - 1 || '??') + '/'}{anime?.episodes || '??'}
                   </h2>
                 </div>
                 {/* Image */}

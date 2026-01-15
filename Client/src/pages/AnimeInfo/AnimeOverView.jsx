@@ -150,22 +150,10 @@ const AnimeOverView = () => {
                             </button>
                             {
                                 animeUserStatus ? (
-                                <div onClick={handleAction} className='bg-pink-600  flex-grow-1 sm:flex-grow-0 flex justify-center capitalize py-2 text-white text-sm h-full px-2 sm:px-5 items-center rounded-lg relative gap-2 cursor-pointer hover:bg-pink-500'>
+                                <button onClick={handleAction} className='bg-pink-600  flex-grow-1 sm:flex-grow-0 flex justify-center capitalize py-2 text-white text-sm h-full px-2 sm:px-5 items-center rounded-lg relative gap-2 cursor-pointer hover:bg-pink-500'>
                                 <ExternalLink width={16} />
-                                {/* <StatusDrodown 
-                                selectedWatchStatus={selectedWatchStatus} 
-                                setSelectedWatchStatus={setSelectedWatchStatus} 
-                                buttonClassname='bg-pink-600 h-full px-2 sm:px-3 flex items-center justify-between rounded-lg relative gap-2 cursor-pointer hover:bg-pink-500'
-                                titleClassname='text-gray-100 text-sm'
-                                arrowClassname='text-gray-100'
-                                dropdownClassname='bg-themeDark border border-themeLightDark shadow'
-                                textClassname='text-gray-200 text-sm'
-                                dropdownButtonClassname='hover:bg-themeDarker'
-                                arrowSize={18}
-                                action={handleAction}
-                                /> */}
                                 <span>{selectedWatchStatus.replaceAll("_", " ")}</span>
-                                </div>
+                                </button>
                                 )
                                 :
                                 (
