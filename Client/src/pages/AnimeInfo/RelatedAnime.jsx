@@ -35,8 +35,8 @@ const RelatedAnime = () => {
             animeRelations?.length !== 0 && (
                 <Swiper
                 modules={[FreeMode, Navigation]}
-                freeMode={true}
-                spaceBetween={20}
+                // freeMode={true}
+                spaceBetween={10}
                 slidesPerView={2}
                 slidesPerGroup={1}
                 grabCursor={true}
