@@ -12,17 +12,34 @@ import Footer from './Footer'
 import chibi from '../../images/chibi.gif'
 import TopAnimeProvider from '../../providers/TopAnimeProvider.js'
 import Chibi from '../../components/Chibi.jsx'
+import useScrollPosition from '../../stores/ScrollPositionStore.js'
 
 
 const Home = () => {
   const {topAnimes} = TopAnimeProvider()
-
+  const scrollPosition = useScrollPosition((s) => s.scrollPosition)
+  const setScrollPosition = useScrollPosition((s) => s.setScrollPosition)
   const handleScroll = (id) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   }
+
+  const handleSetScrollPosition = () => {
+    setScrollPosition(window.pageYOffset)
+  }
+
+  useEffect(() => {
+    if(scrollPosition){
+      setTimeout(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: 'smooth'
+        })
+      }, 300)
+    }
+  },[])
 
   return (
     <main className=' w-full overflow-x-hidden h-full relative bg-themeDarkest'>
@@ -32,20 +49,20 @@ const Home = () => {
         <div className="absolute bottom-0 w-full h-7 bg-gradient-to-b from-transparent to-[#141414] pointer-events-none"></div>
         </div>
         
-        <TopAnimes topAnimes={topAnimes} />
+        <TopAnimes topAnimes={topAnimes} handleSetScrollPosition={handleSetScrollPosition} />
 
         <div className='relative '>
         <div className="absolute z-[999] top-0 w-full h-15 bg-gradient-to-t from-transparent to-themeDarkest pointer-events-none"></div>
         </div>
 
         <div className='relative'>
-        <SeasonNowAnime />  
+        <SeasonNowAnime handleSetScrollPosition={handleSetScrollPosition} />  
         <div className="absolute bottom-0 w-full h-7 bg-gradient-to-b from-transparent to-[#141414] pointer-events-none"></div>
         </div>
-        <OngoingAnime />
-        <AiringToday />
-        <UpcomingAnime />
-        <AnimeMovies />
+        <OngoingAnime handleSetScrollPosition={handleSetScrollPosition} />
+        <AiringToday handleSetScrollPosition={handleSetScrollPosition} />
+        <UpcomingAnime handleSetScrollPosition={handleSetScrollPosition} />
+        <AnimeMovies handleSetScrollPosition={handleSetScrollPosition} />
         <Footer />
     </main>
   )

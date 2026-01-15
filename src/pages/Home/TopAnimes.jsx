@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react'
 import TopAnimeProvider from '../../providers/TopAnimeProvider'
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/free-mode';
@@ -10,8 +9,9 @@ import 'swiper/css/navigation';
 import { FreeMode, Navigation } from 'swiper/modules';
 import { useNavigate } from 'react-router';
 import { Star } from 'lucide-react';
+import { motion } from "framer-motion";
 
-const TopAnimes = ({topAnimes}) => {
+const TopAnimes = ({topAnimes, handleSetScrollPosition}) => {
     const prevRef = useRef(null);
     const nextRef = useRef(null);
     const navigate = useNavigate()
@@ -51,7 +51,7 @@ const TopAnimes = ({topAnimes}) => {
           <h1  className="text-2xl md:text-3xl font-bold text-white">Top Rated Anime</h1>
           <div className='flex justify-between'>
               <p  className="text-gray-400 mt-1 text-sm md:text-basetext-white">Explore the highest-rated anime of all time</p>
-              <button data-aos="fade-left" onClick={()=>navigate('/explore?page=1')} className='text-sm md:text-base text-white cursor-pointer hover:text-gray-300'>See all</button>
+              <button data-aos="fade-left" onClick={()=>{handleSetScrollPosition();navigate('/explore?page=1&order_by=score&sort_by=desc')}} className='text-sm md:text-base text-white cursor-pointer hover:text-gray-300'>See all</button>
           </div>
           
         </div>
@@ -110,11 +110,19 @@ const TopAnimes = ({topAnimes}) => {
             if(array[index - 1]?.mal_id != anime?.mal_id){
               return (
                 <SwiperSlide
-              key={index}
-              style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
-              className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
-            >
-              <div onClick={()=>navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)} className="relative h-full overflow-hidden rounded-lg">
+                  key={index}
+                  style={{ width: '195px', height: '40svh' }}
+                  className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
+                >
+                  <motion.div
+                  key={anime.id}
+                  layout="position"
+                  className=""
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: (index % 10) * 0.05 }}
+                  >
+              <div onClick={()=>{handleSetScrollPosition();navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)}} className="relative h-full overflow-hidden rounded-lg">
                 {/* Rating */}
                 <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-0.5 rounded-full text-xs font-semibold text-white flex items-center gap-1 z-90">
                     <Star className='fill-amber-500 text-amber-500' width={13} />
@@ -142,6 +150,7 @@ const TopAnimes = ({topAnimes}) => {
                   </div>
                 </div>
               </div>
+              </motion.div>
             </SwiperSlide>
               )
             }})

@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 import localforage from 'localforage';
 
-const UpcomingAnime = () => {
+const UpcomingAnime = ({handleSetScrollPosition}) => {
   const navigate = useNavigate()
   const [upcomingAnime, setUpcomingAnime] = useState(null)
   const prevRef = useRef(null);
@@ -74,7 +74,7 @@ const UpcomingAnime = () => {
         <h1  className="text-2xl md:text-3xl font-bold text-white">Upcoming Anime</h1>
         <div className='flex justify-between'>
             <p  className="text-gray-400 mt-1 text-sm md:text-basetext-white">Anticipated upcoming anime</p>
-            <button onClick={()=>navigate('/explore?status=upcoming')} className='text-sm md:text-base text-white cursor-pointer hover:text-gray-300'>See all</button>
+            {/* <button onClick={()=>navigate('/explore?status=upcoming')} className='text-sm md:text-base text-white cursor-pointer hover:text-gray-300'>See all</button> */}
         </div>
         
         </div>
@@ -134,7 +134,7 @@ const UpcomingAnime = () => {
             style={{ width: '195px', height: '40svh' }} // or use fixed or dynamic width based on screen
             className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
             >
-            <div onClick={()=>{navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)}} className="relative h-full overflow-hidden rounded-lg cursor-pointer">
+            <div onClick={()=>{handleSetScrollPosition();navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)}} className="relative h-full overflow-hidden rounded-lg cursor-pointer">
                 {/* Image */}
                 <div className="w-full bg-red-100 h-full rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
                 <img

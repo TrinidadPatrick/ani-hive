@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router'
 import OngoingAnimeStore from '../../stores/OngoingAnimeStore'
-import { Star, Tv } from 'lucide-react'
 import localforage from 'localforage'
+import { motion } from "framer-motion";
 
-const OngoingAnime = () => {
+const OngoingAnime = ({handleSetScrollPosition}) => {
   const navigate = useNavigate()
   const OngoingAnime = OngoingAnimeStore((state) => state.OngoingAnime)
   const s_setOngoingAnime = OngoingAnimeStore((state) => state.s_setOngoingAnime)
@@ -114,7 +114,15 @@ const OngoingAnime = () => {
         {
           if(array[index - 1]?.id != anime?.id){
             return (
-              <div  key={index} onClick={()=> {navigate(`/anime/${anime?.idMal}?title=${anime?.title?.romaji || ''}`)}} className="w-full rounded-lg cursor-pointer relative overflow-hidden flex flex-col items-center ">
+              <motion.div
+                  key={anime.id}
+                  layout="position"
+                  className=""
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: (index % 10) * 0.05 }}
+                  >
+              <div  key={index} onClick={()=> {navigate(`/anime/${anime?.idMal}?title=${anime?.title?.romaji || ''}`);handleSetScrollPosition()}} className="w-full rounded-lg cursor-pointer relative overflow-hidden flex flex-col items-center ">
                 {/* Image */}
                 <div className='rounded-lg overflow-hidden flex-none'>
                 <img
@@ -142,6 +150,7 @@ const OngoingAnime = () => {
                   </div>
                 </div>
               </div>
+              </motion.div>
             )
           }})
       }
