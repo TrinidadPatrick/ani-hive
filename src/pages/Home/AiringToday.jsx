@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import AnimeMoviesStore from '../../stores/AnimeMoviesStore';
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useNavigate } from 'react-router';
+import { Star } from 'lucide-react';
 
 const AiringToday = () => {
   const [hovered, setHovered] = useState(false);
@@ -92,7 +93,7 @@ const AiringToday = () => {
                           
                           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                             <div className={`transition-all duration-300 ${hovered === index ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-90'}`}>
-                              <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-cyan-400 transition-colors">
+                              <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-pink-400 transition-colors">
                                 {anime?.title_english || anime?.title}
                               </h3>
                               <div className="flex items-center gap-2 text-sm text-gray-300">
@@ -104,14 +105,15 @@ const AiringToday = () => {
                             </div>
                             
                             {hovered === index && (
-                              <button onClick={()=>navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)} className="cursor-pointer mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105">
+                              <button onClick={()=>navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)} className="cursor-pointer mt-4 px-4 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105">
                                 View Details
                               </button>
                             )}
                           </div>
                           
-                          <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-white">
-                            {anime?.score || 'TBD'}
+                          <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-0.5 rounded-full text-xs font-semibold text-white flex items-center gap-1">
+                            <Star className='fill-amber-500 text-amber-500' width={13} />
+                            {anime?.score || '0'}
                           </div>
                         </div>
                         )

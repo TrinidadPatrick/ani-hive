@@ -9,6 +9,7 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import { FreeMode, Navigation } from 'swiper/modules';
 import { useNavigate } from 'react-router';
+import { Star } from 'lucide-react';
 
 const TopAnimes = ({topAnimes}) => {
     const prevRef = useRef(null);
@@ -115,21 +116,9 @@ const TopAnimes = ({topAnimes}) => {
             >
               <div onClick={()=>navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)} className="relative h-full overflow-hidden rounded-lg">
                 {/* Rating */}
-                <div className="w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-1">
-                  <div className="w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>
-                  <svg
-                    className="z-[9999]"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="23"
-                    height="23"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="orange"
-                      d="m12 17.275l-4.15 2.5q-.275.175-.575.15t-.525-.2t-.35-.437t-.05-.588l1.1-4.725L3.775 10.8q-.25-.225-.312-.513t.037-.562t.3-.45t.55-.225l4.85-.425l1.875-4.45q.125-.3.388-.45t.537-.15t.537.15t.388.45l1.875 4.45l4.85.425q.35.05.55.225t.3.45t.038.563t-.313.512l-3.675 3.175l1.1 4.725q.075.325-.05.588t-.35.437t-.525.2t-.575-.15z"
-                    />
-                  </svg>
-                  <p className="z-[9999] mt-[1px]">{anime?.score}</p>
+                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-0.5 rounded-full text-xs font-semibold text-white flex items-center gap-1 z-90">
+                    <Star className='fill-amber-500 text-amber-500' width={13} />
+                    {anime?.score || '0'}
                 </div>
 
                 {/* Image */}

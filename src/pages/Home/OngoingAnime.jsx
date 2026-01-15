@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router'
 import OngoingAnimeStore from '../../stores/OngoingAnimeStore'
+import { Star, Tv } from 'lucide-react'
 
 const OngoingAnime = () => {
   const navigate = useNavigate()
@@ -101,7 +102,7 @@ const OngoingAnime = () => {
       </div>
       
     </div>
-    <div className="w-[90%] mx-auto h-full gap-5 bg-[#141414] grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+    <div className="w-[90%] mx-auto gap-5 bg-[#141414] grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
       
       {
         OngoingAnime?.length > 0 &&
@@ -109,14 +110,9 @@ const OngoingAnime = () => {
         {
           if(array[index - 1]?.id != anime?.id){
             return (
-              <div  key={index} onClick={()=> {navigate(`/anime/${anime?.idMal}?title=${anime?.title?.romaji || ''}`)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
-                <div className='absolute z-[999] top-1 left-1 bg-pink-600 px-1 py-0.5 rounded'>
-                  <h2 className="text-gray-300 text-center w-full text-sm md:text-sm">
-                      Ep {(anime?.nextAiringEpisode?.episode - 1 || '??') + '/'}{anime?.episodes || '??'}
-                  </h2>
-                </div>
+              <div  key={index} onClick={()=> {navigate(`/anime/${anime?.idMal}?title=${anime?.title?.romaji || ''}`)}} className="w-full rounded-lg cursor-pointer relative overflow-hidden flex flex-col items-center ">
                 {/* Image */}
-                <div className='rounded-lg overflow-hidden'>
+                <div className='rounded-lg overflow-hidden flex-none'>
                 <img
                   src={anime?.coverImage?.large}
                   alt={anime?.title?.romaji}
@@ -124,15 +120,21 @@ const OngoingAnime = () => {
                 />
                 </div>
 
+                <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-white flex items-center gap-1">
+                  {(anime?.nextAiringEpisode?.episode - 1 || '??') + ' / '}{anime?.episodes || '??'}
+                </div>
+
                 {/* Info */}
-                <div className="w-full px-1 py-1 bottom-0 bg-transparent sm:h-[25%] md:h-[20%] rounded-b-lg flex">
-                  <div className="flex flex-col items-start w-full h-full justify-around">
+                <div className="w-full px-1 py-1 bottom-0 bg-transparent rounded-b-lg flex h-full">
+                  <div className="flex flex-col items-start w-full h-full justify-between b">
                     <h2 className="text-white font-medium text-start text-sm md:text-[0.9rem] mt-1 line-clamp-2 w-full">
                       {anime?.title?.romaji || ''}
                     </h2>
-                    <h2 className="text-gray-400 text-start w-full text-sm md:text-sm mt-2">
-                      {anime?.genres.join(', ')}
-                    </h2>
+                    <div className=' z-[999] w-full py-0.5 mt-2 '>
+                      <div className="text-gray-300 text-start gap-2 rounded text-xs md:text-[0.8rem] line-clamp-1">
+                          {anime?.genres.slice(0,2).join(', ')}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
