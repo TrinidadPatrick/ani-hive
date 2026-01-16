@@ -102,7 +102,7 @@ const SeasonNowAnime = ({handleSetScrollPosition}) => {
               const yt_id = getYoutubeId(url)
 
               return (
-                <section className="px-5 w-full h-full  lg:h-[80svh] bg-themeExtraDarkBlue relative overflow-hidden flex items-center justify-center">
+                <section className="px-5 w-full h-full lg:h-[80svh] bg-themeExtraDarkBlue relative overflow-hidden flex items-center justify-center">
               {/* Background Image */}{index}
               <img
                 src={anime?.images?.webp.large_image_url}
@@ -112,13 +112,13 @@ const SeasonNowAnime = ({handleSetScrollPosition}) => {
             
               {/* Overlay (blur + tint) */}
               <div className="absolute inset-0 bg-black/40 backdrop-blur-xs" />
-              <div className="relative mx-3 sm:mx-10 xl:mx-0 z-10 flex flex-col-reverse lg:flex-row items-center gap-10 w-full max-w-7xl">
+              <div className="relative mx-3 sm:mx-10 xl:mx-0 z-10 flex flex-col-reverse lg:flex-row items-center gap-10 w-full max-w-7xl xl:max-w-[85rem] ">
                 
                 {/* Left Side: Anime Info */}
-                <div className="text-white h-fit flex-1 space-y-5 p-3 md:p-0">
+                <div className="text-white h-fit flex-1 w-full space-y-5 p-3 md:p-0">
                   <div>
-                  <p className='text-sm text-gray-400 font-light'>Popular animes this season</p>
-                  <h1 className="text-3xl md:text-4xl lg::text-5xl font-bold line-clamp-2">{anime?.title_english || anime?.title}</h1>
+                  <p className='text-base text-gray-300 font-light'>Popular animes this season</p>
+                  <h1 className="text-3xl md:text-4xl lg::text-5xl xl:text-[3.4rem] font-bold line-clamp-2 max-w-lg mt-3 ">{anime?.title_english || anime?.title}</h1>
                   </div>
                   <p className="text-sm text-gray-300 max-w-prose">{anime?.synopsis?.substring(0, showMore ? 100000 : 500)}
                   {
@@ -128,16 +128,16 @@ const SeasonNowAnime = ({handleSetScrollPosition}) => {
                   </p>
                   
             
-                  <div className="flex flex-wrap gap-4 text-sm text-gray-200">
-                    <div><span className="font-semibold text-pink-400">Rating:</span> {anime?.score} / 10</div>
-                    <div><span className="font-semibold text-pink-400">Episodes:</span> {anime?.episodes}</div>
-                    <div><span className="font-semibold text-pink-400">Status:</span> {anime?.status}</div>
-                    <div><span className="font-semibold text-pink-400">Season:</span> {anime?.season?.charAt(0).toUpperCase()}{anime?.season?.slice(1)} {anime?.year}</div>
-                    <div><span className="font-semibold text-pink-400">Genre:</span> {anime?.genres.map((genre)=>genre.name).join(', ')}</div>
-                    <div><span className="font-semibold text-pink-400">Type:</span> {anime?.type}</div>
+                  <div className="flex flex-wrap gap-4 text-sm text-gray-200 max-w-lg ">
+                    <div><span className="font-semibold text-pink-600 text-base">Rating:</span> {anime?.score} / 10</div>
+                    <div><span className="font-semibold text-pink-600 text-base">Episodes:</span> {anime?.episodes || 'TBD'}</div>
+                    <div><span className="font-semibold text-pink-600 text-base">Status:</span> {anime?.status}</div>
+                    <div><span className="font-semibold text-pink-600 text-base">Season:</span> {anime?.season?.charAt(0).toUpperCase()}{anime?.season?.slice(1)} {anime?.year}</div>
+                    <div><span className="font-semibold text-pink-600 text-base">Genre:</span> {anime?.genres.map((genre)=>genre.name).join(', ')}</div>
+                    <div><span className="font-semibold text-pink-600 text-base">Type:</span> {anime?.type}</div>
                   </div>
             
-                  <button onClick={()=>{handleSetScrollPosition();navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)}} className="mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">
+                  <button onClick={()=>{handleSetScrollPosition();navigate(`/anime/${anime?.mal_id}?title=${anime?.title || ''}`)}} className="mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-lg shadow-lg transition duration-300">
                     Overview
                   </button>
                   <button onClick={()=>{setShowTrailer(true);setYoutubeId(yt_id)}} className=" hover:bg-gray-50/2 md:hidden ml-3 mt-4 cursor-pointer bg-transparent border text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300">

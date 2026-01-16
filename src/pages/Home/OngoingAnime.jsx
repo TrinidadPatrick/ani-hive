@@ -81,7 +81,7 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
     {
       OngoingAnime == null ?
       (
-        <section className="p-6">
+      <section className="p-6">
       <h2 className="text-3xl font-bold mb-4">Ongoing Anime</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {Array.from({ length: 12 }).map((_, index) => (
@@ -99,7 +99,7 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
       :
       (
         <section className='w-full bg-themeExtraDarkBlue py-10'>
-      <div className="w-[95%] md:w-[90%] mx-auto px-3">
+      <div className="w-[95%] md:w-[90%] mx-auto">
       <h1  className="text-2xl md:text-3xl font-bold text-white">Ongoing Anime</h1>
       <div className='flex justify-between'>
           <p  className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes streaming this season</p>
