@@ -6,7 +6,6 @@ import getYoutubeId from '../../utils/getYoutubeId.js';
 import TrailerPlayer from '../../components/TrailerPlayer.jsx';
 import useUserAnimeStore from '../../stores/UserAnimeStore.js';
 import { ExternalLink, Play, Plus, Star, Trash2 } from 'lucide-react';
-import StatusDrodown from '../../components/MalComponents/MalAnimeList/StatusDrodown.jsx';
 import useAuthStore from '../../stores/AuthStore.js';
 import LoaderV2 from '../../components/LoaderV2.jsx';
 import Characters from './Characters.jsx';
@@ -14,9 +13,9 @@ import Recommendations from './Recommendations.jsx';
 import RelatedAnime from './RelatedAnime.jsx';
 import Reviews from './Reviews.jsx';
 import MobileRecommendations from './MobileRecommendations.jsx';
+import useErrorHandler from '../../stores/FetchErrorHandler.js';
 
 const AnimeOverView = () => {
-    const navigate = useNavigate()
     const authenticated = useAuthStore((s) => s.authenticated)
     const login = useAuthStore((s) => s.login)
     const isUpdating = useUserAnimeStore((s) => s.isUpdating)
@@ -24,14 +23,15 @@ const AnimeOverView = () => {
     const checkIsSaved = useUserAnimeStore((s) => s.checkIsSaved)
     const updateAnime = useUserAnimeStore((s) => s.updateAnime)
     const deleteAnime = useUserAnimeStore((s) => s.deleteAnime)
+    const setErrorStatus = useErrorHandler((s) => s.setErrorStatus)
 
     const {id} = useParams()
     const [selectedWatchStatus, setSelectedWatchStatus] = useState(null)
     const [animeUserStatus, setAnimeUserStatus] = useState(null)
     const [animeInfo, setAnimeInfo] = useState(null)
-    const [reviews, setReviews] = useState(null);
     const [showTrailer, setShowTrailer] = useState(false)
     const [youtubeId, setYoutubeId] = useState(null)
+    const [notFound, setNotFound] = useState(false)
     
     const checkAnimeForUser = async (anime_id) => {
         const result = await checkIsSaved(anime_id)
@@ -44,7 +44,6 @@ const AnimeOverView = () => {
     }
 
     const handleAction = async (status) => {
-        console.log(status)
         if(authenticated === false){
             return login()
         }
@@ -74,8 +73,8 @@ const AnimeOverView = () => {
 
                 }
         } catch (error) {
-            console.log(error)
-            if(retries > 0)
+            setErrorStatus(error.status)
+            if(retries > 0 && error.status === 429)
             {
                 setTimeout(()=>{
                     getAnimeInfo(id, retries - 1)

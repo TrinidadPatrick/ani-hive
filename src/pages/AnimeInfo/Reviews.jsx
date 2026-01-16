@@ -20,8 +20,7 @@ const Reviews = ({mal_id}) => {
                     setReviews(sortedReviews)
                 }
         } catch (error) {
-            console.log(error)
-            if(retries > 0)
+            if(retries > 0  && error.status === 429)
             {
                 setTimeout(()=>{
                     getUserReviews(mal_id, retries - 1)

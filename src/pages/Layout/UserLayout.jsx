@@ -9,8 +9,12 @@ import MalProfileDropdown from '../../components/MalComponents/MalProfile/MalPro
 import useAuthStore from '../../stores/AuthStore.js';
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import { useRef } from 'react';
+import useErrorHandler from '../../stores/FetchErrorHandler.js';
+import MainHandler from '../../components/ErrorHandlerComponent/MainHandler.jsx';
 
 const UserLayout = () => {
+  const errors = [404, 504, 400]
+  const errorStatus = useErrorHandler((s) => s.errorStatus)
   const checkAuth = useAuthStore((s) => s.checkAuth)
   const authenticated = useAuthStore((s) => s.authenticated)
   const navigate = useNavigate()
@@ -187,7 +191,9 @@ const UserLayout = () => {
           
         </nav>
         <ToastContainer />
-        <Outlet />
+        {
+          errors.includes(errorStatus) ? (<MainHandler status={errorStatus} />) : <Outlet />
+        }
         <ScrollRestoration />
     </div>
   )

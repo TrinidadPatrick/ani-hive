@@ -8,6 +8,7 @@ import Characters from './pages/Characters/Characters'
 import MalCallback from './pages/AuthCallback/MalCallback'
 import PrivateLayout from './pages/Layout/PrivateLayout.jsx'
 import AnimeList from './pages/Private/AnimeList/AnimeList.jsx'
+import PageNotFound from './components/ErrorHandlerComponent/PageNotFound.jsx'
 
 const router = createBrowserRouter([
     {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
                         element: <AnimeList />
                     }
                 ]
+            },
+            {
+                path: '*',
+                element: <PageNotFound />
             }
         ]
     },
