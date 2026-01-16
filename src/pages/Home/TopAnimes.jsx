@@ -144,18 +144,16 @@ const TopAnimes = ({ topAnimes, handleSetScrollPosition }) => {
                           transition={{
                             delay: (index % 10) * 0.05,
                           }}
+                          className="relative h-full overflow-hidden rounded-lg"
+                          onClick={() => {
+                            handleSetScrollPosition();
+                            navigate(
+                              `/anime/${anime?.mal_id}?title=${
+                                anime?.title || ''
+                              }`
+                            );
+                          }}
                         >
-                          <div
-                            onClick={() => {
-                              handleSetScrollPosition();
-                              navigate(
-                                `/anime/${anime?.mal_id}?title=${
-                                  anime?.title || ''
-                                }`
-                              );
-                            }}
-                            className="relative h-full overflow-hidden rounded-lg"
-                          >
                             {/* Rating */}
                             <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-0.5 rounded-full text-xs font-semibold text-white flex items-center gap-1 z-90">
                               <Star
@@ -197,7 +195,6 @@ const TopAnimes = ({ topAnimes, handleSetScrollPosition }) => {
                                 </h2>
                               </div>
                             </div>
-                          </div>
                         </motion.div>
                       </SwiperSlide>
                     );

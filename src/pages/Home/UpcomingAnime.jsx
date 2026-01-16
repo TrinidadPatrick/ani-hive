@@ -160,17 +160,15 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: (index % 10) * 0.05 }}
-                        >
-                        <div
-                          onClick={() => {
-                            handleSetScrollPosition();
-                            navigate(
-                              `/anime/${anime?.mal_id}?title=${
-                                anime?.title || ''
-                              }`
-                            );
-                          }}
-                          className="relative h-full overflow-hidden rounded-lg cursor-pointer"
+                            onClick={() => {
+                              handleSetScrollPosition();
+                              navigate(
+                                `/anime/${anime?.mal_id}?title=${
+                                  anime?.title || ''
+                                }`
+                              );
+                            }}
+                            className="relative h-full overflow-hidden rounded-lg cursor-pointer"
                         >
                           {/* Image */}
                           <div className="w-full h-full rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
@@ -204,7 +202,6 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
                               </h2>
                             </div>
                           </div>
-                        </div>
                         </motion.div>
                       </SwiperSlide>
                     );
