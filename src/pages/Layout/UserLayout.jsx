@@ -24,6 +24,11 @@ const UserLayout = () => {
   const [searchinput, setSearchInput] = useState('')
   const [showSidebar, setShowSidebar] = useState(false)
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const setErrorStatus = useErrorHandler((s) => s.setErrorStatus)
+
+  useEffect(() => {
+    if(errorStatus) return setErrorStatus(null)
+  },[location])
 
   useRegisterSW({ onRegistered(r) { console.log('SW Registered') } })
   
@@ -53,23 +58,6 @@ const UserLayout = () => {
     setShowSidebar(false)
     navigate(`/explore?page=1&q=${searchinput}`)
   }
-
-  // useEffect(() => {
-  //   const savedPath = localStorage.getItem('last_visited_path');
-
-  //   if (!hasAttemptedRedirect.current && savedPath && location.pathname === '/' && authenticated) {
-  //     hasAttemptedRedirect.current = true;
-  //     navigate(savedPath, { replace: true });
-  //   }
-  // }, [authenticated])
-
-  //   useEffect(() => {
-  //     const excludedPaths = ['/auth/mal/callback'];
-
-  //     if (!excludedPaths.includes(location.pathname) && authenticated) {
-  //     localStorage.setItem('last_visited_path', location.pathname + location.search);
-  //   }
-  // }, [location, authenticated])
 
   return (
     <div>

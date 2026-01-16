@@ -31,7 +31,6 @@ const AnimeOverView = () => {
     const [animeInfo, setAnimeInfo] = useState(null)
     const [showTrailer, setShowTrailer] = useState(false)
     const [youtubeId, setYoutubeId] = useState(null)
-    const [notFound, setNotFound] = useState(false)
     
     const checkAnimeForUser = async (anime_id) => {
         const result = await checkIsSaved(anime_id)

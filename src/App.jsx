@@ -1,4 +1,4 @@
-import { RouterProvider } from "react-router-dom"
+import { RouterProvider, useLocation } from "react-router-dom"
 import router from "./router"
 import { useEffect } from "react"
 import AnimeInfoNotFound from "./components/ErrorHandlerComponent/AnimeInfoNotFound.jsx"
@@ -8,7 +8,7 @@ import MainHandler from "./components/ErrorHandlerComponent/MainHandler.jsx"
 function App() {
 
   return (
-    <main>
+    <main className="">
       <RouterProvider router={router} />
     </main>
   )
