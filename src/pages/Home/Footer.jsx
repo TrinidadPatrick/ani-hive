@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom';
 export default function Footer() {
   const navigate = useNavigate();
   return (
-    <footer className="bg-[#141414] text-white pt-10 pb-5 px-6 md:px-16">
+    <footer className="bg-themeExtraDarkBlue text-white pt-10 pb-5 px-6 md:px-16">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-8">
 
         {/* About */}

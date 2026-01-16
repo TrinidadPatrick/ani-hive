@@ -25,6 +25,8 @@ const Reviews = ({mal_id}) => {
                 setTimeout(()=>{
                     getUserReviews(mal_id, retries - 1)
                 }, 1000)
+            }else{
+                setReviews([])
             }
         }
     }

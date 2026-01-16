@@ -42,22 +42,22 @@ const Home = () => {
   },[])
 
   return (
-    <main className=' w-full overflow-x-hidden h-full relative bg-themeDarkest'>
+    <main className=' w-full overflow-x-hidden h-full relative bg-themeExtraDarkBlue'>
         <Chibi handleScroll={handleScroll} />
         <div className='relative'>
         <TopSection topAnimes={topAnimes} />
-        <div className="absolute bottom-0 w-full h-7 bg-gradient-to-b from-transparent to-[#141414] pointer-events-none"></div>
+        <div className="absolute bottom-0 w-full h-30 bg-gradient-to-b from-transparent to-themeExtraDarkBlue pointer-events-none"></div>
         </div>
         
         <TopAnimes topAnimes={topAnimes} handleSetScrollPosition={handleSetScrollPosition} />
 
         <div className='relative '>
-        <div className="absolute z-[999] top-0 w-full h-15 bg-gradient-to-t from-transparent to-themeDarkest pointer-events-none"></div>
+        <div className="absolute z-[999] top-0 w-full h-15 bg-gradient-to-t from-transparent to-themeExtraDarkBlue pointer-events-none"></div>
         </div>
 
         <div className='relative'>
         <SeasonNowAnime handleSetScrollPosition={handleSetScrollPosition} />  
-        <div className="absolute bottom-0 w-full h-7 bg-gradient-to-b from-transparent to-[#141414] pointer-events-none"></div>
+        <div className="absolute bottom-0 w-full h-30 bg-gradient-to-b from-transparent to-themeExtraDarkBlue pointer-events-none"></div>
         </div>
         <OngoingAnime handleSetScrollPosition={handleSetScrollPosition} />
         <AiringToday handleSetScrollPosition={handleSetScrollPosition} />

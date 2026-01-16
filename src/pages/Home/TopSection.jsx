@@ -78,7 +78,7 @@ const TopSection = ({topAnimes}) => {
           )
           :
           (
-            <section className="w-full md:h-[100svh] bg-gray-900 relative overflow-hidden flex items-center justify-center lg:px-6">
+            <section className="w-full md:h-[100svh] bg-themeExtraDarkBlue relative overflow-hidden flex items-center justify-center lg:px-6">
               {showTrailer && <TrailerPlayer youtubeId={youtubeId} setShowTrailer={setShowTrailer} />}
               {/* Background Image */}
               <img
@@ -88,7 +88,7 @@ const TopSection = ({topAnimes}) => {
               />
 
               {/* Overlay (blur + tint) */}
-              <div className="absolute inset-0 bg-black/40 backdrop-blur-xs" />
+              <div className="absolute inset-0 bg-themeExtraDarkBlue/80 backdrop-blur-xs" />
               <div className="relative mx-3 sm:mx-10 xl:mx-0 z-10 flex flex-col-reverse md:flex-row items-center gap-10 w-full max-w-7xl">
                 
                 {/* Left Side: Anime Info */}

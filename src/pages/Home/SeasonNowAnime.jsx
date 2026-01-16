@@ -102,12 +102,12 @@ const SeasonNowAnime = ({handleSetScrollPosition}) => {
               const yt_id = getYoutubeId(url)
 
               return (
-                <section className="px-5 w-full h-full  lg:h-[80svh] bg-gray-900 relative overflow-hidden flex items-center justify-center">
+                <section className="px-5 w-full h-full  lg:h-[80svh] bg-themeExtraDarkBlue relative overflow-hidden flex items-center justify-center">
               {/* Background Image */}{index}
               <img
                 src={anime?.images?.webp.large_image_url}
                 alt={anime?.title || "anime"}
-                className="absolute w-full h-full object-cover brightness-30 opacity-70"
+                className="absolute w-full h-full object-cover brightness-20 opacity-70"
               />
             
               {/* Overlay (blur + tint) */}

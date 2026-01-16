@@ -98,7 +98,7 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
       )
       :
       (
-        <section className='w-full bg-[#141414] py-10'>
+        <section className='w-full bg-themeExtraDarkBlue py-10'>
       <div className="w-[95%] md:w-[90%] mx-auto px-3">
       <h1  className="text-2xl md:text-3xl font-bold text-white">Ongoing Anime</h1>
       <div className='flex justify-between'>
@@ -106,7 +106,7 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
       </div>
       
     </div>
-    <div className="w-[90%] mx-auto gap-5 bg-[#141414] grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+    <div className="w-[90%] mx-auto gap-5  grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
       
       {
         OngoingAnime?.length > 0 &&

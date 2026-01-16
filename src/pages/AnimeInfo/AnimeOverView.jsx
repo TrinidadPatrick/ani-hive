@@ -112,7 +112,7 @@ const AnimeOverView = () => {
 
   return (
   <main className='w-full grid grid-cols-13 h-fit relative overflow-hidden sm:p-3'>
-    <div className="absolute inset-0 bg-[url(https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&q=80)] z-0 brightness-60 opacity-70" aria-hidden="true"/>
+    <div className="absolute inset-0 bg-[url(https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&q=80)] z-0 brightness-40 opacity-70" aria-hidden="true"/>
     
     {showTrailer && <TrailerPlayer youtubeId={youtubeId} setShowTrailer={setShowTrailer} />}
     {
@@ -285,7 +285,7 @@ const AnimeOverView = () => {
         </div>
         :
         // Loader
-        <div className='w-full col-span-13 h-[100svh] bg-[#141414] mt-20 z-90  p-4'>
+        <div className='w-full col-span-13 h-[100svh]  mt-20 z-90  p-4'>
             
             <div className="flex gap-6">
 
