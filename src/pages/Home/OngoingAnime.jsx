@@ -33,6 +33,7 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
             coverImage {
               large
             }
+            duration
             genres
             episodes
             nextAiringEpisode {
@@ -143,7 +144,7 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
         ongoingAnime?.length > 0 &&
         processedAnime?.map((anime, index, array) =>
         {
-          if(array[index - 1]?.id != anime?.id){
+          if(array[index - 1]?.id != anime?.id && anime?.duration >= 6){
             return (
               <motion.div
                   key={anime.id}
