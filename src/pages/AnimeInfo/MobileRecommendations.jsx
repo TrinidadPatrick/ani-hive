@@ -7,10 +7,11 @@
     import axios from 'axios';
     import useSmallScreen from '../../utils/useSmallScreen';
     import AnimeRecommendationSkeleton from './skeleton/AnimeRecommendationSkeleton';
-    import {useSearchParams} from 'react-router-dom'
+    import {useNavigate, useSearchParams} from 'react-router-dom'
     import usePublicAnimeInfo from '../../stores/PublicAnimeInfoStore';
 
     const MobileRecommendations = React.memo(({title}) => {
+        const navigate = useNavigate()
         const [searchParams, setSearchParams] = useSearchParams()
         const recommendations = usePublicAnimeInfo((s) => s.recommendations)
 
@@ -85,9 +86,7 @@
                             return (
                             <SwiperSlide
                                 key={index}
-                                onClick={() =>
-                                (window.location.href = `/anime/${recommendation.mediaRecommendation.idMal}?title=${recommendation.mediaRecommendation.title.romaji}`)
-                                }
+                                onClick={() =>navigate(`/anime/${recommendation.mediaRecommendation.idMal}?title=${recommendation.mediaRecommendation.title.romaji}`)}
                                 style={{ width: "195px", height: "auto" }}
                                 className="h-fit  px-0 flex items-center justify-center rounded-lg cursor-pointer"
                             >

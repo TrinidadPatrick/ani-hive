@@ -5,11 +5,12 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import {useSearchParams} from 'react-router-dom'
+import {useNavigate, useSearchParams} from 'react-router-dom'
 import AnimeRelatedSkeleton from './skeleton/AnimeRelatedSkeleton';
 import usePublicAnimeInfo from '../../stores/PublicAnimeInfoStore';
 
 const RelatedAnime = () => {
+    const navigate = useNavigate()
     const animeRelations = usePublicAnimeInfo((s) => s.animeRelations)
 
     const prevRef = useRef(null);
@@ -84,7 +85,7 @@ const RelatedAnime = () => {
                         <SwiperSlide
                             key={index}
                             onClick={() => {
-                            window.location.href = `/anime/${info.idMal}?title=${info?.title.english || info?.title.romaji}`;
+                            navigate(`/anime/${info.idMal}?title=${info?.title.english || info?.title.romaji}`);
                             }}
                             style={{ width: "195px", height: "auto" }}
                             className="h-full md:h-[40svh] flex items-center justify-center rounded-lg cursor-pointer"

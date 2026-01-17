@@ -7,10 +7,11 @@
     import axios from 'axios';
     import useSmallScreen from '../../utils/useSmallScreen';
     import AnimeRecommendationSkeleton from './skeleton/AnimeRecommendationSkeleton';
-    import {useSearchParams} from 'react-router-dom'
+    import {useNavigate, useSearchParams} from 'react-router-dom'
     import usePublicAnimeInfo from '../../stores/PublicAnimeInfoStore';
 
     const Recommendations = React.memo(({title}) => {
+        const navigate = useNavigate()
         const [searchParams, setSearchParams] = useSearchParams()
         const recommendations = usePublicAnimeInfo((s) => s.recommendations)
         const setRecommendations = usePublicAnimeInfo((s) => s.setRecommendations)
@@ -108,7 +109,7 @@
                     if(recommendation?.mediaRecommendation)
                     {
                         return (
-                        <div onClick={()=>window.location.href = `/anime/${recommendation.mediaRecommendation.idMal}?title=${recommendation.mediaRecommendation.title.romaji}`} key={index} className='w-full hover:bg-[#212121] flex gap-2 cursor-pointer'>
+                        <div onClick={()=>navigate(`/anime/${recommendation.mediaRecommendation.idMal}?title=${recommendation.mediaRecommendation.title.romaji}`)} key={index} className='w-full hover:bg-[#212121] flex gap-2 cursor-pointer'>
                             <div className='w-[90px] aspect-[2/2.3] flex-none'>
                                 <img src={recommendation?.mediaRecommendation?.coverImage?.large} alt={recommendation?.mediaRecommendation?.title?.english || recommendation?.mediaRecommendation?.title?.romaji} className='w-full h-full object-cover rounded-lg' />
                             </div>
