@@ -92,6 +92,7 @@ const AnimeOverView = () => {
     useEffect(() => {
         if (id) {
           (async () => {
+            setAnimeInfo(null)
             await checkAnimeForUser(id)
             await getAnimeInfo(id, 1);
           })();

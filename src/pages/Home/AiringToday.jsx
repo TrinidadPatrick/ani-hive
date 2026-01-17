@@ -35,7 +35,7 @@ const AiringToday = ({ handleSetScrollPosition }) => {
     } catch (error) {
       console.log(error);
 
-      if (retries > 0) {
+      if (retries > 0 && error.status === 429) {
         setTimeout(() => {
           getAiringToday(1, retries - 1);
         }, 1000);

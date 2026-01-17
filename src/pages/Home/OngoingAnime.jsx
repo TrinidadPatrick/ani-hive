@@ -22,6 +22,7 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
             idMal
             title {
               romaji
+              english
             }
             coverImage {
               large
@@ -61,7 +62,7 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
   
   } catch (error) {
     console.log(error)
-    if(retries > 0)
+    if(retries > 0 && error.status === 429)
     {
       setTimeout(()=>{
         getOngoingAnime(1, retries - 1)
@@ -140,7 +141,7 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
                 <div className="w-full px-1 py-1 bottom-0 bg-transparent rounded-b-lg flex h-full">
                   <div className="flex flex-col items-start w-full h-full justify-between b">
                     <h2 className="text-white font-medium text-start text-sm md:text-[0.9rem] mt-1 line-clamp-2 w-full">
-                      {anime?.title?.romaji || ''}
+                      {anime?.title?.english || anime?.title?.romaji}
                     </h2>
                     <div className=' z-[999] w-full py-0.5 mt-2 '>
                       <div className="text-gray-300 text-start gap-2 rounded text-xs md:text-[0.8rem] line-clamp-1">
