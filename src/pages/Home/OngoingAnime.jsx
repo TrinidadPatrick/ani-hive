@@ -1,22 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router'
-import OngoingAnimeStore from '../../stores/OngoingAnimeStore'
 import localforage from 'localforage'
 import { motion } from "framer-motion";
+import { Flame } from 'lucide-react';
 
 const OngoingAnime = ({handleSetScrollPosition}) => {
   const navigate = useNavigate()
-  const OngoingAnime = OngoingAnimeStore((state) => state.OngoingAnime)
-  const s_setOngoingAnime = OngoingAnimeStore((state) => state.s_setOngoingAnime)
+  const [ongoingAnime, setOngoingAnime] = useState(null)
 
-  const getOngoingAnime = async (page, retries = 10) => {
-    const cachedList = await localforage.getItem('ongoingAnime');
-    if(cachedList) s_setOngoingAnime(cachedList)
+  const getOngoingAnime = async (page = 1, retries = 10) => {
+    if (page === 1) {
+      const cached = await localforage.getItem('ongoingAnime');
+      if (cached) setOngoingAnime(cached);
+    }
+
     try {
       const query = `
-      query {
-        Page(perPage: 200) {
+      query($page: Int) {
+        Page(page: $page, perPage: 40) {
+        pageInfo {
+          hasNextPage
+          currentPage
+        }
           media(status: RELEASING, type: ANIME, sort: POPULARITY_DESC, isAdult: false) {
             id
             idMal
@@ -29,24 +35,20 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
             }
             genres
             episodes
-            averageScore
             nextAiringEpisode {
               episode
               airingAt
             }
-            startDate {
-              year
-              month
-              day
-            }
             siteUrl
+            trending
+            popularity
           }
         }
       }
     `;
     const response = await axios.post(
       'https://graphql.anilist.co',
-      { query },
+      { query, variables: { page} },
       {
         headers: {
           'Content-Type': 'application/json',
@@ -56,8 +58,24 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
 
     if(response.status === 200) {
       const animes = response.data.data.Page.media
-      s_setOngoingAnime(animes)
-      await localforage.setItem('ongoingAnime', animes);
+      const pageInfo = response.data.data.Page.pageInfo
+      setOngoingAnime(prev => {
+        const animeMap = new Map((prev || []).map(item => [item.id, item]));
+        animes.forEach(item => animeMap.set(item.id, item));
+        const updated = Array.from(animeMap.values());
+        
+        localforage.setItem('ongoingAnime', updated);
+        
+        return updated;
+      });
+
+
+      if(pageInfo?.hasNextPage){
+        setTimeout(()=>{
+            getOngoingAnime(page + 1)
+        }, 50)
+      }
+      
     }
   
   } catch (error) {
@@ -65,22 +83,35 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
     if(retries > 0 && error.status === 429)
     {
       setTimeout(()=>{
-        getOngoingAnime(1, retries - 1)
+        getOngoingAnime(page, retries - 1)
       }, 1000)
     }
   }
 
   }
 
+  const processedAnime = useMemo(() => {
+  return ongoingAnime?.map((anime, index) => ({
+    ...anime,
+    // First 10 by popularity are "Popular"
+    isPopular: index < 10,
+    // Trending score over 80 is "Hot"
+    isHot: anime.trending > 80,
+    // High score is "Top Rated"
+    isTopRated: anime.averageScore > 80 
+  }));
+}, [ongoingAnime]);
+
   useEffect(() => {
     getOngoingAnime()
   }, [])
-  
-    
+
+
+
   return (
   <main id='ongoing'>
     {
-      OngoingAnime == null ?
+      ongoingAnime == null ?
       (
       <section className="p-6">
       <h2 className="text-3xl font-bold mb-4">Ongoing Anime</h2>
@@ -108,10 +139,9 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
       
     </div>
     <div className="w-[90%] mx-auto gap-5  grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
-      
       {
-        OngoingAnime?.length > 0 &&
-        OngoingAnime.map((anime, index, array) =>
+        ongoingAnime?.length > 0 &&
+        processedAnime?.map((anime, index, array) =>
         {
           if(array[index - 1]?.id != anime?.id){
             return (
@@ -125,7 +155,14 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
                   >
               <div  key={index} onClick={()=> {navigate(`/anime/${anime?.idMal}?title=${anime?.title?.romaji || ''}`);handleSetScrollPosition()}} className="w-full rounded-lg cursor-pointer relative overflow-hidden flex flex-col items-center ">
                 {/* Image */}
-                <div className='rounded-lg overflow-hidden flex-none'>
+                <div className='rounded-lg overflow-hidden flex-none relative'>
+                  {/* badge */}
+                  {anime.isHot && anime.isPopular &&
+                  <div className='absolute z-20 bg-gradient-to-br from-orange-500 via-red-600 to-red-700 border border-orange-400/30 w-30 -rotate-45 top-5 -left-7 flex justify-center text-gray-200 items-center gap-2'>
+                    <Flame width={16} className='fill-amber-50' />
+                    Hot
+                  </div>
+                  }
                 <img
                   src={anime?.coverImage?.large}
                   alt={anime?.title?.romaji}
@@ -145,7 +182,7 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
                     </h2>
                     <div className=' z-[999] w-full py-0.5 mt-2 '>
                       <div className="text-gray-300 text-start gap-2 rounded text-xs md:text-[0.8rem] line-clamp-1">
-                          {anime?.genres.slice(0,2).join(', ')}
+                          {anime?.genres?.slice(0,2).join(', ')}
                       </div>
                     </div>
                   </div>

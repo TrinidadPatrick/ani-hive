@@ -19,6 +19,7 @@ const Home = () => {
   const {topAnimes} = TopAnimeProvider()
   const scrollPosition = useScrollPosition((s) => s.scrollPosition)
   const setScrollPosition = useScrollPosition((s) => s.setScrollPosition)
+
   const handleScroll = (id) => {
     const element = document.getElementById(id);
     if (element) {
@@ -27,14 +28,14 @@ const Home = () => {
   }
 
   const handleSetScrollPosition = () => {
-    setScrollPosition(window.pageYOffset)
+    setScrollPosition({...scrollPosition, home: window.pageYOffset})
   }
 
   useEffect(() => {
-    if(scrollPosition){
+    if(scrollPosition?.home){
       setTimeout(() => {
         window.scrollTo({
-          top: scrollPosition,
+          top: scrollPosition.home,
           behavior: 'smooth'
         })
       }, 300)
