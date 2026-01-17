@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import {motion} from 'framer-motion'
 import axios from 'axios'
-import { Film, Image, Info, Mic, PictureInPicture, PictureInPictureIcon } from 'lucide-react'
+import { Film, Image, Info, Mic, PictureInPicture, PictureInPictureIcon, X } from 'lucide-react'
 import About from './TabItemsContent.jsx/About.jsx'
 import VoiceActors from './TabItemsContent.jsx/VoiceActors.jsx'
+import CharacterAnimes from './TabItemsContent.jsx/CharacterAnimes.jsx'
+import Pictures from './TabItemsContent.jsx/Pictures.jsx'
+import CharacterInfoModalSkeleton from './CharacterInfoModalSkeleton.jsx'
 
-const CharacterInfoModal = ({character}) => {
+const CharacterInfoModal = ({character, setIsOpen}) => {
     const [characterFullInfo, setCharacterFullInfo] = useState(null)
     const {mal_id} = character
 
@@ -27,10 +30,9 @@ const CharacterInfoModal = ({character}) => {
     useEffect(() => {
         getCharacterInfo()
     },[])
-
-    // console.log(characterFullInfo)
+    
     return (
-        <main onClick={(e) => e.stopPropagation()} className='fixed w-[100svw] cursor-pointer h-[100dvh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.7)]'>
+        <main onClick={(e) => e.stopPropagation()} className='fixed rounded-lg w-[100svw] cursor-pointer h-[100dvh] top-0 left-0 z-[99999999999999999] pointer-none: bg-[rgba(0,0,0,0.7)]'>
             <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -40,13 +42,20 @@ const CharacterInfoModal = ({character}) => {
                 damping: 25, 
                 stiffness: 300 
                 }}
-                className='bg-themeDarker border flex flex-col border-themeLightDark rounded-lg shadow-2xl absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+                className='bg-themeDarker w-[90%] sm:max-w-4xl border flex flex-col border-themeLightDark rounded-lg shadow-2xl absolute z-[99999999999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
             >
                 {/* Image container */}
-                <section className='w-xl aspect-video bg-red-100 flex overflow-hidden'>
-                    <img src={characterFullInfo?.images.jpg.image_url} className='object-cover w-full' />
-                </section>
-                <Tabs character={characterFullInfo} />
+                {
+                    characterFullInfo === null ? <CharacterInfoModalSkeleton /> :
+                    <>
+                    <section className='w-full h-[350px] flex overflow-hidden relative'>
+                        <button onClick={()=>setIsOpen(false)} className='absolute z-10 top-1 right-1 p-2 rounded-full bg-themeDarkest/20 hover:bg-themeDark/10 cursor-pointer text-white'><X /></button>
+                        <img src={characterFullInfo?.images?.jpg?.image_url} alt={characterFullInfo?.name} className='object-cover w-full brightness-30 blur-xs opacity-50' />
+                        <img src={characterFullInfo?.images?.jpg?.image_url} className='w-45 rounded-lg absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2' />
+                    </section>
+                    <Tabs character={characterFullInfo} />
+                    </>
+                }
             </motion.div>
         </main>
     )
@@ -57,20 +66,20 @@ const Tabs = ({character}) => {
         {label: 'About', value: 'about', icon: Info},
         {label: 'Voice Actors', value: 'voices', icon: Mic},
         {label: 'Anime', value: 'anime', icon: Film},
-        {label: 'Pictures', value: 'picures', icon: Image}
+        {label: 'Pictures', value: 'pictures', icon: Image}
     ]
 
     const [selectedTab, setSelectedTab] = useState('about')
 
     return (
     <section className='flex flex-col'>
-        <ul className='w-full flex gap-3 mt-1 p-2 border-b border-themeLightDark'>
+        <ul className='w-full flex gap-5 mt-1 p-2 border-b border-themeLightDark'>
             {
                 tabItems.map((item, index) => {
                     return (
-                        <li onClick={()=>setSelectedTab(item.value)} className='text-gray-400 flex gap-1'>
+                        <li onClick={()=>setSelectedTab(item.value)} className={`${selectedTab === item.value ? 'text-pink-600 font-semibold bg-themeDarkest border-b-2 border-pink-600' : 'text-gray-400'} flex gap-1`}>
                             <item.icon width={15} />
-                            <span>{item.label}</span>
+                            <span className='text-sm'>{item.label}</span>
                         </li>
                     )
                 })
@@ -84,10 +93,12 @@ const Tabs = ({character}) => {
 const TabItems = ({tab, character}) => {
 
     return (
-    <section className='w-full max-h-[200px] overflow-y-auto recoList p-3'>
+    <section className='w-full max-h-[300px] overflow-y-auto recoList p-3'>
         {
             tab === 'about' ? <About content={character[tab]} nicknames={character.nicknames} /> :
-            tab === 'voices' && <VoiceActors content={character[tab]} />
+            tab === 'voices' ? <VoiceActors content={character[tab]} /> :
+            tab === 'anime' ? <CharacterAnimes content={character[tab]} /> :
+            tab === 'pictures' && <Pictures content={character[tab]} />
         }
     </section>
     )

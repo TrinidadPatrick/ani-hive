@@ -43,7 +43,7 @@ const CharacterCard = ({ character }) => {
             </h2>
             </div>
         </div>
-        {isOpen && <CharacterInfoModal character={character} />}
+        {isOpen && <CharacterInfoModal character={character} setIsOpen={setIsOpen} />}
     </div>
     );
 };
