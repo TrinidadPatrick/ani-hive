@@ -265,7 +265,7 @@ const Explore = () => {
             {
               if(array[index - 1]?.mal_id != anime?.mal_id){
                 return (
-                  <div key={index} onClick={()=> {setScrollPosition({...scrollPosition, explore: window.pageYOffset});navigate('/anime/'+anime?.mal_id)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
+                  <div key={index} onClick={()=> {setScrollPosition({...scrollPosition, explore: window.pageYOffset});navigate(`/anime/${anime?.mal_id}?title=${anime.title}`)}} className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center">
                     <div className="w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-0">
                       <div className="w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>
                       <svg
