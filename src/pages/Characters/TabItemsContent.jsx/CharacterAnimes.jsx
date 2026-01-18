@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom'
 const CharacterAnimes = ({content}) => {
     const navigate = useNavigate()
     return (
-        <div className='flex-1 gap-2 grid grid-cols-3'>
+        <div className='flex-1 gap-2 grid grid-cols-2 sm:grid-cols-3'>
             {
                 content.map((anime, index) => {
                     return (
                         <div onClick={() => navigate(`/anime/${anime.anime.mal_id}?title=${anime.anime.title}`)} key={index} className='flex flex-col'>
                             {/* Image container */}
-                            <div className='flex flex-col aspect-video overflow-hidden rounded'>
+                            <div className='flex flex-col aspect-[2/3] overflow-hidden rounded'>
                                 <img src={anime.anime.images.jpg.image_url} className='object-center object-cover w-full h-full hover:scale-105' />
                             </div>
                             <div className='mt-1'>

@@ -73,13 +73,13 @@ const Tabs = ({character}) => {
 
     return (
     <section className='flex flex-col'>
-        <ul className='w-full flex gap-5 mt-1 p-2 border-b border-themeLightDark'>
+        <ul className='w-full flex gap-5 mt-1 p-2 border-b border-themeLightDark items-center'>
             {
                 tabItems.map((item, index) => {
                     return (
-                        <li onClick={()=>setSelectedTab(item.value)} className={`${selectedTab === item.value ? 'text-pink-600 font-semibold bg-themeDarkest border-b-2 border-pink-600' : 'text-gray-400'} flex gap-1`}>
+                        <li onClick={()=>setSelectedTab(item.value)} className={`${selectedTab === item.value ? 'text-pink-600 font-semibold bg-themeDarkest border-b-2 border-pink-600' : 'text-gray-400'} flex gap-1 items-center`}>
                             <item.icon width={15} />
-                            <span className='text-sm'>{item.label}</span>
+                            <span className='text-xs sm:text-sm'>{item.label}</span>
                         </li>
                     )
                 })

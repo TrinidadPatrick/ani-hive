@@ -3,7 +3,7 @@ import React from 'react'
 const About = ({content, nicknames}) => {
   return (
     <div className=''>
-        <h3 className='font-medium text-lg text-gray-300'>Nicknames</h3>
+        {nicknames?.length > 0 && <h3 className='font-medium text-lg text-gray-300'>Nicknames</h3>}
         <div className='flex items-center gap-2 w-full overflow-x-auto flex-wrap'>
             {
                 nicknames.length > 0 && 
