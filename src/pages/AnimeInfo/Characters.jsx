@@ -51,7 +51,7 @@ const Characters = ({mal_id}) => {
                 <Swiper
                 modules={[FreeMode, Navigation]}
                 // freeMode={true}
-                spaceBetween={20}
+                spaceBetween={10}
                 slidesPerView={2}
                 slidesPerGroup={1}  grabCursor={true}
                 navigation={{
@@ -64,14 +64,10 @@ const Characters = ({mal_id}) => {
                 }}
                 breakpoints={{
                 0: {
-                    slidesPerView: 2,
+                    slidesPerView: 3,
                     slidesPerGroup: 3,
                 },
                 481: {
-                    slidesPerView: 3,
-                    slidesPerGroup: 4,
-                },
-                630: {
                     slidesPerView: 4,
                     slidesPerGroup: 4,
                 },
@@ -107,7 +103,7 @@ const Characters = ({mal_id}) => {
                     <div className={`sm:peer-hover:rotate-y-180 transform duration-300 ease-in-out delay-75 relative h-fit overflow-hidden rounded-lg`}>
                     <div className={`${hovered == index ? 'sm:rotate-y-180' : ''} w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-1`}>
                     <div className=" w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>
-                    <p className="z-[9999] mt-[1px] text-sm">{char?.role}</p>
+                    <p className="z-[9999] mt-[1px] text-xs sm:text-sm">{char?.role}</p>
                     </div>
                         {/* Image */}
                         <div className="w-full  h-fit rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">

@@ -54,10 +54,6 @@ const RelatedAnime = () => {
                     slidesPerView: 3,
                     slidesPerGroup: 3,
                     },
-                    481: {
-                    slidesPerView: 4,
-                    slidesPerGroup: 4,
-                    },
                     630: {
                     slidesPerView: 4,
                     slidesPerGroup: 4,
