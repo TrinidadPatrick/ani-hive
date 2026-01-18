@@ -6,9 +6,11 @@ import 'swiper/css/navigation';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import useSmallScreen from '../../utils/useSmallScreen';
+import { useSearchParams } from 'react-router-dom';
 
 
 const Characters = ({mal_id}) => {
+    const [searchParams, setSearchParams] = useSearchParams()
     const isSmallScreen = useSmallScreen()
 
     const [characters, setCharacters] = useState(null)
@@ -16,6 +18,8 @@ const Characters = ({mal_id}) => {
 
     const prevRef = useRef(null);
     const nextRef = useRef(null);
+
+    const va = searchParams.get('va') || ''
 
     const getCharacters = async(mal_id, retries = 10) => {
         try {
@@ -97,9 +101,9 @@ const Characters = ({mal_id}) => {
                     onMouseLeave={()=>{!isSmallScreen && setTimeout(()=>{setHovered(-1)}, 150)}}
                     onClick={()=>{isSmallScreen && setTimeout(()=>{hovered === index ? setHovered(-1) : setHovered(index)}, 150)}}
                     style={{ width: '195px', height: 'auto' }} // or use fixed or dynamic width based on screen
-                    className={`sm:peer-hover:rotate-y-180 transform duration-300 ease-in-out delay-75 h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer`}
+                    className={` sm:peer-hover:rotate-y-180 transform duration-300 ease-in-out delay-75 h-full md:h-[40svh] px-0 flex items-center justify-center cursor-pointer`}
                     >
-                        <div className='w-full h-full top-0 absolute bg-transparent peer z-[9999999999999]'></div>
+                        <div className={`${char.character.mal_id == va && 'border-2 border-pink-600 shadow-[0_0_15px_rgba(219,39,119,0.5)]'} w-full h-full top-0 absolute bg-transparent peer z-[9999999999999] rounded-lg overflow-hidden`}></div>
                     <div className={`sm:peer-hover:rotate-y-180 transform duration-300 ease-in-out delay-75 relative h-fit overflow-hidden rounded-lg`}>
                     <div className={`${hovered == index ? 'sm:rotate-y-180' : ''} w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-1`}>
                     <div className=" w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>

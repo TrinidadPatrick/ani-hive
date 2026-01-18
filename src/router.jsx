@@ -9,6 +9,7 @@ import MalCallback from './pages/AuthCallback/MalCallback'
 import PrivateLayout from './pages/Layout/PrivateLayout.jsx'
 import AnimeList from './pages/Private/AnimeList/AnimeList.jsx'
 import PageNotFound from './components/ErrorHandlerComponent/PageNotFound.jsx'
+import VoiceActorDetails from './pages/VoiceActor/VoiceActorDetails.jsx'
 
 const router = createBrowserRouter([
     {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
             {
                 path: '/anime/:id',
                 element: <AnimeOverView />
+            },
+            {
+                path: '/voice-actor/:id',
+                element: <VoiceActorDetails />
             },
 
             // Private Route
