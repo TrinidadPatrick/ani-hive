@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import chibi from '../images/chibi.gif'
+import chibi from '../images/chibiV2.gif'
 
 const Chibi = ({handleScroll}) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -8,11 +8,11 @@ const Chibi = ({handleScroll}) => {
         <div 
         onMouseEnter={()=> setIsOpen(true)}
         onMouseLeave={()=> setIsOpen(false)}
-        className='fixed w-[150px]  group aspect-square cursor-pointer bottom-2 right-0 z-[999999999]'>
+        className='fixed w-[80px] sm:w-[100px]  group aspect-square cursor-pointer bottom-2 right-0 z-[999999999]'>
             <img src={chibi} alt="chibi" className=' w-full h-full object-cover ' />
                 {
                     isOpen &&
-                <div className="absolute bottom-[75%] left-1/4 transform -translate-x-1/2">
+                <div className="absolute bottom-[100%] left-1/4 transform -translate-x-1/2">
                     <div className="relative bg-themeDark border py-2 border-themeLightDark text-sm flex flex-col gap-3 text-white px-3 rounded-lg shadow-lg origin-bottom">
                         <button onClick={() => {handleScroll('top');setIsOpen(false)}} className="whitespace-nowrap text-start cursor-pointer hover:text-gray-200">Top Section</button>
                         <button onClick={() => {handleScroll('top-animes');setIsOpen(false)}} className="whitespace-nowrap text-start cursor-pointer hover:text-gray-200">Top Rated Animes</button>
