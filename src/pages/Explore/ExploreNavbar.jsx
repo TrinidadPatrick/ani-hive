@@ -1,7 +1,7 @@
 import { useState } from "react";
 import OutsideClickHandler from 'react-outside-click-handler';
 import useScrollPosition from "../../stores/ScrollPositionStore";
-import { X } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 const ExploreNavbar = (props) => {
   const {selectedSortItem,setSelectedGenres,setShowOtherFilter, otherFilters, setSearching, setShowSort,sortItems, setSelectedStatus, setSelectedSeason, setSelectedYear, setSelectedType,otherRefs, setSelectedSortItem, searchValue, selectedGenres, showState, setShowState, genres, themes, selectedStatus, status, showSort, showOtherFilter, setSearchValue, handleSearch, selectedSeason,selectedYear, selectedType} = props
@@ -91,15 +91,15 @@ const ExploreNavbar = (props) => {
             {/* Search Bar */}
             <div className='flex w-full gap-3 items-center relative'>
               <button onClick={()=>{handleHideDropdowns();setSearching(true);setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}} className="text-gray-400 absolute left-3 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"><g fill="none" stroke="#99a1af" strokeLinejoin="round" strokeWidth="4"><path d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z"/><path strokeLinecap="round" d="M26.657 14.343A7.98 7.98 0 0 0 21 12a7.98 7.98 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485"/></g></svg>
+                <Search width={17} />
               </button>
-              <input onClick={handleHideDropdowns} onKeyDown={(e)=>{if(e.key === 'Enter') {handleHideDropdowns();setSearching(true);setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}}} value={searchValue} onChange={(e)=>{setSearchValue(e.target.value)}} type="text" className=" outline-0 w-full ps-10 h-10 bg-themeDarker border border-themeDark rounded-lg text-white placeholder:text-gray-400 placeholder:text-sm" placeholder="Search anime..." />
+              <input onClick={handleHideDropdowns} onKeyDown={(e)=>{if(e.key === 'Enter') {handleHideDropdowns();setSearching(true);setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}}} value={searchValue} onChange={(e)=>{setSearchValue(e.target.value)}} type="text" className=" outline-0 w-full ps-10 h-10 bg-themeDark border border-themeDark rounded-lg text-white placeholder:text-gray-400 placeholder:text-sm" placeholder="Search anime..." />
               <button onClick={()=>{handleHideDropdowns();setSearching(true);setSearchValue('');setScrollPosition({...scrollPosition, explore : null});handleSearch('', selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}} className={`text-gray-400 absolute right-3 ${searchValue.length === 0 && 'hidden'} cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200`}>
                 <X width={17} />
               </button>
             </div>
             {/* Genre */}
-            <div className='hidden sm:flex w-full items-center relative bg-themeDarker border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
+            <div className='hidden sm:flex w-full items-center relative bg-themeDark border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
               <div onClick={()=>{setShowState(showState === 'genre' ? '' : 'genre');setShowSort(false);setShowOtherFilter(false)}} className=' overflow-hidden cursor-pointer relative p-1 flex  items-center w-full h-full '>
               <p className='truncate ps-2 text-gray-400 whitespace-nowrap'>Genre</p>
               <button className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
@@ -124,7 +124,7 @@ const ExploreNavbar = (props) => {
               </div>
             </div>
             {/* Theme */}
-            <div className='hidden md:flex w-full items-center relative bg-themeDarker border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
+            <div className='hidden md:flex w-full items-center relative bg-themeDark border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
               <div onClick={()=>{setShowState(showState === 'theme' ? '' : 'theme');setShowSort(false);setShowOtherFilter(false)}} className='cursor-pointer relative p-1 flex  items-center w-full h-full '>
               <p className='ps-2 text-gray-400'>Theme</p>
               <button className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
@@ -150,7 +150,7 @@ const ExploreNavbar = (props) => {
               </div>
             </div>
             {/* Status */}
-            <div className='w-full hidden lg:flex items-center relative bg-themeDarker border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
+            <div className='w-full hidden lg:flex items-center relative bg-themeDark border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
               <div onClick={()=>{setShowState(showState === 'status' ? '' : 'status');setShowSort(false);setShowOtherFilter(false)}} className='cursor-pointer relative p-1 flex  items-center w-full h-full '>
               <p className='ps-2 text-gray-400'>{selectedStatus == '' ? 'Status' : selectedStatus}</p>
               <button className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
@@ -175,7 +175,7 @@ const ExploreNavbar = (props) => {
             </div>
     
             {/* Sort */}
-            <div className='flex w-fit px-1 items-center relative bg-themeDarker border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
+            <div className='flex w-fit px-1 items-center relative bg-themeDark border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
               <div onClick={()=>{setShowSort(!showSort);setShowState(false);setShowOtherFilter(false)}} className='cursor-pointer z-[99999999999] relative p-1 flex  items-center w-full h-full '>
               <button className="text-white right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
               {/* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="lightgray" strokeLinecap="round" strokeMiterlimit="10" strokeWidth="1.5" d="M21.25 12H8.895m-4.361 0H2.75m18.5 6.607h-5.748m-4.361 0H2.75m18.5-13.214h-3.105m-4.361 0H2.75m13.214 2.18a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm-9.25 6.607a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm6.607 6.608a2.18 2.18 0 1 0 0-4.361a2.18 2.18 0 0 0 0 4.36Z"/></svg> */}
@@ -211,7 +211,7 @@ const ExploreNavbar = (props) => {
             </div>
     
             {/* Other Filter */}
-            <div className='flex w-fit px-1 items-center relative bg-themeDarker border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
+            <div className='flex w-fit px-1 items-center relative bg-themeDark border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
               <div onClick={()=>{setShowOtherFilter(!showOtherFilter);setShowState(false);setShowSort(false)}} className='cursor-pointer z-[99999999999] relative p-1 flex  items-center w-full h-full '>
               <button className="text-white right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="lightgray" strokeLinecap="round" strokeMiterlimit="10" strokeWidth="1.5" d="M21.25 12H8.895m-4.361 0H2.75m18.5 6.607h-5.748m-4.361 0H2.75m18.5-13.214h-3.105m-4.361 0H2.75m13.214 2.18a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm-9.25 6.607a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm6.607 6.608a2.18 2.18 0 1 0 0-4.361a2.18 2.18 0 0 0 0 4.36Z"/></svg>

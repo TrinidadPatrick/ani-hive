@@ -98,27 +98,24 @@ const UserLayout = () => {
 
           {/* Sidebar Search */}
           <div className={`${path === '/explore' && 'hidden'} w-[80%] flex mx-auto justify-center`}>
-            <div className="w-full max-w-sm min-w-[200px] flex">
+            <div className="w-full max-w-sm min-w-[200px] flex gap-2">
               <ImageSearch />
               <div className="relative w-full">
-                <input
-                  onKeyDown={(e) => { if (e.key === 'Enter' && searchinput?.length !== 0) handleSearch(); }}
-                  value={searchinput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  className="w-full bg-transparent placeholder:text-slate-400 text-gray-200 text-sm border border-slate-400 rounded-md pl-3 pr-28 py-2 focus:outline-none focus:border-slate-400 shadow-sm"
-                  placeholder="Search anime"
-                />
-                <button
-                  onClick={() => { if (searchinput?.length !== 0) handleSearch(); }}
-                  className="absolute top-1 right-1 flex items-center rounded py-1.5 px-2.5 text-white bg-pink-600 hover:bg-pink-500"
-                  type="button"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                    <path fillRule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clipRule="evenodd" />
-                  </svg>
-                  <span className="hidden ml-2">Search</span>
-                </button>
-              </div>
+              <input
+                onKeyDown={(e) => { if (e.key === 'Enter' && searchinput?.length !== 0) handleSearch(); }}
+                value={searchinput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="w-full text-gray-200 text-sm rounded-full bg-themeDark pl-10 sm:pr-14 lg:pr-28 py-2 focus:outline-none transition duration-300 placeholder:text-gray-400"
+                placeholder="Search anime..."
+              />
+              <button
+                onClick={() => { if (searchinput?.length !== 0) handleSearch(); }}
+                className="cursor-pointer absolute top-0 left-1 flex items-center justify-center rounded py-1.5 px-2.5 text-gray-400 hover:text-gray-200 transition-all"
+                type="button"
+              >
+                <SearchIcon className='' width={16} />
+              </button>
+            </div>
             </div>
           </div>
 
@@ -171,16 +168,16 @@ const UserLayout = () => {
         {/* Desktop Links */}
         <ul className="w-full hidden md:flex text-white justify-end gap-5 lg:gap-10 pe-10 z-10">
           <li>
-            <button onClick={() => navigate('/')} className={`${path === '/' || path.startsWith('/anime/') ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer text-sm lg:text-base`}>Home</button>
+            <button onClick={() => navigate('/')} className={`${path === '/' || path.startsWith('/anime/') ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-gray-300 font-sans'} cursor-pointer text-sm lg:text-base`}>Home</button>
           </li>
           <li>
-            <button onClick={() => navigate('/schedule')} className={`${path === '/schedule' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer text-sm lg:text-base`}>Schedule</button>
+            <button onClick={() => navigate('/schedule')} className={`${path === '/schedule' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-gray-300 font-sans'} cursor-pointer text-sm lg:text-base`}>Schedule</button>
           </li>
           <li>
-            <button onClick={() => navigate('/explore')} className={`${path === '/explore' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer text-sm lg:text-base`}>Explore</button>
+            <button onClick={() => navigate('/explore')} className={`${path === '/explore' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-gray-300 font-sans'} cursor-pointer text-sm lg:text-base`}>Explore</button>
           </li>
           <li>
-            <button onClick={() => navigate('/characters')} className={`${path === '/characters' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-white'} cursor-pointer text-sm lg:text-base`}>Characters</button>
+            <button onClick={() => navigate('/characters')} className={`${path === '/characters' ? 'border-b-2 border-b-pink-500 text-pink-500 font-bold' : 'text-gray-300 font-sans'} cursor-pointer text-sm lg:text-base`}>Characters</button>
           </li>
         </ul>
 
@@ -209,7 +206,7 @@ const UserLayout = () => {
 
         <MalProfileDropdown />
 
-        <button onClick={() => setShowSidebar(!showSidebar)} className="md:hidden h-full bg-pink-500 px-1 py-0.5 rounded">
+        <button onClick={() => setShowSidebar(!showSidebar)} className="md:hidden h-full bg-pink-500 px-1 py-0.5 rounded z-10">
           <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 16 16">
             <path fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5" />
           </svg>
@@ -223,7 +220,6 @@ const UserLayout = () => {
       ) : (
         <Outlet />
       )}
-      <ScrollRestoration />
     </main>
   );
 };
