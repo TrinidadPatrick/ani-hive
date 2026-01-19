@@ -25,7 +25,7 @@ const MalProfileDropdown = () => {
     }
 
     return (
-    <div className='relative'>
+    <div className='relative h-9 flex-1 flex flex-col'>
         {
             authenticated === true ?
             (

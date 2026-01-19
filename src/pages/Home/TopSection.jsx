@@ -84,7 +84,7 @@ const TopSection = ({topAnimes}) => {
               <img
                 src={topAnime?.images?.webp.large_image_url}
                 alt={topAnime?.title}
-                className="absolute w-full h-full object-cover brightness-20 opacity-70"
+                className="absolute w-full h-full object-cover brightness-50 opacity-80"
               />
 
               {/* Overlay (blur + tint) */}
@@ -95,7 +95,7 @@ const TopSection = ({topAnimes}) => {
                 <div className=" flex-1 space-y-5 p-3 md:p-0">
                   <div className='flex flex-col'>
                   <p className='text-pink-500'>#1 Anime</p>
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">{topAnime?.title}</h1>
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white max-w-lg ">{topAnime?.title}</h1>
                     <div className='mt-4 flex gap-3 text-white'>
                       <div className='flex gap-2 items-center'>
                         <Star width={17} className='text-amber-300 fill-amber-300' />

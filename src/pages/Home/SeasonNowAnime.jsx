@@ -107,7 +107,7 @@ const SeasonNowAnime = ({handleSetScrollPosition}) => {
               <img
                 src={anime?.images?.webp.large_image_url}
                 alt={anime?.title || "anime"}
-                className="absolute w-full h-full object-cover brightness-20 opacity-70"
+                className="absolute w-full h-full object-cover brightness-50 opacity-80"
               />
             
               {/* Overlay (blur + tint) */}

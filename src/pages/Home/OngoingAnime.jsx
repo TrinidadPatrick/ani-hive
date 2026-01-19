@@ -132,13 +132,14 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
       :
       (
         <section className='w-full bg-themeExtraDarkBlue py-10'>
-      <div className="w-[95%] md:w-[90%] mx-auto">
-      <h1  className="text-2xl md:text-3xl font-bold text-white">Ongoing Anime</h1>
-      <div className='flex justify-between'>
-          <p  className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes streaming this season</p>
-      </div>
+        <div className="w-[95%] md:w-[90%] mx-auto flex gap-2 items-center">
+          <div className='w-1 h-13 bg-pink-600' />
+        <div className='flex flex-col'>
+            <h1  className="text-2xl md:text-3xl font-bold text-white">Ongoing Anime</h1>
+            <p  className="text-gray-400 mt-1 text-sm md:text-basetext-white">Animes streaming this season</p>
+        </div>
       
-    </div>
+      </div>
     <div className="w-[90%] mx-auto gap-5  grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
       {
         ongoingAnime?.length > 0 &&

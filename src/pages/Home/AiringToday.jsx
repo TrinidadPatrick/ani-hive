@@ -75,13 +75,13 @@ const AiringToday = ({ handleSetScrollPosition }) => {
         </div>
       ) : (
         <section className="w-full h-fit flex flex-col items-center justify-center bg-themeExtraDarkBlue py-10">
-          <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3">
-            <h1 className="text-2xl md:text-3xl font-bold text-white">
-              Airing Today
-            </h1>
-
-            <div className="flex justify-between">
-              <p className="text-gray-400 mt-1 text-sm md:text-base ">
+          <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3 flex items-center gap-2">
+              <div className='w-1 h-13 bg-pink-600' />
+            <div className="flex flex-col">
+              <h1 className="text-2xl md:text-3xl font-bold text-white">
+                Airing Today
+              </h1>
+              <p className="text-gray-400 text-sm md:text-base ">
                 Animes currently or will be airing today
               </p>
             </div>

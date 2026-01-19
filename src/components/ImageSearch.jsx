@@ -87,7 +87,7 @@ const ImageSearch = () => {
     }
 
   return (
-    <div className='flex items-center px-2 mx-1 cursor-pointer bg-pink-600 rounded hover:bg-pink-500'>
+    <div className='flex items-center h-full aspect-square justify-center cursor-pointer bg-themeDark rounded-full z-10 '>
         {
           isSearching ? (
             <button title='Search by image' className='cursor-pointer '>
@@ -97,7 +97,7 @@ const ImageSearch = () => {
           :
           (
             <button title='Search by image' onClick={()=>fileInputRef.current.click()} className='cursor-pointer '>
-              <Camera color='white' />
+              <Camera color='white' width={16} />
             </button>
           )
         }

@@ -43,22 +43,35 @@ const AnimeMovies = ({handleSetScrollPosition}) => {
       )
       :
       (
-        <section className="w-full h-full md:h-[65svh] bg-themeExtraDarkBlue py-10">
-    <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3">
-      <h1 className="text-2xl md:text-3xl font-bold text-white">Anime movies</h1>
-      <div className='flex justify-between'>
-          <p className="text-gray-400 mt-1 text-sm md:text-basetext-white">Popular movies you may like</p>
-          <button onClick={()=>{handleSetScrollPosition();navigate('/explore?type=Movie&page=1')}} data-aos="fade-left" className='cursor-pointer hover:text-gray-200 text-sm md:text-base text-white'>See all</button>
-      </div>
-      
-    </div>
-    <div className=' relative'>
-      <button ref={prevRef} className=" cursor-pointer hover:text-gray-400 swiper-button-prev-custom hidden lg:block absolute left-5 z-10 top-1/2 -translate-y-1/2 text-white text-2xl px-2">
-        ◀
-      </button>
-      <button ref={nextRef} className=" cursor-pointer hover:text-gray-400 swiper-button-next-custom hidden lg:block absolute right-5 z-10 top-1/2 -translate-y-1/2 text-white text-2xl px-2">
-        ▶
-      </button>
+        <section className="w-full h-full md:h-[65svh] bg-themeExtraDarkBlue py-10">  
+        <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3 flex items-center gap-2">
+              <div className='w-1 h-13 bg-pink-600' />
+            <div className='flex-1'>
+              <h1 className="text-2xl md:text-3xl font-bold text-white">
+                Anime movies
+              </h1>
+
+              <p className="text-gray-400 mt-1 text-sm md:text-base ">
+                Popular movies you may like
+              </p>
+            </div>
+            <div className="flex justify-between">
+              <button
+                data-aos="fade-left"
+                onClick={()=>{handleSetScrollPosition();navigate('/explore?type=Movie&page=1')}}
+                className="text-sm md:text-base text-white cursor-pointer hover:text-gray-300"
+              >
+                See all
+              </button>
+            </div>
+          </div>
+          <div className=' relative'>
+            <button ref={prevRef} className=" cursor-pointer hover:text-gray-400 swiper-button-prev-custom hidden lg:block absolute left-5 z-10 top-1/2 -translate-y-1/2 text-white text-2xl px-2">
+              ◀
+            </button>
+            <button ref={nextRef} className=" cursor-pointer hover:text-gray-400 swiper-button-next-custom hidden lg:block absolute right-5 z-10 top-1/2 -translate-y-1/2 text-white text-2xl px-2">
+              ▶
+            </button>
     <Swiper
     modules={[FreeMode, Navigation]}
     spaceBetween={20}
@@ -158,8 +171,8 @@ const AnimeMovies = ({handleSetScrollPosition}) => {
       }
       
     </Swiper>
-    </div>
-        </section>
+          </div>
+      </section>
       )
     }
     
