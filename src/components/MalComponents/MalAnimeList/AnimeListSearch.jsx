@@ -127,14 +127,14 @@ const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType,
                 >
                 <div className=''>
                     <button onClick={()=>setIsOpen(false)} className='text-white absolute right-5 cursor-pointer hover:text-gray-300'><X width={17} /></button>
-                    <h2 className='font-bold text-xl text-white text-center pb-3'>Select Filter</h2>{selectedGenres.join("")}
+                    <h2 className='font-bold text-xl text-white text-center pb-3'>Select Filter</h2>
                     <div ref={ref} className='flex flex-col gap-2 w-fit'>
                       {/* Genres */}
                       <div className='flex gap-1 sm:gap-2 items-center'>
                         <h3 className='text-white font-medium w-14 sm:w-20 text-xs sm:text-base'>Genre</h3>
                         <span className='text-white'> - </span>
                           <div className=' relative'>
-                            <button onClick={()=>setDropdownOpen(dropdownOpen === 'genre' ? '' : 'genre')} className='bg-themeDarker border border-themeLightDark hover:bg-themeDark/30 cursor-pointer flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-xs sm:text-sm'>{genres[0]?.name} <ChevronDown className='text-white' width={17} /></button>
+                            <button onClick={()=>setDropdownOpen(dropdownOpen === 'genre' ? '' : 'genre')} className='bg-themeDarker border border-themeLightDark hover:bg-themeDark/30 cursor-pointer flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-xs sm:text-sm'>{selectedGenres[0] || 'genre'}<ChevronDown className='text-white' width={17} /></button>
                             <div className={`z-90 ${dropdownOpen === 'genre' ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
                               {
                                 genres.length !== 0 && genres.map((genre, index) => {
@@ -154,7 +154,7 @@ const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType,
                         <h3 className='text-white font-medium w-14 sm:w-20 text-xs sm:text-base'>Themes</h3>
                         <span className='text-white'> - </span>
                           <div className=' relative'>
-                            <button onClick={()=>setDropdownOpen(dropdownOpen === 'theme' ? '' : 'theme')} className='bg-themeDarker border border-themeLightDark hover:bg-themeDark/30 cursor-pointer flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-xs sm:text-sm'>{themes[0]?.name} <ChevronDown className='text-white' width={17} /></button>
+                            <button onClick={()=>setDropdownOpen(dropdownOpen === 'theme' ? '' : 'theme')} className='bg-themeDarker border border-themeLightDark hover:bg-themeDark/30 cursor-pointer flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-xs sm:text-sm'>themes<ChevronDown className='text-white' width={17} /></button>
                             <div className={`z-90 ${dropdownOpen === 'theme' ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
                               {
                                 themes.length !== 0 && themes.map((theme, index) => {
