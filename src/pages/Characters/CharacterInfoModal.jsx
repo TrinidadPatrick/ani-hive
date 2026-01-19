@@ -77,7 +77,7 @@ const Tabs = ({character}) => {
             {
                 tabItems.map((item, index) => {
                     return (
-                        <li onClick={()=>setSelectedTab(item.value)} className={`${selectedTab === item.value ? 'text-pink-600 font-semibold bg-themeDarkest border-b-2 border-pink-600' : 'text-gray-400'} flex gap-1 items-center`}>
+                        <li key={index} onClick={()=>setSelectedTab(item.value)} className={`${selectedTab === item.value ? 'text-pink-600 font-semibold bg-themeDarkest border-b-2 border-pink-600' : 'text-gray-400'} flex gap-1 items-center`}>
                             <item.icon width={15} />
                             <span className='text-xs sm:text-sm'>{item.label}</span>
                         </li>

@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react'
 import Footer from '../Home/Footer'
 import useErrorHandler from '../../stores/FetchErrorHandler.js'
 import CharacterCard from './CharacterCard.jsx'
+import { Search, X } from 'lucide-react'
 
 const Characters = () => {
     const setErrorStatus = useErrorHandler((s) => s.setErrorStatus)
@@ -28,7 +29,7 @@ const Characters = () => {
         []
     );
 
-    const getCharacters = async (page , searchValue,option, retries = 0) => {
+    const getCharacters = async (page , searchValue, option, retries = 0) => {
         setSearching(true)
         try {
             const result = await axios.get(`https://api.jikan.moe/v4/characters?q=${searchValue || ''}&page=${page || 1}&order_by=favorites&sort=desc`)
@@ -51,6 +52,7 @@ const Characters = () => {
         getCharacters(page, searchValue, 1)
     },[page])
 
+    console.log(searching)
   return (
     <main className='flex flex-col pt-20 bg-themeExtraDarkBlue min-h-[100svh] gap-5'>
         <div className='flex flex-col sm:flex-row w-[90%] mx-auto'>
@@ -59,14 +61,29 @@ const Characters = () => {
             <p className='text-gray-400 text-start text-sm'>Popular characters in the anime industry</p>
         </div>
         <div className='flex w-full mt-3 sm:mt-0 sm:w-[340px] gap-3 items-center relative'>
-          <input onKeyDown={(e)=>{if(e.key === 'Enter'){getCharacters(1, e.target.value, 2)}}} value={searchValue} onChange={(e)=>{setSearchValue(e.target.value)}} type="text" className=" outline-0 w-full ps-2 h-10 bg-gray-800 rounded-lg text-white" placeholder="Search..." />
-          <button className="text-white absolute right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48"><g fill="none" stroke="lightGray" strokeLinejoin="round" strokeWidth="4"><path d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z"/><path strokeLinecap="round" d="M26.657 14.343A7.98 7.98 0 0 0 21 12a7.98 7.98 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485"/></g></svg>
+          <input onKeyDown={(e)=>{if(e.key === 'Enter'){getCharacters(1, e.target.value, 2)}}} value={searchValue} onChange={(e)=>{setSearchValue(e.target.value)}} type="text" 
+          className=" outline-0 w-full ps-9 h-10 bg-themeDarker border border-themeLightDark rounded-lg text-white placeholder:text-gray-400 text-sm" placeholder="Search character" />
+          <button onClick={()=>getCharacters(1, searchValue, 2)} className="text-white absolute left-3 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
+            <Search width={17} className='text-gray-400' /> 
+          </button>
+          <button onClick={()=>{setSearchValue('');getCharacters(1, '', 2)}} className="text-white absolute right-3 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
+            <X width={17} className='text-gray-400' /> 
           </button>
         </div>
         </div>
         <div className='w-[90%] relative mx-auto flex-1 gap-5 grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7'>
-            {
+            {   
+                searching ? 
+                Array.from({ length: 10 }, (_, index) => index + 7).map((page, index) => {
+                    return (
+                    <div  key={index} className="w-[140px] sm:w-[160px] md:w-[180px] animate-pulse">
+                        <div className="relative w-full h-[210px] sm:h-[230px] md:h-[260px] bg-gray-700 rounded-md"></div>
+                        <div className="mt-2 h-4 w-3/4 bg-gray-600 rounded"></div>
+                        <div className="mt-1 h-4 w-1/2 bg-gray-600 rounded"></div>
+                    </div>
+                    )
+                })
+                :
                 characters?.length > 0 &&
                 characters.map((character, index, array) =>
                 {
@@ -102,20 +119,9 @@ const Characters = () => {
                         )
                     }else{
                         return (
-                            <CharacterCard key={character.mal_id} character={character} />
+                            <CharacterCard key={`${character.mal_id}-${index}`} character={character} />
                         )
                     }
-                })
-            }
-            {
-                searching && Array.from({ length: 10 }, (_, index) => index + 7).map((page, index) => {
-                    return (
-                    <div  key={index} className="w-[140px] sm:w-[160px] md:w-[180px] animate-pulse">
-                        <div className="relative w-full h-[210px] sm:h-[230px] md:h-[260px] bg-gray-700 rounded-md"></div>
-                        <div className="mt-2 h-4 w-3/4 bg-gray-600 rounded"></div>
-                        <div className="mt-1 h-4 w-1/2 bg-gray-600 rounded"></div>
-                    </div>
-                    )
                 })
             }
         </div>

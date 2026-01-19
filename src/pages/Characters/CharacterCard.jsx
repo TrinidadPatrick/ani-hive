@@ -1,8 +1,8 @@
 import { Star } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import CharacterInfoModal from './CharacterInfoModal.jsx';
 
-const CharacterCard = ({ character }) => {
+const CharacterCard = memo(({ character }) => {
     const [isOpen, setIsOpen] = useState(false)
 
     const handleViewCharacter = () => {
@@ -14,8 +14,8 @@ const CharacterCard = ({ character }) => {
         onClick={handleViewCharacter}
         className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center"
         >
-        <div className="absolute z-[999] top-1 left-2 bg-pink-600 px-1 py-0.5 rounded flex items-center gap-0">
-            <Star className='fill-amber-500 text-amber-500' />
+        <div className="absolute z-[999] top-1 left-2 bg-black/60 px-1 py-0.5 rounded flex items-center gap-1">
+            <Star className='fill-amber-500 text-amber-500' width={17} />
 
             <h2 className="text-gray-300 text-center w-full text-sm md:text-sm">
             {character?.favorites.toLocaleString()}
@@ -46,6 +46,6 @@ const CharacterCard = ({ character }) => {
         {isOpen && <CharacterInfoModal character={character} setIsOpen={setIsOpen} />}
     </div>
     );
-};
+})
 
 export default CharacterCard;
