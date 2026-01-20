@@ -9,6 +9,7 @@ const Characters = () => {
     const setErrorStatus = useErrorHandler((s) => s.setErrorStatus)
     const [characters, setCharacters] = useState([])
     const [searching, setSearching] = useState(false)
+    const [paging, setPaging] = useState(false)
     const [page, setPage] = useState(1)
     const [searchValue, setSearchValue] = useState('')
     const observer = useRef();
@@ -20,6 +21,7 @@ const Characters = () => {
     
           observer.current = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting) {
+              setPaging(true)
               setPage((prevPage) => prevPage + 1);
             }
           });
@@ -38,13 +40,13 @@ const Characters = () => {
             setErrorStatus(error.status)
             if(retries > 0 && error.status === 429)
             {
-                console.log(retries)
                 setTimeout(()=>{
                     getCharacters(page,searchValue,option, retries - 1)
                 }, 1000)
             }
         } finally{
             setSearching(false)
+            setPaging(false)
         }
     }
 
@@ -52,7 +54,6 @@ const Characters = () => {
         getCharacters(page, searchValue, 1)
     },[page])
 
-    console.log(searching)
   return (
     <main className='flex flex-col pt-20 bg-themeExtraDarkBlue min-h-[100svh] gap-5'>
         <div className='flex flex-col sm:flex-row w-[90%] mx-auto'>
@@ -76,7 +77,7 @@ const Characters = () => {
         </div>
         <div className='w-[90%] relative mx-auto flex-1 gap-5 grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7'>
             {   
-                searching ? 
+                searching && !paging ? 
                 Array.from({ length: 10 }, (_, index) => index + 7).map((page, index) => {
                     return (
                     <div  key={index} className="w-[140px] sm:w-[160px] md:w-[180px] animate-pulse">
@@ -126,6 +127,20 @@ const Characters = () => {
                         )
                     }
                 })
+                
+            }
+            {
+                searching && paging && 
+                Array.from({ length: 10 }, (_, index) => index + 7).map((page, index) => {
+                    return (
+                    <div  key={index} className="w-[140px] sm:w-[160px] md:w-[180px] animate-pulse">
+                        <div className="relative w-full h-[210px] sm:h-[230px] md:h-[260px] bg-gray-700 rounded-md"></div>
+                        <div className="mt-2 h-4 w-3/4 bg-gray-600 rounded"></div>
+                        <div className="mt-1 h-4 w-1/2 bg-gray-600 rounded"></div>
+                    </div>
+                    )
+                })
+            
             }
         </div>
         <Footer />
