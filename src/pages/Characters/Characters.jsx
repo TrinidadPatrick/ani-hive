@@ -66,9 +66,12 @@ const Characters = () => {
           <button onClick={()=>getCharacters(1, searchValue, 2)} className="text-white absolute left-3 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
             <Search width={17} className='text-gray-400' /> 
           </button>
-          <button onClick={()=>{setSearchValue('');getCharacters(1, '', 2)}} className="text-white absolute right-3 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
-            <X width={17} className='text-gray-400' /> 
-          </button>
+          {
+            searchValue.length > 0 && 
+            <button onClick={()=>{setSearchValue('');getCharacters(1, '', 2)}} className="text-white absolute right-3 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
+                <X width={17} className='text-gray-400' /> 
+            </button>
+          }
         </div>
         </div>
         <div className='w-[90%] relative mx-auto flex-1 gap-5 grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7'>
