@@ -143,7 +143,7 @@ const OngoingAnime = ({handleSetScrollPosition}) => {
     <div className="w-[90%] mx-auto gap-5  grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
       {
         ongoingAnime?.length > 0 &&
-        processedAnime?.slice(0, 15).map((anime, index, array) =>
+        processedAnime?.map((anime, index, array) =>
         {
           if(array[index - 1]?.id != anime?.id && anime?.duration >= 6){
             return (
