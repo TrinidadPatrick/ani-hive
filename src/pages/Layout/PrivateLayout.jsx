@@ -9,7 +9,7 @@ const PrivateLayout = () => {
 
     useEffect(() => {
       if(authenticated === false){
-        window.location.href = "/"
+          window.location.href = "/"
       }
     },[authenticated])
 
