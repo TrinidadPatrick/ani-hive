@@ -59,7 +59,7 @@ const MobileRecommendations = React.memo(({ title }) => {
             ) : (
                 recommendations &&
                     <div className="relative w-full">
-                        <div className="flex w-full overflow-x-auto gap-4 pb-4 snap-x hover-scrollbar">
+                        <div className="flex w-full overflow-x-auto gap-3 pb-4 snap-x hover-scrollbar">
                             {recommendations.length > 0 &&
                                 recommendations.map((recommendation, index, array) => {
                                     if (1 === 1) {
