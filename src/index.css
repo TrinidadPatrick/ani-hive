@@ -4,6 +4,10 @@
   font-family: "Source Sans 3", sans-serif;
 }
 
+button {
+  cursor: pointer
+}
+
 .progress {
   height: 10px
 }

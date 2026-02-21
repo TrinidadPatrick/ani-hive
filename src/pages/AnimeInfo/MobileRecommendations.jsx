@@ -62,15 +62,15 @@ const MobileRecommendations = React.memo(({ title }) => {
                     <div className="flex w-full overflow-x-auto gap-3 pb-2 snap-x hover-scrollbar">
                         {recommendations.length > 0 &&
                             recommendations.map((recommendation, index, array) => {
-                                if (1 === 1) {
+                                if (recommendation?.mediaRecommendation) {
                                     return (
                                         <div
-                                            key={recommendation.mediaRecommendation.idMal}
+                                            key={recommendation.mediaRecommendation?.idMal}
                                             ref={(node) => {
                                                 if (node) {
-                                                    itemRefs.current.set(recommendation.mediaRecommendation.idMal, node);
+                                                    itemRefs.current.set(recommendation.mediaRecommendation?.idMal, node);
                                                 } else {
-                                                    itemRefs.current.delete(recommendation.mediaRecommendation.idMal);
+                                                    itemRefs.current.delete(recommendation.mediaRecommendation?.idMal);
                                                 }
                                             }}
                                             onClick={() => {

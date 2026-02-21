@@ -7,7 +7,7 @@ import ReactPlayer from 'react-player'
 import useSmallScreen from '../../utils/useSmallScreen'
 import getYoutubeId from '../../utils/getYoutubeId'
 import TrailerPlayer from '../../components/TrailerPlayer'
-import { ArrowUpRight, Calendar, Film, Play, Star } from 'lucide-react'
+import { ArrowUpRight, Calendar, Film, Play, Star, Heart, Sparkles } from 'lucide-react'
 
 const TopSection = ({topAnimes}) => {
     const isSmallScreen = useSmallScreen()
@@ -92,44 +92,83 @@ const TopSection = ({topAnimes}) => {
               <div className="relative mx-3 sm:mx-10 xl:mx-0 z-10 flex flex-col-reverse md:flex-row items-center gap-10 w-full max-w-7xl">
                 
                 {/* Left Side: Anime Info */}
-                <div className=" flex-1 space-y-5 p-3 md:p-0">
-                  <div className='flex flex-col'>
-                  <p className='text-pink-500'>#1 Anime</p>
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white max-w-lg ">{topAnime?.title}</h1>
-                    <div className='mt-4 flex gap-3 text-white'>
-                      <div className='flex gap-2 items-center'>
-                        <Star width={17} className='text-amber-300 fill-amber-300' />
-                        {topAnime?.score}
-                      </div>
-                      <div className='flex gap-2 items-center'>
-                        <Film width={17} className='' />
-                        {topAnime?.episodes} Episodes
-                      </div>
-                      <div className='flex gap-2 items-center'>
-                        <Calendar width={17} className='' />
-                        {topAnime?.season[0].toUpperCase()}{topAnime?.season?.slice(1)} {topAnime?.year}
-                      </div>
-                    </div>
+                <div className="flex-1 space-y-0 p-3 md:p-0 z-10 w-full">
+                  
+                  {/* Badge */}
+                  <div className="w-fit border border-pink-500/30 bg-pink-500/10 rounded-full px-3 py-1.5 flex items-center gap-2 mb-6">
+                    <Sparkles className="w-3.5 h-3.5 text-pink-400" />
+                    <span className="text-pink-400 text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase">#1 Anime Of All Time</span>
+                  </div>
 
-                    <div className='flex gap-2 mt-5'>
-                      {topAnime?.genres.map((genre, index)=> (
-                        <div key={index} className='text-sm px-4 py-1 rounded-full bg-themeDark border border-themeLightDark text-white'>
-                          {genre.name}
-                        </div>
-                      ))}
+                  {/* Title */}
+                  <div className="flex flex-col mb-4">
+                    {(() => {
+                        const title = topAnime?.title || '';
+                        const parts = title.split(' ');
+                        const isSingleWord = parts.length === 1;
+                        const lastWord = isSingleWord ? '' : parts.pop();
+                        const firstPart = isSingleWord ? title : parts.join(' ');
+                        
+                        return (
+                          <h1 className="text-5xl md:text-5xl lg:text-[4rem] font-serif font-bold leading-[1.1] tracking-tight">
+                            <span className="text-white block">{title}</span>
+                          </h1>
+                        );
+                    })()}
+                  </div>
+
+                  {/* Subtitle / English Title */}
+                  <p className="text-gray-400/80 text-xs sm:text-sm font-bold tracking-[0.15em] uppercase mb-8">
+                    {topAnime?.title_english || topAnime?.title}
+                  </p>
+
+                  {/* Stats Row */}
+                  <div className='flex items-center gap-4 sm:gap-6 text-gray-300 text-sm font-medium mb-6'>
+                    <div className='flex gap-1.5 items-center'>
+                      <Star className='w-4 h-4 text-amber-400 fill-amber-400' />
+                      <span className="text-amber-400 font-bold text-base">{topAnime?.score?.toFixed(2) || topAnime?.score}</span>
+                    </div>
+                    <div className="w-px h-4 bg-gray-700"></div>
+                    <div className='flex gap-2 items-center text-gray-400'>
+                      <Film className='w-4 h-4' />
+                      <span>{topAnime?.episodes} Episodes</span>
+                    </div>
+                    <div className="w-px h-4 bg-gray-700"></div>
+                    <div className='flex gap-2 items-center text-gray-400'>
+                      <Calendar className='w-4 h-4' />
+                      <span>{topAnime?.season ? topAnime.season.charAt(0).toUpperCase() + topAnime.season.slice(1) : ''} {topAnime?.year}</span>
                     </div>
                   </div>
-                  <p className="text-base text-gray-300 max-w-xl">{topAnime?.synopsis.substring(0, showMore ? 100000 : 300)}
-                  <button onClick={()=>{setShowMore(!showMore)}} className='inline px-1 font-medium cursor-pointer'>{showMore ? '...see less' : '...see more'}</button></p>
+
+                  {/* Genres Row */}
+                  <div className='flex flex-wrap gap-2.5 mb-8'>
+                    {topAnime?.genres.map((genre, index)=> (
+                      <div key={index} className='text-xs sm:text-sm px-4 py-1.5 rounded-full bg-transparent border border-gray-600 text-gray-300 font-medium hover:bg-gray-800 transition-colors'>
+                        {genre.name}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Synopsis */}
+                  <div className="relative max-w-2xl mb-2">
+                    <p className={`text-gray-400/90 text-sm sm:text-base leading-relaxed ${!showMore ? 'line-clamp-3 md:line-clamp-4' : ''}`}>
+                      {topAnime?.synopsis?.replace('[Written by MAL Rewrite]', '')}
+                    </p>
+                  </div>
                   
-                  <div className='flex'>
-                    <button onClick={()=>{navigate(`/anime/${topAnime?.mal_id}?title=${topAnime?.title || ''}`)}} className="flex items-center gap-2 mt-4 bg-pink-600 cursor-pointer hover:bg-pink-500 text-white font-semibold py-2 px-5 rounded-lg shadow-lg transition duration-300">
-                      <ArrowUpRight width={17} />
+                  <button onClick={()=>{setShowMore(!showMore)}} className='text-pink-400 text-sm font-medium flex items-center gap-1 hover:text-pink-300 transition-colors mb-10'>
+                    {showMore ? '- Show less' : '+ Read more'}
+                  </button>
+                  
+                  {/* Buttons */}
+                  <div className='flex items-center flex-wrap gap-4'>
+                    <button onClick={()=>{navigate(`/anime/${topAnime?.mal_id}?title=${topAnime?.title || ''}`)}} className="flex items-center justify-center gap-2 bg-pink-500 hover:bg-pink-400 text-white font-bold py-3.5 px-8 rounded-full shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:shadow-[0_0_25px_rgba(236,72,153,0.6)] transition-all duration-300">
+                      <ArrowUpRight className="w-5 h-5 fill-current" />
                       Overview
                     </button>
-                    <button onClick={()=>{setShowTrailer(true)}} className=" hover:bg-gray-50/2 flex items-center ml-3 mt-4 cursor-pointer bg-transparent border text-white font-semibold py-2 px-5 rounded-lg shadow-lg transition duration-300">
-                      <Play width={17} />
-                      Watch Trailer
+                    <button onClick={()=>{setShowTrailer(true)}} className="flex items-center justify-center gap-2 bg-transparent border border-gray-600 hover:border-gray-400 hover:bg-gray-800/50 text-white font-semibold py-3.5 px-8 rounded-full transition-all duration-300">
+                      <Play className="w-5 h-5" />
+                      Trailer
                     </button>
                   </div>
                 </div>

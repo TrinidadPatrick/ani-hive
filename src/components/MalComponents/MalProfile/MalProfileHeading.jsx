@@ -22,7 +22,7 @@ const MalProfileDropdown = () => {
         if (open) setOpen(false)
     })
 
-    const { isLoading } = useQuery({
+    const { isLoading, data } = useQuery({
         queryKey: ['malProfile'],
         queryFn: async () => {
             try {
