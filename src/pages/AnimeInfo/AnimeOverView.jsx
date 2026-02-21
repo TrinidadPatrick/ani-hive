@@ -13,6 +13,7 @@ import Recommendations from './Recommendations.jsx';
 import RelatedAnime from './RelatedAnime.jsx';
 import Reviews from './Reviews.jsx';
 import MobileRecommendations from './MobileRecommendations.jsx';
+import { useQuery } from '@tanstack/react-query';
 import useErrorHandler from '../../stores/FetchErrorHandler.js';
 
 const AnimeOverView = () => {
@@ -28,7 +29,6 @@ const AnimeOverView = () => {
     const {id} = useParams()
     const [selectedWatchStatus, setSelectedWatchStatus] = useState(null)
     const [animeUserStatus, setAnimeUserStatus] = useState(null)
-    const [animeInfo, setAnimeInfo] = useState(null)
     const [showTrailer, setShowTrailer] = useState(false)
     const [youtubeId, setYoutubeId] = useState(null)
     
@@ -63,39 +63,32 @@ const AnimeOverView = () => {
         }
     }
 
-    const getAnimeInfo = async (mal_id, retries = 10) => {
-        try {
-            const result = await axios.get(`https://api.jikan.moe/v4/anime/${mal_id}/full`)
-                if(result.status === 200) {
-                    const anime = result.data.data
-                    setAnimeInfo(anime)
-
-                }
-        } catch (error) {
-            setErrorStatus(error.status)
-            if(retries > 0 && error.status === 429)
-            {
-                setTimeout(()=>{
-                    getAnimeInfo(id, retries - 1)
-                }, 1000)
+    const { data: animeInfo, isLoading, isError } = useQuery({
+        queryKey: ['animeInfo', id],
+        queryFn: async () => {
+            const { data } = await axios.get(`https://api.jikan.moe/v4/anime/${id}/full`);
+            return data.data;
+        },
+        enabled: !!id,
+        retry: 3,
+        retryDelay: 1000,
+        onError: (err) => {
+            if (err?.response?.status) {
+                setErrorStatus(err.response.status);
             }
         }
-    }
+    });
 
     const InfoRow = ({ label, children }) => (
         <li className="flex justify-start gap-2">
-          <h1 className="text-gray-400  min-w-[100px] text-[0.8rem] lg:text-[0.9rem] font-medium w-25 ">{label}</h1>
+          <h1 className="text-gray-400 min-w-[100px] text-[0.8rem] lg:text-[0.9rem] font-medium w-25">{label}</h1>
           <h1 className="text-gray-200 line-clamp-1 text-[0.8rem] lg:text-[0.9rem] font-bold">{children}</h1>
         </li>
     );
 
     useEffect(() => {
         if (id) {
-          (async () => {
-            setAnimeInfo(null)
-            await checkAnimeForUser(id)
-            await getAnimeInfo(id, 1);
-          })();
+          checkAnimeForUser(id);
         }
     }, [id]);
 
@@ -116,7 +109,7 @@ const AnimeOverView = () => {
     
     {showTrailer && <TrailerPlayer youtubeId={youtubeId} setShowTrailer={setShowTrailer} />}
     {
-        animeInfo ?
+        !isLoading && animeInfo ?
         <div className='w-full col-span-13 xl:col-span-10 h-fit py-20 px-2 sm:px-5 flex flex-col gap-5 z-90'>
 
             {/* Top Section */}
