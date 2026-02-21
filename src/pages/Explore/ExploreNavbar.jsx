@@ -133,7 +133,7 @@ const ExploreNavbar = (props) => {
               </div>
               <div className={`${showState === 'theme' ? '' : 'hidden'} w-full h-full absolute top-12 `}>
               {/* <OutsideClickHandler onOutsideClick={showState === 'theme' ? ()=>{setShowState('')} : ()=>{}}> */}
-              <div className='w-full md:w-[500px] overflow-auto lg:w-[500px] max-h-[400px] gap-3 bg-themeDarker border border-themeDark recoList grid grid-cols-2 md:grid-cols-3 right-0 lg:left-0 top-12 p-2 rounded-lg'>
+              <div className='w-full md:w-[500px] overflow-auto lg:w-[500px] max-h-[400px] gap-3 bg-themeDarker border border-themeDark scrollbar grid grid-cols-2 md:grid-cols-3 right-0 lg:left-0 top-12 p-2 rounded-lg'>
               {
                 themes.map((genre, index) => {
                   const isSelected = selectedGenres.includes(genre?.mal_id)

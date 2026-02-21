@@ -93,7 +93,7 @@ const Tabs = ({character}) => {
 const TabItems = ({tab, character}) => {
 
     return (
-    <section className='w-full max-h-[300px] overflow-y-auto recoList p-3'>
+    <section className='w-full max-h-[300px] overflow-y-auto scrollbar p-3'>
         {
             tab === 'about' ? <About content={character[tab]} nicknames={character.nicknames} /> :
             tab === 'voices' ? <VoiceActors content={character[tab]} /> :

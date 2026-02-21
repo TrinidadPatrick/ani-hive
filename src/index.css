@@ -1,94 +1,143 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
-*{
-    font-family: "Source Sans 3", sans-serif;
+
+* {
+  font-family: "Source Sans 3", sans-serif;
 }
 
-.progress{
-    height: 10px
+.progress {
+  height: 10px
 }
 
 /* Chrome & Safari */
 .progress::-webkit-progress-bar {
-    background-color: #eee;
-    border-radius: 10px;
-  }
+  background-color: #eee;
+  border-radius: 10px;
+}
 
-  .progress::-webkit-progress-value {
-    background-color: #f6339a;
-    border-radius: 10px;
-  }
+.progress::-webkit-progress-value {
+  background-color: #f6339a;
+  border-radius: 10px;
+}
 
-  /* Firefox */
-  .progress::-moz-progress-bar {
-    background-color: #f6339a;
-    border-radius: 10px;
-  }
+/* Firefox */
+.progress::-moz-progress-bar {
+  background-color: #f6339a;
+  border-radius: 10px;
+}
 
-  .recoList::-webkit-scrollbar {
-    width: 8px; /* or height if horizontal */
-  }
-  
-  .recoList::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 10px;
-  }
-  
-  .recoList::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-  }
-  
-  .recoList::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
+.hideScrollbar::-webkit-scrollbar {
+  width: 0px;
+  /* or height if horizontal */
+  height: 0px;
+}
 
-  .otherFilter::-webkit-scrollbar {
-    width: 8px; /* or height if horizontal */
-  }
-  
-  .otherFilter::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 10px;
-  }
-  
-  .otherFilter::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-  }
-  
-  .otherFilter::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-  
-  .vjs-default-skin .vjs-control-bar {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  /* Show controls on hover or focus */
-  .vjs-default-skin.vjs-has-started.vjs-user-active .vjs-control-bar {
-    opacity: 1;
-  }
+.hideScrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
 
-  .video-js .my-settings-icon {
-    font-size: 24px !important; /* or use 32px, etc */
-    line-height: 1 !important;
-  }
+.hideScrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
 
-  .statusList::-webkit-scrollbar {
-    width: 0px; /* or height if horizontal */
-    height: 0px;
-  }
-  
-  .statusList::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 10px;
-  }
-  
-  .statusList::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-  }
+.hover-scrollbar::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.hover-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+  /* Invisible by default */
+  border-radius: 10px;
+}
+
+
+.hover-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #4B5563 !important;
+}
+
+.hover-scrollbar {
+  scrollbar-width: none;
+  /* Hide by default */
+}
+
+.hover-scrollbar:hover {
+  scrollbar-width: thin;
+  /* Show on hover */
+  scrollbar-color: #4B5563 transparent !important;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+  /* or height if horizontal */
+  height: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.otherFilter::-webkit-scrollbar {
+  width: 8px;
+  /* or height if horizontal */
+}
+
+.otherFilter::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.otherFilter::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.otherFilter::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.vjs-default-skin .vjs-control-bar {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Show controls on hover or focus */
+.vjs-default-skin.vjs-has-started.vjs-user-active .vjs-control-bar {
+  opacity: 1;
+}
+
+.video-js .my-settings-icon {
+  font-size: 24px !important;
+  /* or use 32px, etc */
+  line-height: 1 !important;
+}
+
+.statusList::-webkit-scrollbar {
+  width: 0px;
+  /* or height if horizontal */
+  height: 0px;
+}
+
+.statusList::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.statusList::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
 
 @import "tailwindcss";
 

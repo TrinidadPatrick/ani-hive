@@ -135,7 +135,7 @@ const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType,
                         <span className='text-white'> - </span>
                           <div className=' relative'>
                             <button onClick={()=>setDropdownOpen(dropdownOpen === 'genre' ? '' : 'genre')} className='bg-themeDarker border border-themeLightDark hover:bg-themeDark/30 cursor-pointer flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-xs sm:text-sm'>{selectedGenres[0] || 'genre'}<ChevronDown className='text-white' width={17} /></button>
-                            <div className={`z-90 ${dropdownOpen === 'genre' ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
+                            <div className={`z-90 ${dropdownOpen === 'genre' ? '' : 'hidden'} scrollbar absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
                               {
                                 genres.length !== 0 && genres.map((genre, index) => {
                                   return (
@@ -155,7 +155,7 @@ const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType,
                         <span className='text-white'> - </span>
                           <div className=' relative'>
                             <button onClick={()=>setDropdownOpen(dropdownOpen === 'theme' ? '' : 'theme')} className='bg-themeDarker border border-themeLightDark hover:bg-themeDark/30 cursor-pointer flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-xs sm:text-sm'>themes<ChevronDown className='text-white' width={17} /></button>
-                            <div className={`z-90 ${dropdownOpen === 'theme' ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
+                            <div className={`z-90 ${dropdownOpen === 'theme' ? '' : 'hidden'} scrollbar absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
                               {
                                 themes.length !== 0 && themes.map((theme, index) => {
                                   return (
@@ -178,7 +178,7 @@ const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType,
                               return (
                                 <div key={index} className='relative'>
                                   <button onClick={()=>setDropdownOpen(dropdownOpen === key ? '' : key)} className='bg-themeDarker border border-themeLightDark hover:bg-themeDark/30 flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-xs sm:text-sm cursor-pointer'>{selectedDate['startDate'][key] || '-'} <ChevronDown className='text-white' width={17} /></button>
-                                  <div className={`z-90 ${dropdownOpen === key ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
+                                  <div className={`z-90 ${dropdownOpen === key ? '' : 'hidden'} scrollbar absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
                                     {
                                       value.map((item, index) => {
                                         return (
@@ -205,7 +205,7 @@ const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType,
                                 <div key={index} className=' relative'>
                                   {/* Year */}
                                   <button onClick={()=>setDropdownOpen(dropdownOpen === key + '1' ? '' : key + '1')} className='bg-themeDarker border border-themeLightDark hover:bg-themeDark/30 flex items-center gap-2 text-white  px-3 py-1 rounded-lg text-xs sm:text-sm cursor-pointer'>{selectedDate['endDate'][key] || '-'} <ChevronDown className='text-white' width={17} /></button>
-                                  <div className={`z-90 ${dropdownOpen === key + '1' ? '' : 'hidden'} recoList absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
+                                  <div className={`z-90 ${dropdownOpen === key + '1' ? '' : 'hidden'} scrollbar absolute rounded-lg left-0 bg-themeDarker top-10 max-h-80 overflow-y-scroll`}>
                                     {
                                       value.map((item, index) => {
                                         return (
