@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import {useNavigate, useSearchParams, useParams} from 'react-router-dom'
+import { useNavigate, useSearchParams, useParams } from 'react-router-dom'
 import AnimeRelatedSkeleton from './skeleton/AnimeRelatedSkeleton';
 import usePublicAnimeInfo from '../../stores/PublicAnimeInfoStore';
 import useScrollPosition from '../../stores/ScrollPositionStore';
@@ -11,7 +11,7 @@ const RelatedAnime = () => {
     const animeRelations = usePublicAnimeInfo((s) => s.animeRelations);
     const setClickedRelatedId = useScrollPosition((s) => s.setClickedRelatedId);
     const clickedRelatedId = useScrollPosition((s) => s.clickedRelatedId);
-    
+
     const itemRefs = useRef(new Map());
 
     const scrollToId = (itemId) => {
@@ -41,7 +41,7 @@ const RelatedAnime = () => {
             }, 500);
         }
     }, [animeRelations, clickedRelatedId]);
-        
+
     return (
         <div className="w-full flex flex-col gap-3">
             <div>
@@ -60,7 +60,7 @@ const RelatedAnime = () => {
                 ) : (
                     animeRelations && animeRelations?.length !== 0 && (
                         <div className="relative w-full">
-                            <div className="flex w-full overflow-x-auto gap-3 pb-4 snap-x hover-scrollbar">
+                            <div className="flex w-full overflow-x-auto gap-3 pb-2 snap-x hover-scrollbar">
                                 {animeRelations.map((info, index) => {
                                     const relatedId = info.idMal || info.id;
                                     return (
@@ -77,7 +77,7 @@ const RelatedAnime = () => {
                                                 setClickedRelatedId(relatedId);
                                                 navigate(`/anime/${info.idMal}?title=${info?.title.english || info?.title.romaji}`);
                                             }}
-                                            className="w-[130px] sm:w-[135px] md:w-[180px] lg:w-[195px] shrink-0 snap-start h-full md:h-[40svh] flex flex-col items-center justify-center rounded-lg cursor-pointer"
+                                            className="w-[130px] sm:w-[135px] md:w-[180px] lg:w-[195px] shrink-0 snap-start h-full md:h-fit flex flex-col items-center justify-center rounded-lg cursor-pointer"
                                         >
                                             <div className="relative w-full h-fit overflow-hidden rounded-lg">
                                                 <div className="absolute top-1 left-2 z-[999999999999] px-2 py-0.5 rounded-lg flex items-center justify-center gap-1">
