@@ -87,7 +87,7 @@ const AiringToday = ({ handleSetScrollPosition }) => {
             </div>
           </div>
 
-          <div className="w-[90%] h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 lg:gap-10">
+          <div className="w-[90%] h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
             {airingToday?.length > 0 &&
               airingToday.map((anime, index) => {
                 if (1 == 1) {
