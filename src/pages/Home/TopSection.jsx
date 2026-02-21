@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import topAnimeStore from '../../stores/topAnimeStore'
 import TopAnimeProvider from '../../providers/TopAnimeProvider'
 import image_1 from '../../images/image_2.jpeg'
@@ -81,10 +82,13 @@ const TopSection = ({topAnimes}) => {
             <section className="w-full md:h-[100svh] bg-themeExtraDarkBlue relative overflow-hidden flex items-center justify-center lg:px-6">
               {showTrailer && <TrailerPlayer youtubeId={youtubeId} setShowTrailer={setShowTrailer} />}
               {/* Background Image */}
-              <img
+              <motion.img
+                initial={{ scale: 1.1, opacity: 0 }}
+                animate={{ scale: 1, opacity: 0.8 }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
                 src={topAnime?.images?.webp.large_image_url}
                 alt={topAnime?.title}
-                className="absolute w-full h-full object-cover brightness-50 opacity-80"
+                className="absolute w-full h-full object-cover brightness-50"
               />
 
               {/* Overlay (blur + tint) */}
@@ -95,13 +99,23 @@ const TopSection = ({topAnimes}) => {
                 <div className="flex-1 space-y-0 p-3 md:p-0 z-10 w-full">
                   
                   {/* Badge */}
-                  <div className="w-fit border border-pink-500/30 bg-pink-500/10 rounded-full px-3 py-1.5 flex items-center gap-2 mb-6">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="w-fit border border-pink-500/30 bg-pink-500/10 rounded-full px-3 py-1.5 flex items-center gap-2 mb-6"
+                   >
                     <Sparkles className="w-3.5 h-3.5 text-pink-400" />
                     <span className="text-pink-400 text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase">#1 Anime Of All Time</span>
-                  </div>
+                  </motion.div>
 
                   {/* Title */}
-                  <div className="flex flex-col mb-4">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="flex flex-col mb-4"
+                  >
                     {(() => {
                         const title = topAnime?.title || '';
                         const parts = title.split(' ');
@@ -115,15 +129,25 @@ const TopSection = ({topAnimes}) => {
                           </h1>
                         );
                     })()}
-                  </div>
+                  </motion.div>
 
                   {/* Subtitle / English Title */}
-                  <p className="text-gray-400/80 text-xs sm:text-sm font-bold tracking-[0.15em] uppercase mb-8">
+                  <motion.p 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                    className="text-gray-400/80 text-xs sm:text-sm font-bold tracking-[0.15em] uppercase mb-8"
+                  >
                     {topAnime?.title_english || topAnime?.title}
-                  </p>
+                  </motion.p>
 
                   {/* Stats Row */}
-                  <div className='flex items-center gap-4 sm:gap-6 text-gray-300 text-sm font-medium mb-6'>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.5 }}
+                    className='flex items-center gap-4 sm:gap-6 text-gray-300 text-sm font-medium mb-6'
+                  >
                     <div className='flex gap-1.5 items-center'>
                       <Star className='w-4 h-4 text-amber-400 fill-amber-400' />
                       <span className="text-amber-400 font-bold text-base">{topAnime?.score?.toFixed(2) || topAnime?.score}</span>
@@ -138,30 +162,50 @@ const TopSection = ({topAnimes}) => {
                       <Calendar className='w-4 h-4' />
                       <span>{topAnime?.season ? topAnime.season.charAt(0).toUpperCase() + topAnime.season.slice(1) : ''} {topAnime?.year}</span>
                     </div>
-                  </div>
+                  </motion.div>
 
                   {/* Genres Row */}
-                  <div className='flex flex-wrap gap-2.5 mb-8'>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                    className='flex flex-wrap gap-2.5 mb-8'
+                  >
                     {topAnime?.genres.map((genre, index)=> (
                       <div key={index} className='text-xs sm:text-sm px-4 py-1.5 rounded-full bg-transparent border border-gray-600 text-gray-300 font-medium hover:bg-gray-800 transition-colors'>
                         {genre.name}
                       </div>
                     ))}
-                  </div>
+                  </motion.div>
 
                   {/* Synopsis */}
-                  <div className="relative max-w-2xl mb-2">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.7 }}
+                    className="relative max-w-2xl mb-2"
+                  >
                     <p className={`text-gray-400/90 text-sm sm:text-base leading-relaxed ${!showMore ? 'line-clamp-3 md:line-clamp-4' : ''}`}>
                       {topAnime?.synopsis?.replace('[Written by MAL Rewrite]', '')}
                     </p>
-                  </div>
+                  </motion.div>
                   
-                  <button onClick={()=>{setShowMore(!showMore)}} className='text-pink-400 text-sm font-medium flex items-center gap-1 hover:text-pink-300 transition-colors mb-10'>
+                  <motion.button 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.8 }}
+                    onClick={()=>{setShowMore(!showMore)}} className='text-pink-400 text-sm font-medium flex items-center gap-1 hover:text-pink-300 transition-colors mb-10'
+                   >
                     {showMore ? '- Show less' : '+ Read more'}
-                  </button>
+                  </motion.button>
                   
                   {/* Buttons */}
-                  <div className='flex items-center flex-wrap gap-4'>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.9 }}
+                    className='flex items-center flex-wrap gap-4'
+                   >
                     <button onClick={()=>{navigate(`/anime/${topAnime?.mal_id}?title=${topAnime?.title || ''}`)}} className="flex items-center justify-center gap-2 bg-pink-500 hover:bg-pink-400 text-white font-bold py-3.5 px-8 rounded-full shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:shadow-[0_0_25px_rgba(236,72,153,0.6)] transition-all duration-300">
                       <ArrowUpRight className="w-5 h-5 fill-current" />
                       Overview
@@ -170,18 +214,23 @@ const TopSection = ({topAnimes}) => {
                       <Play className="w-5 h-5" />
                       Trailer
                     </button>
-                  </div>
+                  </motion.div>
                 </div>
 
                 {/* Right Side: Anime Poster */}
-                <div className="flex-1 w-full max-w-sm md:max-w-[300px] xl:max-w-[400px] mt-20 md:mt-0 md:ml-10">
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.9, x: 50 }}
+                  animate={{ opacity: 1, scale: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+                  className="flex-1 w-full max-w-sm md:max-w-[300px] xl:max-w-[400px] mt-20 md:mt-0 md:ml-10"
+                 >
                   <img
                     src={topAnime?.images?.webp.large_image_url}
                     alt={topAnime?.title}
                     style={{boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset'}}
                     className="w-full rounded-xl shadow-2xl hover:scale-105 cursor-pointer transition-all duration-500 ease-in-out transform brightness-75"
                   />
-                </div>
+                </motion.div>
               </div>
             </section>
           )
