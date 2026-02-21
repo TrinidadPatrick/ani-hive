@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import LoginButton from '../../MalLogin/LoginButton.jsx'
 import http from '../../../http.js'
 import useAuthStore from '../../../stores/AuthStore.js'
@@ -13,12 +14,33 @@ const MalProfileDropdown = () => {
     const authenticated = useAuthStore((s) => s.authenticated)
     const profile = useAuthStore((s) => s.profile)
     const logout = useAuthStore((s) => s.logout)
+    const setAuthData = useAuthStore((s) => s.setAuthData)
 
     const [open, setOpen] = useState(false)
 
     useOutsideClick(ref, ()=>{
         if (open) setOpen(false)
     })
+
+    const { isLoading } = useQuery({
+        queryKey: ['malProfile'],
+        queryFn: async () => {
+            try {
+                const { data } = await http.get('mal/me');
+                setAuthData(data, true);
+                return data;
+            } catch (error) {
+                setAuthData(null, false);
+                throw error;
+            }
+        },
+        retry: 0,
+        refetchOnWindowFocus: false
+    });
+
+    if(isLoading && authenticated === null) {
+        return null
+    }
 
     if(authenticated === null){
         return null

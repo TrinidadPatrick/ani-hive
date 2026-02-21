@@ -42,20 +42,8 @@ const useAuthStore = create((set, get) => ({
         window.location.href = url
     },
 
-    checkAuth: async () => {
-        try {
-            set({isAuthenticating: true})
-            const response = await http.get('mal/me')
-            if(response.status === 200){
-                return set({profile: response.data, authenticated: true})
-            }
-            set({authenticated: false})
-        } catch (error) {
-            console.log(error)
-            set({authenticated: false})
-        } finally {
-            set({isAuthenticating: false})
-        }
+    setAuthData: (profile, authenticated) => {
+        set({ profile, authenticated, isAuthenticating: false });
     },
 
     logout: async () => {

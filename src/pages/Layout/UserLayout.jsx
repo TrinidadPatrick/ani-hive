@@ -19,7 +19,6 @@ const UserLayout = () => {
   const errors = [404, 504, 400];
   const errorStatus = useErrorHandler((s) => s.errorStatus);
   const setErrorStatus = useErrorHandler((s) => s.setErrorStatus);
-  const checkAuth = useAuthStore((s) => s.checkAuth);
   
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,10 +55,7 @@ const UserLayout = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Handle authentication
-  useEffect(() => {
-    checkAuth();
-  }, []);
+
 
   const handleSearch = () => {
     setSearchInput('');
