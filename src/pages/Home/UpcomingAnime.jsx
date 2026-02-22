@@ -58,7 +58,7 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative p-2 md:p-0">
             <button
               ref={prevRef}
               className="cursor-pointer hover:text-gray-400 swiper-button-prev-custom hidden lg:block absolute left-5 z-10 top-1/2 -translate-y-1/2 text-white text-2xl px-2"
@@ -76,11 +76,16 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
             <Swiper
               modules={[FreeMode, Navigation]}
               spaceBetween={20}
+              slidesPerView={1}
               slidesPerGroup={1}
               grabCursor
               navigation={{
                 nextEl: nextRef.current,
                 prevEl: prevRef.current,
+              }}
+              onBeforeInit={(swiper) => {
+                swiper.params.navigation.prevEl = prevRef.current;
+                swiper.params.navigation.nextEl = nextRef.current;
               }}
               breakpoints={{
                 0: {
@@ -99,7 +104,7 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
                   slidesPerView: 3,
                   slidesPerGroup: 3,
                 },
-                890: {
+                1024: {
                   slidesPerView: 4,
                   slidesPerGroup: 4,
                 },
@@ -108,23 +113,16 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
                   slidesPerGroup: 5,
                 },
               }}
-              onBeforeInit={(swiper) => {
-                swiper.params.navigation.prevEl = prevRef.current;
-                swiper.params.navigation.nextEl = nextRef.current;
-              }}
-              className="w-[95%] md:w-[90%] mx-auto"
-            >
-              {upcomingAnime?.data?.length > 0 &&
+                className="w-[95%] md:w-[90%] mx-auto"
+                >
+                { upcomingAnime?.data?.length > 0 &&
                 upcomingAnime.data.map((anime, index, array) => {
-                  if (
-                    array[index - 1]?.mal_id !== anime?.mal_id &&
-                    anime.title
-                  ) {
+                  if (array[index - 1]?.mal_id !== anime?.mal_id) {
                     return (
                       <SwiperSlide
                         key={index}
                         style={{ width: "195px", height: "auto" }}
-                        className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
+                        className="h-full md:h-fit px-0 flex items-center justify-center rounded-lg cursor-pointer"
                       >
                         <motion.div
                           key={anime.mal_id}
@@ -138,7 +136,7 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
                             onMouseEnter={() => setHovered(index)}
                             onMouseLeave={() => setHovered(-1)}
                           >
-                            <div className="aspect-[4/3] overflow-hidden">
+                            <div className="aspect-[3/4] overflow-hidden">
                               <img
                                 src={
                                   anime?.images?.jpg?.large_image_url ||
@@ -149,23 +147,21 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
                               />
 
                               <div
-                                className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-300 ${
-                                  hovered === index
+                                className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-300 ${hovered === index
                                     ? "opacity-100"
                                     : "opacity-70"
-                                }`}
+                                  }`}
                               />
                             </div>
 
                             <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                               <div
-                                className={`transition-all duration-300 ${
-                                  hovered === index
+                                className={`transition-all duration-300 ${hovered === index
                                     ? "translate-y-0 opacity-100"
                                     : "translate-y-2 opacity-90"
-                                }`}
+                                  }`}
                               >
-                                <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-pink-400 transition-colors">
+                                <h3 className="text-base 2xl:text-lg font-bold mb-2 line-clamp-2 leading-4 group-hover:text-pink-400 transition-colors">
                                   {anime?.title_english?.replace(/;/g, " ") ||
                                     anime?.title?.replace(/;/g, " ")}
                                 </h3>
@@ -223,12 +219,14 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
                       </SwiperSlide>
                     );
                   }
-                })}
-            </Swiper>
-          </div>
+                })
+              }
+                        </Swiper>
+        </div>
         </section>
-      )}
-    </main>
+  )
+}
+    </main >
   );
 };
 

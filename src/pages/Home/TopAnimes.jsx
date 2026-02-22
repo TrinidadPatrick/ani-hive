@@ -20,7 +20,7 @@ const TopAnimes = ({ handleSetScrollPosition }) => {
   const navigate = useNavigate();
 
   return (
-    <main id="top-animes" className="pb-20 hover-scrollbar">
+    <main id="top-animes" className="pb-10 sm:pb-0 hover-scrollbar">
       {isLoading ? (
         <section className="px-6 py-8 text-white animate-pulse hover-scrollbar">
           {/* Title */}
@@ -178,7 +178,7 @@ const TopAnimes = ({ handleSetScrollPosition }) => {
                                     : "translate-y-2 opacity-90"
                                 }`}
                               >
-                                <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-pink-400 transition-colors">
+                                <h3 className="text-base 2xl:text-lg font-bold mb-2 line-clamp-2 leading-4 group-hover:text-pink-400 transition-colors">
                                   {anime?.title_english?.replace(/;/g, " ") ||
                                     anime?.title?.replace(/;/g, " ")}
                                 </h3>
