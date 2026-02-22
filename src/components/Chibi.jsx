@@ -3,7 +3,6 @@ import chibi from "../images/chibiV2.gif";
 
 const Chibi = ({ handleScroll }) => {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(isOpen);
   return (
     <div
       onMouseEnter={() => setIsOpen(true)}

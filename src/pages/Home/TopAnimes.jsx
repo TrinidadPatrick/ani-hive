@@ -1,25 +1,28 @@
-import React, { useEffect, useRef } from 'react';
-import TopAnimeProvider from '../../providers/TopAnimeProvider';
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/navigation';
-import { FreeMode, Navigation } from 'swiper/modules';
-import { useNavigate } from 'react-router';
-import { Star } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef, useState } from "react";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import { FreeMode, Navigation } from "swiper/modules";
+import { useNavigate } from "react-router";
+import { Star } from "lucide-react";
+import { motion } from "framer-motion";
+import { useTopAnimes } from "../../hooks/useTopAnimes.js";
+import slugify from "slugify";
 
-const TopAnimes = ({ topAnimes, handleSetScrollPosition }) => {
+const TopAnimes = ({ handleSetScrollPosition }) => {
+  const { data: topAnimes, isLoading } = useTopAnimes();
+  const [hovered, setHovered] = useState(null);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const navigate = useNavigate();
 
   return (
-    <main id="top-animes">
-      {topAnimes == null ? (
-        <section className="px-6 py-8 text-white animate-pulse">
+    <main id="top-animes" className="pb-20 hover-scrollbar">
+      {isLoading ? (
+        <section className="px-6 py-8 text-white animate-pulse hover-scrollbar">
           {/* Title */}
           <div className="flex justify-between items-center mb-4">
             <div>
@@ -30,7 +33,7 @@ const TopAnimes = ({ topAnimes, handleSetScrollPosition }) => {
           </div>
 
           {/* Carousel skeleton */}
-          <div className="flex gap-4 overflow-x-auto">
+          <div className="flex gap-4 overflow-x-auto hover-scrollbar">
             {Array.from({ length: 7 }).map((_, idx) => (
               <div
                 key={idx}
@@ -44,10 +47,10 @@ const TopAnimes = ({ topAnimes, handleSetScrollPosition }) => {
           </div>
         </section>
       ) : (
-        <section className="w-full h-full md:h-[65svh] bg-themeExtraDarkBlue py-10">
+        <section className="w-full h-full md:h-[65svh] bg-themeExtraDarkBlue py-10 hover-scrollbar">
           <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3 flex items-center gap-2">
-              <div className='w-1 h-13 bg-pink-600' />
-            <div className='flex-1'>
+            <div className="w-1 h-13 bg-pink-600" />
+            <div className="flex-1">
               <h1 className="text-2xl md:text-3xl font-bold text-white">
                 Top Rated Anime
               </h1>
@@ -61,9 +64,7 @@ const TopAnimes = ({ topAnimes, handleSetScrollPosition }) => {
                 data-aos="fade-left"
                 onClick={() => {
                   handleSetScrollPosition();
-                  navigate(
-                    '/explore?page=1&order_by=score&sort_by=desc'
-                  );
+                  navigate("/explore?page=1&order_by=score&sort_by=desc");
                 }}
                 className="text-sm md:text-base text-white cursor-pointer hover:text-gray-300"
               >
@@ -135,68 +136,102 @@ const TopAnimes = ({ topAnimes, handleSetScrollPosition }) => {
                     return (
                       <SwiperSlide
                         key={index}
-                        style={{ width: '195px', height: '40svh' }}
-                        className="h-full md:h-[40svh] px-0 flex items-center justify-center rounded-lg cursor-pointer"
+                        style={{ width: "195px", height: "auto" }}
+                        className="h-full md:h-fit px-0 flex items-center justify-center rounded-lg cursor-pointer"
                       >
                         <motion.div
-                          key={anime.id}
+                          key={anime.mal_id}
                           layout="position"
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{
-                            delay: (index % 10) * 0.05,
-                          }}
-                          className="relative h-full overflow-hidden rounded-lg"
-                          onClick={() => {
-                            handleSetScrollPosition();
-                            navigate(
-                              `/anime/${anime?.mal_id}?title=${
-                                anime?.title || ''
-                              }`
-                            );
-                          }}
+                          transition={{ delay: (index % 10) * 0.05 }}
                         >
-                            {/* Rating */}
-                            <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-0.5 rounded-full text-xs font-semibold text-white flex items-center gap-1 z-90">
-                              <Star
-                                className="fill-amber-500 text-amber-500"
-                                width={13}
-                              />
-                              {anime?.score || '0'}
-                            </div>
-
-                            {/* Image */}
-                            <div className="w-full h-full rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03]">
+                          <div
+                            className="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                            onMouseEnter={() => setHovered(index)}
+                            onMouseLeave={() => setHovered(-1)}
+                          >
+                            <div className="aspect-[3/4] overflow-hidden">
                               <img
                                 src={
-                                  anime?.images?.webp
-                                    .large_image_url
+                                  anime?.images?.jpg?.large_image_url ||
+                                  anime?.images?.webp?.large_image_url
                                 }
-                                alt={anime?.title}
-                                className="w-full h-full object-cover brightness-70"
+                                alt={anime?.title_english || anime?.title}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                              />
+
+                              <div
+                                className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-300 ${
+                                  hovered === index
+                                    ? "opacity-100"
+                                    : "opacity-70"
+                                }`}
                               />
                             </div>
 
-                            {/* Info */}
-                            <div className="w-full absolute px-3 py-1 bottom-0 bg-transparent backdrop-blur h-fit rounded-b-lg flex">
-                              <div className="flex flex-col items-start w-full h-full justify-around">
-                                <h2 className="text-white text-lg sm:text-sm md:text-base truncate w-full">
-                                  {anime?.title_english?.replace(
-                                    /;/g,
-                                    ' '
-                                  ) ||
-                                    anime?.title_english?.replace(
-                                      /;/g,
-                                      ' '
-                                    )}
-                                </h2>
+                            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                              <div
+                                className={`transition-all duration-300 ${
+                                  hovered === index
+                                    ? "translate-y-0 opacity-100"
+                                    : "translate-y-2 opacity-90"
+                                }`}
+                              >
+                                <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-pink-400 transition-colors">
+                                  {anime?.title_english?.replace(/;/g, " ") ||
+                                    anime?.title?.replace(/;/g, " ")}
+                                </h3>
 
-                                <h2 className="text-gray-300 text-sm md:text-sm">
-                                  {anime?.year}{' '}
-                                  {anime?.genres[0]?.name}
-                                </h2>
+                                <div className="flex items-center gap-2 text-sm text-gray-300">
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      clipRule="evenodd"
+                                      d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                    />
+                                  </svg>
+
+                                  <span>
+                                    {anime?.year || "TBA"}{" "}
+                                    {anime?.genres?.[0]?.name
+                                      ? `- ${anime.genres[0].name}`
+                                      : ""}
+                                  </span>
+                                </div>
                               </div>
+
+                              {hovered === index && (
+                                <button
+                                  onClick={() => {
+                                    handleSetScrollPosition();
+                                    navigate(
+                                      `/anime/${anime?.mal_id}?title=${slugify(
+                                        anime?.title || "",
+                                      )}`,
+                                    );
+                                  }}
+                                  className="cursor-pointer mt-4 px-4 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105"
+                                >
+                                  View Details
+                                </button>
+                              )}
                             </div>
+
+                            {anime?.score && (
+                              <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-0.5 rounded-full text-xs font-semibold text-white flex items-center gap-1">
+                                <Star
+                                  className="fill-amber-500 text-amber-500"
+                                  width={13}
+                                />
+                                {anime?.score}
+                              </div>
+                            )}
+                          </div>
                         </motion.div>
                       </SwiperSlide>
                     );

@@ -1,59 +1,20 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import AnimeMoviesStore from '../../stores/AnimeMoviesStore';
-import ProgressBar from '@ramonak/react-progress-bar';
-import { useNavigate } from 'react-router';
-import { Star } from 'lucide-react';
-import localforage from 'localforage';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
+import { Star } from "lucide-react";
+import { motion } from "framer-motion";
+import { useAiringToday } from "../../hooks/useAiringToday";
+import slugify from "slugify";
 
 const AiringToday = ({ handleSetScrollPosition }) => {
   const [hovered, setHovered] = useState(false);
-  const today = new Date().toLocaleString('en-US', { weekday: 'long' });
-  const [airingToday, setAiringToday] = useState(null);
+  const { data: airingToday, isLoading } = useAiringToday();
   const navigate = useNavigate();
-
-  const getAiringToday = async (page, retries = 10) => {
-    const cachedList = await localforage.getItem('airingToday');
-
-    if (cachedList) setAiringToday(cachedList);
-
-    try {
-      const result = await axios.get(
-        `https://api.jikan.moe/v4/schedules?filter=${today}&limit=20&sfw=true`
-      );
-
-      if (result.status === 200) {
-        const animes = result.data.data.filter(
-          (obj, index, self) =>
-            index === self.findIndex((t) => t.mal_id === obj.mal_id)
-        );
-
-        setAiringToday(animes);
-        await localforage.setItem('airingToday', animes);
-      }
-    } catch (error) {
-      console.log(error);
-
-      if (retries > 0 && error.status === 429) {
-        setTimeout(() => {
-          getAiringToday(1, retries - 1);
-        }, 1000);
-      }
-    }
-  };
-
-  useEffect(() => {
-    getAiringToday();
-  }, []);
 
   return (
     <main id="airing-today">
-      {AiringToday == null ? (
+      {isLoading && !airingToday ? (
         <div className="p-6">
-          <h2 className="text-3xl font-bold mb-4 text-white">
-            Airing Today
-          </h2>
+          <h2 className="text-3xl font-bold mb-4 text-white">Airing Today</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {Array.from({ length: 6 }).map((_, index) => (
@@ -76,7 +37,7 @@ const AiringToday = ({ handleSetScrollPosition }) => {
       ) : (
         <section className="w-full h-fit flex flex-col items-center justify-center bg-themeExtraDarkBlue py-10">
           <div className="w-[95%] md:w-[90%] mx-auto mb-6 px-3 flex items-center gap-2">
-              <div className='w-1 h-13 bg-pink-600' />
+            <div className="w-1 h-13 bg-pink-600" />
             <div className="flex flex-col">
               <h1 className="text-2xl md:text-3xl font-bold text-white">
                 Airing Today
@@ -113,9 +74,7 @@ const AiringToday = ({ handleSetScrollPosition }) => {
 
                           <div
                             className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-300 ${
-                              hovered === index
-                                ? 'opacity-100'
-                                : 'opacity-70'
+                              hovered === index ? "opacity-100" : "opacity-70"
                             }`}
                           />
                         </div>
@@ -124,8 +83,8 @@ const AiringToday = ({ handleSetScrollPosition }) => {
                           <div
                             className={`transition-all duration-300 ${
                               hovered === index
-                                ? 'translate-y-0 opacity-100'
-                                : 'translate-y-2 opacity-90'
+                                ? "translate-y-0 opacity-100"
+                                : "translate-y-2 opacity-90"
                             }`}
                           >
                             <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-pink-400 transition-colors">
@@ -145,9 +104,7 @@ const AiringToday = ({ handleSetScrollPosition }) => {
                                 />
                               </svg>
 
-                              <span>
-                                {anime?.aired?.string || 'TBA'}
-                              </span>
+                              <span>{anime?.aired?.string || "TBA"}</span>
                             </div>
                           </div>
 
@@ -156,9 +113,9 @@ const AiringToday = ({ handleSetScrollPosition }) => {
                               onClick={() => {
                                 handleSetScrollPosition();
                                 navigate(
-                                  `/anime/${anime?.mal_id}?title=${
-                                    anime?.title || ''
-                                  }`
+                                  `/anime/${anime?.mal_id}?title=${slugify(
+                                    anime?.title || "",
+                                  )}`,
                                 );
                               }}
                               className="cursor-pointer mt-4 px-4 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105"
@@ -173,7 +130,7 @@ const AiringToday = ({ handleSetScrollPosition }) => {
                             className="fill-amber-500 text-amber-500"
                             width={13}
                           />
-                          {anime?.score || '0'}
+                          {anime?.score || "0"}
                         </div>
                       </div>
                     </motion.div>
