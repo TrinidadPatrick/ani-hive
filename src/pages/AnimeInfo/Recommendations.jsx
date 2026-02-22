@@ -7,13 +7,14 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import useSmallScreen from "../../utils/useSmallScreen";
 import AnimeRecommendationSkeleton from "./skeleton/AnimeRecommendationSkeleton";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import usePublicAnimeInfo from "../../stores/PublicAnimeInfoStore";
 import useScrollPosition from "../../stores/ScrollPositionStore";
 import slugify from "slugify";
 
 const Recommendations = React.memo(({ title }) => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const recommendations = usePublicAnimeInfo((s) => s.recommendations);
   const setRecommendations = usePublicAnimeInfo((s) => s.setRecommendations);
@@ -40,12 +41,12 @@ const Recommendations = React.memo(({ title }) => {
     }
   };
 
-  const getRecommendations = async (searchTerm) => {
+  const getRecommendations = async (searchTerm, page = 1) => {
     const query = `
         query ($search: String) {
             Media(search: $search, type: ANIME) {
             id
-            recommendations(sort: RATING_DESC, perPage: 20) {
+            recommendations(sort: RATING_DESC, page: ${page}, perPage: 20) {
                 nodes {
                 mediaRecommendation {
                     id
@@ -97,8 +98,14 @@ const Recommendations = React.memo(({ title }) => {
         (result) => result.type === "ANIME" && result.idMal,
       );
       const recommendedAnimes = media.recommendations.nodes;
-      setRecommendations(recommendedAnimes || []);
-      setAnimeRelations(relatedAnimes || []);
+      setRecommendations(recommendedAnimes);
+      setAnimeRelations(relatedAnimes);
+      if (
+        media.recommendations.nodes &&
+        media.recommendations.nodes.length > 0
+      ) {
+        getRecommendations(searchTerm, page + 1);
+      }
     } catch (err) {
       setRecommendations([]);
       setAnimeRelations([]);
@@ -118,13 +125,14 @@ const Recommendations = React.memo(({ title }) => {
     if (
       clickedRecommendationId &&
       recommendations &&
-      recommendations.length > 0
+      recommendations.length > 0 &&
+      clickedRecommendationId !== id
     ) {
       setTimeout(() => {
         scrollToId(clickedRecommendationId);
       }, 500);
     }
-  }, [recommendations, clickedRecommendationId]);
+  }, [recommendations]);
 
   return (
     <div className="scrollbar xl:col-span-3 hidden xl:flex h-fit pb-5 overflow-auto mt-20 flex-col gap-3 z-90 relative">
@@ -151,6 +159,7 @@ const Recommendations = React.memo(({ title }) => {
                   }
                 }}
                 onClick={() => {
+                  window.scrollTo(0, 0);
                   setClickedRecommendationId(
                     recommendation.mediaRecommendation.idMal,
                   );

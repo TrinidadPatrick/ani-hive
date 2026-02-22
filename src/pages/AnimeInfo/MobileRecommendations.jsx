@@ -43,13 +43,14 @@ const MobileRecommendations = React.memo(({ title }) => {
     if (
       clickedRecommendationId &&
       recommendations &&
-      recommendations.length > 0
+      recommendations.length > 0 &&
+      clickedRecommendationId !== id
     ) {
       setTimeout(() => {
         scrollToId(clickedRecommendationId);
-      }, 500);
+      }, 200);
     }
-  }, [recommendations, clickedRecommendationId]);
+  }, [recommendations]);
 
   return (
     <div className="w-full flex flex-col gap-3 xl:hidden ">
@@ -88,6 +89,7 @@ const MobileRecommendations = React.memo(({ title }) => {
                           }
                         }}
                         onClick={() => {
+                          window.scrollTo(0, 0);
                           setClickedRecommendationId(
                             recommendation.mediaRecommendation.idMal,
                           );
