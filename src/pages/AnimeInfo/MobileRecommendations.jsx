@@ -1,56 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
-import useSmallScreen from "../../utils/useSmallScreen";
 import AnimeRecommendationSkeleton from "./skeleton/AnimeRecommendationSkeleton";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import usePublicAnimeInfo from "../../stores/PublicAnimeInfoStore";
-import useScrollPosition from "../../stores/ScrollPositionStore";
 import slugify from "slugify";
 
 const MobileRecommendations = React.memo(({ title }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const recommendations = usePublicAnimeInfo((s) => s.recommendations);
-  const setClickedRecommendationId = useScrollPosition(
-    (s) => s.setClickedRecommendationId,
-  );
-  const clickedRecommendationId = useScrollPosition(
-    (s) => s.clickedRecommendationId,
-  );
-  const itemRefs = useRef(new Map());
-
-  const scrollToId = (itemId) => {
-    const map = itemRefs.current;
-    const node = map.get(itemId);
-    if (node) {
-      node.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "center",
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (clickedRecommendationId == id || !clickedRecommendationId) {
-      setTimeout(() => {
-        window.scrollTo({ top: 0 });
-      }, 500);
-    }
-  }, [clickedRecommendationId, id]);
-
-  useEffect(() => {
-    if (
-      clickedRecommendationId &&
-      recommendations &&
-      recommendations.length > 0 &&
-      clickedRecommendationId !== id
-    ) {
-      setTimeout(() => {
-        scrollToId(clickedRecommendationId);
-      }, 200);
-    }
-  }, [recommendations]);
 
   return (
     <div className="w-full flex flex-col gap-3 xl:hidden ">
@@ -76,23 +33,8 @@ const MobileRecommendations = React.memo(({ title }) => {
                     return (
                       <div
                         key={recommendation.mediaRecommendation?.idMal}
-                        ref={(node) => {
-                          if (node) {
-                            itemRefs.current.set(
-                              recommendation.mediaRecommendation?.idMal,
-                              node,
-                            );
-                          } else {
-                            itemRefs.current.delete(
-                              recommendation.mediaRecommendation?.idMal,
-                            );
-                          }
-                        }}
                         onClick={() => {
                           window.scrollTo(0, 0);
-                          setClickedRecommendationId(
-                            recommendation.mediaRecommendation.idMal,
-                          );
                           navigate(
                             `/anime/${recommendation.mediaRecommendation.idMal}?title=${slugify(recommendation.mediaRecommendation.title.romaji)}`,
                           );
