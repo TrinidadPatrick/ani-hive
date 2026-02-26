@@ -42,7 +42,6 @@ const TopSection = () => {
       document.body.style.overflow = "";
     }
 
-    // Clean up on unmount
     return () => {
       document.body.style.overflow = "";
     };
@@ -51,7 +50,7 @@ const TopSection = () => {
   return (
     <main id="top">
       {topAnime == null ? (
-        <section className="relative lg:h-[100svh] flex flex-col-reverse md:flex-row items-center justify-between px-6 py-12 bg-gradient-to-r from-black via-transparent to-black text-white animate-pulse">
+        <section className="relative lg:h-[100svh] flex flex-col-reverse md:flex-row items-center justify-center px-6 py-12 bg-gradient-to-r from-black via-transparent to-black text-white animate-pulse">
           {/* Left content skeleton */}
           <div className="w-full lg:w-1/2 space-y-4">
             <div className="h-4 w-24 bg-gray-700 rounded" />
@@ -91,10 +90,7 @@ const TopSection = () => {
             />
           )}
           {/* Background Image */}
-          <motion.img
-            initial={{ scale: 1.1, opacity: 0 }}
-            animate={{ scale: 1, opacity: 0.8 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+          <img
             src={topAnime?.images?.webp.large_image_url}
             alt={topAnime?.title}
             className="absolute w-full h-full object-cover brightness-50"
@@ -257,10 +253,7 @@ const TopSection = () => {
             </div>
 
             {/* Right Side: Anime Poster */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, x: 50 }}
-              animate={{ opacity: 1, scale: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+            <div
               className="flex-1 w-full max-w-sm md:max-w-[300px] xl:max-w-[400px] mt-20 md:mt-0 md:ml-10"
             >
               <img
@@ -272,7 +265,7 @@ const TopSection = () => {
                 }}
                 className="w-full rounded-xl shadow-2xl hover:scale-105 cursor-pointer transition-all duration-500 ease-in-out transform brightness-75"
               />
-            </motion.div>
+            </div>
           </div>
         </section>
       )}
