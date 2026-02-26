@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -10,12 +10,14 @@ import { motion } from "framer-motion";
 import { useUpcomingAnime } from "../../hooks/useUpcomingAnime";
 import slugify from "slugify";
 
-const UpcomingAnime = ({ handleSetScrollPosition }) => {
+const UpcomingAnime = memo(({ handleSetScrollPosition }) => {
   const navigate = useNavigate();
   const { data: upcomingAnime, isLoading } = useUpcomingAnime();
   const [hovered, setHovered] = useState(null);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+
+  console.log(upcomingAnime)
 
   return (
     <main id="upcoming">
@@ -75,7 +77,7 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
 
             <Swiper
               modules={[FreeMode, Navigation]}
-              spaceBetween={20}
+              spaceBetween={10}
               slidesPerView={1}
               slidesPerGroup={1}
               grabCursor
@@ -89,8 +91,8 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
               }}
               breakpoints={{
                 0: {
-                  slidesPerView: 1,
-                  slidesPerGroup: 1,
+                  slidesPerView: 2,
+                  slidesPerGroup: 2,
                 },
                 430: {
                   slidesPerView: 2,
@@ -109,8 +111,8 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
                   slidesPerGroup: 4,
                 },
                 1280: {
-                  slidesPerView: 5,
-                  slidesPerGroup: 5,
+                  slidesPerView: 6,
+                  slidesPerGroup: 6,
                 },
               }}
                 className="w-[95%] md:w-[90%] mx-auto"
@@ -154,21 +156,21 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
                               />
                             </div>
 
-                            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                            <div className="absolute bottom-0 left-0 right-0 px-2 pb-4 sm:p-6 text-white">
                               <div
                                 className={`transition-all duration-300 ${hovered === index
                                     ? "translate-y-0 opacity-100"
                                     : "translate-y-2 opacity-90"
                                   }`}
                               >
-                                <h3 className="text-base 2xl:text-lg font-bold mb-2 line-clamp-2 leading-4 group-hover:text-pink-400 transition-colors">
+                                <h3 className={`text-xs xs:text-sm sm:text-[0.9rem] md:text-base 2xl:text-base font-bold mb-2 ${hovered === index ? 'line-clamp-5' : 'line-clamp-2'} leading-4 group-hover:text-pink-400 transition-colors`}>
                                   {anime?.title_english?.replace(/;/g, " ") ||
                                     anime?.title?.replace(/;/g, " ")}
                                 </h3>
 
                                 <div className="flex items-center gap-2 text-sm text-gray-300">
                                   <svg
-                                    className="w-4 h-4"
+                                    className="h-3 w-3 sm:w-4 sm:h-4"
                                     fill="currentColor"
                                     viewBox="0 0 20 20"
                                   >
@@ -179,7 +181,7 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
                                     />
                                   </svg>
 
-                                  <span>
+                                  <span className="text-xs sm:text-sm lg:text-base">
                                     {anime?.year || "TBA"}{" "}
                                     {anime?.genres?.[0]?.name
                                       ? `- ${anime.genres[0].name}`
@@ -228,6 +230,6 @@ const UpcomingAnime = ({ handleSetScrollPosition }) => {
 }
     </main >
   );
-};
+})
 
 export default UpcomingAnime;

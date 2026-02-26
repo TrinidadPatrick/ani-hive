@@ -48,7 +48,7 @@ const AiringToday = ({ handleSetScrollPosition }) => {
             </div>
           </div>
 
-          <div className="w-[90%] h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+          <div className="w-[90%] h-full grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
             {airingToday?.length > 0 &&
               airingToday.map((anime, index) => {
                 if (1 == 1) {
@@ -65,7 +65,7 @@ const AiringToday = ({ handleSetScrollPosition }) => {
                         onMouseEnter={() => setHovered(index)}
                         onMouseLeave={() => setHovered(-1)}
                       >
-                        <div className="aspect-[4/3] overflow-hidden">
+                        <div className="aspect-[3/4] sm:aspect-[4/3] overflow-hidden">
                           <img
                             src={anime?.images?.jpg?.large_image_url}
                             alt={anime?.title_english || anime?.title}
@@ -73,27 +73,27 @@ const AiringToday = ({ handleSetScrollPosition }) => {
                           />
 
                           <div
-                            className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-300 ${
-                              hovered === index ? "opacity-100" : "opacity-70"
-                            }`}
+                            className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-300 ${hovered === index ? "opacity-100" : "opacity-70"
+                              }`}
                           />
                         </div>
 
-                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                        <div className="absolute bottom-0 left-0 right-0 px-2 pb-4 sm:p-6 text-white">
                           <div
-                            className={`transition-all duration-300 ${
-                              hovered === index
-                                ? "translate-y-0 opacity-100"
-                                : "translate-y-2 opacity-90"
-                            }`}
+                            className={`transition-all duration-300 ${hovered === index
+                              ? "translate-y-0 opacity-100"
+                              : "translate-y-2 opacity-90"
+                              }`}
                           >
-                            <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-pink-400 transition-colors">
-                              {anime?.title_english || anime?.title}
+                            <h3 className={`text-xs xs:text-sm sm:text-[0.9rem] md:text-base 2xl:text-base font-bold mb-2 ${hovered === index ? 'line-clamp-5' : 'line-clamp-2'} leading-4 group-hover:text-pink-400 transition-colors`}>
+                              {anime?.title_english?.replace(/;/g, " ") ||
+                                anime?.title?.replace(/;/g, " ")}
                             </h3>
+
 
                             <div className="flex items-center gap-2 text-sm text-gray-300">
                               <svg
-                                className="w-4 h-4"
+                                className="h-3 w-3 sm:w-4 sm:h-4"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                               >
@@ -104,7 +104,9 @@ const AiringToday = ({ handleSetScrollPosition }) => {
                                 />
                               </svg>
 
-                              <span>{anime?.aired?.string || "TBA"}</span>
+                              <span className="text-xs sm:text-sm lg:text-base">
+                                {anime?.aired?.string || "TBA"}
+                              </span>
                             </div>
                           </div>
 
