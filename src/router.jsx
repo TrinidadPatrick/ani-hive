@@ -7,9 +7,9 @@ import Explore from './pages/Explore/Explore'
 import Characters from './pages/Characters/Characters'
 import MalCallback from './pages/AuthCallback/MalCallback'
 import PrivateLayout from './pages/Layout/PrivateLayout.jsx'
-import AnimeList from './pages/Private/AnimeList/AnimeList.jsx'
 import PageNotFound from './components/ErrorHandlerComponent/PageNotFound.jsx'
 import VoiceActorDetails from './pages/VoiceActor/VoiceActorDetails.jsx'
+import AnimeList from './pages/MalAnimeList/AnimeList.jsx'
 
 const router = createBrowserRouter([
     {

@@ -1,6 +1,6 @@
 import { CheckCircle, ChevronDown, Clock, Eye, PauseCircle, TicketX } from 'lucide-react';
 import React, { useRef, useState } from 'react'
-import { useOutsideClick } from '../../../hooks/useOutsideClick';
+import { useOutsideClick } from '../../hooks/useOutsideClick';
 
 const StatusDrodown = ({selectedWatchStatus, setSelectedWatchStatus, buttonClassname, dropdownClassname, textClassname, titleClassname, arrowClassname, arrowSize, dropdownButtonClassname, action}) => {
     const ref = useRef(null)

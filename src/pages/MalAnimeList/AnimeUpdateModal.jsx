@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 import { ExternalLink, Minus, Plus, Save, Star, X } from "lucide-react";
 import StatusDrodown from "./StatusDrodown";
 import { useEffect, useState } from "react";
-import useUserAnimeStore from "../../../stores/UserAnimeStore.js";
-import LoaderV2 from "../../LoaderV2.jsx";
+import useUserAnimeStore from "../../stores/UserAnimeStore.js";
+import LoaderV2 from "../../components/LoaderV2.jsx";
 import { useNavigate, useParams } from "react-router-dom";
-import useScrollPosition from "../../../stores/ScrollPositionStore.js";
+import useScrollPosition from "../../stores/ScrollPositionStore.js";
 import slugify from "slugify";
 
 const AnimeUpdateModal = ({

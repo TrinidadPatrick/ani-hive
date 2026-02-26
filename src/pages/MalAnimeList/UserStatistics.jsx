@@ -1,8 +1,8 @@
 import React from 'react'
-import useAuthStore from '../../../stores/AuthStore'
+import useAuthStore from '../../stores/AuthStore'
 import { Calendar, CheckCircle, Clock, Pause, Play, Star, Tv, Tv2, XCircle } from 'lucide-react';
 import { motion } from "framer-motion";
-import ProfileSkeleton from '../Skeletons/ProfileSkeleton';
+import ProfileSkeleton from '../../components/MalComponents/Skeletons/ProfileSkeleton';
 
 const UserStatistics = () => {
   const profile = useAuthStore((s) => s.profile)

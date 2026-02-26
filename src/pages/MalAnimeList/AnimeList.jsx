@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import useUserAnimeStore from '../../../stores/UserAnimeStore'
-import AnimeCard from '../../../components/MalComponents/MalAnimeList/AnimeCard.jsx';
-import StatusBar from '../../../components/MalComponents/MalAnimeList/StatusBar.jsx';
-import AnimeListSearch from '../../../components/MalComponents/MalAnimeList/AnimeListSearch.jsx';
-import useScrollPosition from '../../../stores/ScrollPositionStore.js';
-import UserStatistics from '../../../components/MalComponents/MalAnimeList/UserStatistics.jsx';
 import { motion } from "framer-motion";
-import AnimeCardV2 from '../../../components/MalComponents/MalAnimeList/AnimeCardV2.jsx';
-import AnimeListSkeleton from '../../../components/MalComponents/Skeletons/AnimeListSkeleton.jsx';
+import useScrollPosition from '../../stores/ScrollPositionStore';
+import useUserAnimeStore from '../../stores/UserAnimeStore';
+import UserStatistics from './UserStatistics';
+import StatusBar from './StatusBar';
+import AnimeListSearch from './AnimeListSearch';
+import AnimeListSkeleton from '../../components/MalComponents/Skeletons/AnimeListSkeleton';
+import AnimeCard from './AnimeCard';
+import AnimeCardV2 from './AnimeCardV2';
 
 const AnimeList = () => {
   const [searchParams, setSearchParams] = useSearchParams()

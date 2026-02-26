@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import {Calendar, Minus, Pencil, Plus, Save, Star} from 'lucide-react'
 import StatusDrodown from './StatusDrodown'
-import http from '../../../http'
+import http from '../../http'
 import ScorePicker from './ScorePicker'
 import { useNavigate, useParams } from 'react-router-dom'
 import AnimeUpdateModal from './AnimeUpdateModal'
-import useUserAnimeStore from '../../../stores/UserAnimeStore.js'
-import LoaderV2 from '../../LoaderV2.jsx'
+import useUserAnimeStore from '../../stores/UserAnimeStore.js'
+import LoaderV2 from '../../components/LoaderV2.jsx'
 
 const AnimeCardV2 = ({anime, animeInfo}) => {
   const {status} = useParams()

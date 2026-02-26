@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { ChevronDown, Filter, Grid, List, Search, X } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
-import { useOutsideClick } from '../../../hooks/useOutsideClick'
-import generateDate from '../../../utils/generateDate'
+import generateDate from '../../utils/generateDate'
 import { motion } from "framer-motion";
 import { useSearchParams } from 'react-router-dom'
+import { useOutsideClick } from '../../hooks/useOutsideClick';
 
 const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType, setListType}) => {
   const [searchParams, setSearchParams] = useSearchParams()

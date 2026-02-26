@@ -1,5 +1,5 @@
 import { CheckCircle, ChevronDown, Clock, Eye, PauseCircle, TicketX } from 'lucide-react';
-import useAuthStore from '../../../stores/AuthStore';
+import useAuthStore from '../../stores/AuthStore';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 const StatusBar = ({status, setScrollPosition, scrollPosition}) => {
