@@ -61,11 +61,9 @@ const UserLayout = () => {
   return (
     <main>
       {/* Mobile Sidebar */}
-      {showSidebar && (
+      {true && (
         <div
-          data-aos="fade-left"
-          data-aos-easing="ease-in"
-          className="w-full flex md:hidden flex-col justify-center gap-5 h-[100svh] fixed bg-[#141414] z-[99999999]"
+          className={`${showSidebar ? "w-full" : "w-0"} right-0 transition-all ease-in-out duration-200 overflow-hidden flex md:hidden flex-col justify-center gap-5 h-[100svh] fixed bg-[#141414] z-[99999999]`}
         >
           <div>
             <button
