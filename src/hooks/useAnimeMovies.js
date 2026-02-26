@@ -30,5 +30,7 @@ export const useAnimeMovies = (page = 1) => {
         queryFn: () => fetchAnimeMovies(page),
         staleTime: 1000 * 60 * 60,
         gcTime: 1000 * 60 * 60 * 24,
+        retry: 5,
+        retryDelay: 2500
     });
 };

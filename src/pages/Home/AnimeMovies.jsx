@@ -16,7 +16,7 @@ const AnimeMovies = ({ handleSetScrollPosition }) => {
   const [hovered, setHovered] = useState(null);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  console.log(AnimeMovies)
+
   return (
     <main id="movies">
       {isLoading && !AnimeMovies ? (
@@ -129,8 +129,8 @@ const AnimeMovies = ({ handleSetScrollPosition }) => {
                 AnimeMovies.map((anime, index, array) => {
                   if (array[index - 1]?.mal_id !== anime?.mal_id) {
                     const year = anime.aired.from
-                    ? anime.aired.from.split("-")[0]
-                    : "-----";
+                      ? anime.aired.from.split("-")[0]
+                      : "-----";
                     return (
                       <SwiperSlide
                         key={index}
@@ -160,19 +160,21 @@ const AnimeMovies = ({ handleSetScrollPosition }) => {
                               />
 
                               <div
-                                className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-300 ${hovered === index
+                                className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-300 ${
+                                  hovered === index
                                     ? "opacity-100"
                                     : "opacity-70"
-                                  }`}
+                                }`}
                               />
                             </div>
 
                             <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                               <div
-                                className={`transition-all duration-300 ${hovered === index
+                                className={`transition-all duration-300 ${
+                                  hovered === index
                                     ? "translate-y-0 opacity-100"
                                     : "translate-y-2 opacity-90"
-                                  }`}
+                                }`}
                               >
                                 <h3 className="text-base 2xl:text-lg font-bold mb-2 line-clamp-2 leading-4 group-hover:text-pink-400 transition-colors">
                                   {anime?.title_english?.replace(/;/g, " ") ||

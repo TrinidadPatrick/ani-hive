@@ -27,5 +27,7 @@ export const useTopAnimes = (page = 1) => {
         queryFn: () => fetchTopAnimes(page),
         staleTime: 1000 * 60 * 60, // 1 hour
         gcTime: 1000 * 60 * 60 * 24, // 24 hours
+        retry: 5,
+        retryDelay: 2500
     });
 };
