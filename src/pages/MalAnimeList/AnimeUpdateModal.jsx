@@ -57,6 +57,7 @@ const AnimeUpdateModal = ({
 
   const handleUpdate = async () => {
     setTempEpStatus(epStatus);
+    setIsOpen(false);
     const result = await updateAnime({
       id: anime.id,
       num_watched_episodes: epStatus,
@@ -64,7 +65,6 @@ const AnimeUpdateModal = ({
       status: selectedWatchStatus,
     });
     if (result.status === 200) {
-      setIsOpen(false);
       getList(status);
     }
   };

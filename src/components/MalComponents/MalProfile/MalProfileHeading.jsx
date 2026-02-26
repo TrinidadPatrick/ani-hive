@@ -68,8 +68,6 @@ const MalProfileDropdown = () => {
     return null;
   }
 
-  console.log(data);
-
   return (
     <div className="relative h-9 flex-1 flex flex-col">
       {authenticated === true ? (
