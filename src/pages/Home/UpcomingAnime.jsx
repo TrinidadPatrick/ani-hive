@@ -75,7 +75,7 @@ const UpcomingAnime = memo(({ handleSetScrollPosition }) => {
 
             <Swiper
               modules={[FreeMode, Navigation]}
-              spaceBetween={10}
+              spaceBetween={20}
               slidesPerView={1}
               slidesPerGroup={1}
               grabCursor
