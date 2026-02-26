@@ -91,7 +91,7 @@ const Recommendations = React.memo(({ title }) => {
       const hasNext = media.recommendations.nodes.length > 0;
 
       if (hasNext && page <= 5) {
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 5000));
         await getRecommendations(searchTerm, page + 1);
       }
 

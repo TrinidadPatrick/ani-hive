@@ -144,9 +144,7 @@ button {
 }
 
 @import "tailwindcss";
-
-
-
+@plugin "@tailwindcss/typography";
 @theme {
   --breakpoint-semiMd: 850px;
   --breakpoint-xs: 30rem;

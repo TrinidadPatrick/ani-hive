@@ -17,8 +17,6 @@ const UpcomingAnime = memo(({ handleSetScrollPosition }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
-  console.log(upcomingAnime)
-
   return (
     <main id="upcoming">
       {isLoading && !upcomingAnime ? (
