@@ -18,7 +18,8 @@ import useErrorHandler from "../../stores/FetchErrorHandler.js";
 import usePublicAnimeInfo from "../../stores/PublicAnimeInfoStore.js";
 import chibi from "../../images/chibiV2.gif";
 import { useWatchOrder } from "./actions/useGetWatchOrder.js";
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from "react-markdown";
+import Streamer from "./Streamer.jsx";
 
 const AnimeOverView = () => {
   const authenticated = useAuthStore((s) => s.authenticated);
@@ -30,7 +31,9 @@ const AnimeOverView = () => {
   const deleteAnime = useUserAnimeStore((s) => s.deleteAnime);
   const setErrorStatus = useErrorHandler((s) => s.setErrorStatus);
 
-  const {mutate: getWatchOrder, isPending} = useWatchOrder()
+  const [playlist, setPlaylist] = useState([]);
+  const [currentVideo, setCurrentVideo] = useState(null);
+  const videoRef = useRef(null);
 
   const { id } = useParams();
   const [selectedWatchStatus, setSelectedWatchStatus] = useState(null);
@@ -40,10 +43,10 @@ const AnimeOverView = () => {
   const animeRelations = usePublicAnimeInfo((s) => s.animeRelations);
 
   const [chibiMessage, setChibiMessage] = useState({
-    message: '',
-    actionText: '',
-    action: () => {}
-  })
+    message: "",
+    actionText: "",
+    action: () => {},
+  });
 
   const checkAnimeForUser = async (anime_id) => {
     const result = await checkIsSaved(anime_id);
@@ -104,8 +107,8 @@ const AnimeOverView = () => {
   });
 
   const submitAiAction = () => {
-    chibiMessage.action()
-  }
+    chibiMessage.action();
+  };
 
   const InfoRow = ({ label, children }) => (
     <li className="flex justify-start gap-2">
@@ -256,6 +259,8 @@ const AnimeOverView = () => {
                 </div>
               </div>
 
+              <Streamer />
+
               {/* Other informations */}
               <div className="w-full h-full grid grid-cols-1 md:grid-cols-2 bg-themeDarker border border-themeLightDark rounded-lg p-3">
                 <div className="h-full w-full">
@@ -280,12 +285,12 @@ const AnimeOverView = () => {
                       to{" "}
                       {animeInfo?.aired?.to
                         ? new Date(
-                          animeInfo?.aired?.to || "",
-                        ).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })
+                            animeInfo?.aired?.to || "",
+                          ).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })
                         : "TBA"}
                     </InfoRow>
 
@@ -311,7 +316,7 @@ const AnimeOverView = () => {
                     <InfoRow label="Premiered:">
                       {animeInfo?.season
                         ? animeInfo.season.charAt(0).toUpperCase() +
-                        animeInfo.season.slice(1)
+                          animeInfo.season.slice(1)
                         : "???"}{" "}
                       {animeInfo?.year || "???"}
                     </InfoRow>
