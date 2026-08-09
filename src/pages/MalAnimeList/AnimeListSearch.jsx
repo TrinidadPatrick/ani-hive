@@ -65,7 +65,7 @@ const AnimeListSearch = ({setGenreValue, setSearchValue, setDateValue, listType,
 
   const getGenres = async (retries = 10) => {
     try {
-      const result = await axios.get(`https://api.jikan.moe/v4/genres/anime`);
+      const result = await axios.get(`${import.meta.env.VITE_PRIMARY_URL}/genres/anime`);
       if(result.status === 200) {
         const genres = result.data.data
         const themes = [...genres]

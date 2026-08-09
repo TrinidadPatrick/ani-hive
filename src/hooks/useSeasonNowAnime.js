@@ -4,7 +4,7 @@ import localforage from 'localforage';
 import { useEffect } from 'react';
 
 const fetchSeasonNowAnime = async (page = 1) => {
-    const { data } = await axios.get(`https://api.jikan.moe/v4/seasons/now?page=${page}`);
+    const { data } = await axios.get(`${import.meta.env.VITE_PRIMARY_URL}/seasons/now?page=${page}`);
     const animes = data.data;
     await localforage.setItem('seasonNowAnime', animes);
     return animes;

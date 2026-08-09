@@ -11,7 +11,7 @@ const VoiceActorDetails = () => {
     
     const getPersonInfo = async () => {
         try {
-            const response = await axios.get(`https://api.jikan.moe/v4/people/${id}/full`)
+            const response = await axios.get(`${import.meta.env.VITE_PRIMARY_URL}/people/${id}/full`)
             const {data} = response.data
             if(data){
                 setPersonInfo(data)

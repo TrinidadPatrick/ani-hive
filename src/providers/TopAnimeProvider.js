@@ -11,7 +11,7 @@ const TopAnimeProvider = () => {
         const cachedList = await localforage.getItem('topAnimes');
         s_setTopAnimes(cachedList)
         try {
-            const result = await axios.get(`https://api.jikan.moe/v4/top/anime?page=${page || 1}`)
+            const result = await axios.get(`${import.meta.env.VITE_PRIMARY_URL}/top/anime?page=${page || 1}`)
             if(result.status === 200) {
                 s_setTopAnimes(result.data)
             }

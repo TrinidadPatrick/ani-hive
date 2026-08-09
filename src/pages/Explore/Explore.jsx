@@ -84,7 +84,9 @@ const Explore = () => {
 
   const getGenres = async (retries = 10) => {
     try {
-      const result = await axios.get(`https://api.jikan.moe/v4/genres/anime`);
+      const result = await axios.get(
+        `${import.meta.env.VITE_PRIMARY_URL}/genres/anime`,
+      );
       if (result.status === 200) {
         const genres = result.data.data;
         const themes = [...genres];
@@ -117,21 +119,39 @@ const Explore = () => {
     const params = {};
 
     const seasonDates = {
-      winter: { start: `${selectedYear}-01-01`, end: `${selectedYear}-03-31` },
-      spring: { start: `${selectedYear}-04-01`, end: `${selectedYear}-06-30` },
-      summer: { start: `${selectedYear}-07-01`, end: `${selectedYear}-09-30` },
-      fall: { start: `${selectedYear}-10-01`, end: `${selectedYear}-12-31` },
+      winter: {
+        start: `${selectedYear}-01-01`,
+        end: `${selectedYear}-03-31`,
+      },
+      spring: {
+        start: `${selectedYear}-04-01`,
+        end: `${selectedYear}-06-30`,
+      },
+      summer: {
+        start: `${selectedYear}-07-01`,
+        end: `${selectedYear}-09-30`,
+      },
+      fall: {
+        start: `${selectedYear}-10-01`,
+        end: `${selectedYear}-12-31`,
+      },
     };
 
-    const season = seasonDates[selectedSeason.toLowerCase()];
+    const season = selectedSeason
+      ? seasonDates[selectedSeason.toLowerCase()]
+      : null;
 
+    // Search params for frontend state
     if (searchValue) params.q = searchValue;
-    if (selectedGenres.length > 0) params.genres = selectedGenres.join(",");
+    if (selectedGenres?.length > 0) {
+      params.genres = selectedGenres.join(",");
+    }
     if (selectedStatus) params.status = selectedStatus;
     if (selectedSeason) params.season = selectedSeason;
     if (selectedYear) params.year = selectedYear;
     if (selectedType) params.type = selectedType;
     if (pageNum) params.page = pageNum;
+
     if (selectedOrderBy && selectedSortBy) {
       params.order_by = selectedOrderBy;
       params.sort_by = selectedSortBy;
@@ -139,27 +159,59 @@ const Explore = () => {
 
     setSearchParams(params);
 
-    const sortByParams =
-      selectedOrderBy && selectedSortBy
-        ? `&sort=${selectedSortBy}&order_by=${selectedOrderBy}`
-        : "";
+    // API query parameters
+    const queryParams = new URLSearchParams();
 
-    const url =
-      selectedYear == ""
-        ? `https://api.jikan.moe/v4/anime?q=${searchValue}&genres=${selectedGenres}&status=${selectedStatus}&type=${selectedType}&sfw=true&page=${Number(pageNum)}${sortByParams}&unapproved=false&min_score=1`
-        : selectedSeason && selectedYear
-          ? `https://api.jikan.moe/v4/anime?q=${searchValue}&genres=${selectedGenres}&status=${selectedStatus}&start_date=${season.start}&end_date=${season.end}&type=${selectedType}&sfw=true&page=${Number(pageNum)}${sortByParams}&unapproved=false&min_score=1`
-          : selectedYear &&
-            `https://api.jikan.moe/v4/anime?q=${searchValue}&genres=${selectedGenres}&status=${selectedStatus}&start_date=${selectedYear || 1400}-01-01&end_date=${selectedYear || 3010}-12-31&type=${selectedType}&sfw=true&page=${Number(pageNum)}${sortByParams}&unapproved=false&min_score=1`;
+    if (searchValue) {
+      queryParams.set("q", searchValue);
+    }
+
+    if (selectedGenres?.length > 0) {
+      queryParams.set("genres", selectedGenres.join(","));
+    }
+
+    if (selectedStatus) {
+      queryParams.set("status", selectedStatus);
+    }
+
+    if (selectedSeason && selectedYear && season) {
+      queryParams.set("start_date", season.start);
+      queryParams.set("end_date", season.end);
+    } else if (selectedYear) {
+      queryParams.set("start_date", `${selectedYear}-01-01`);
+      queryParams.set("end_date", `${selectedYear}-12-31`);
+    }
+
+    if (selectedType) {
+      queryParams.set("type", selectedType);
+    }
+
+    queryParams.set("sfw", "true");
+
+    if (pageNum) {
+      queryParams.set("page", String(Number(pageNum)));
+    }
+
+    if (selectedOrderBy && selectedSortBy) {
+      queryParams.set("sort", selectedSortBy);
+      queryParams.set("order_by", selectedOrderBy);
+    }
+
+    queryParams.set("unapproved", "false");
+    queryParams.set("min_score", "1");
+
+    const url = `${import.meta.env.VITE_PRIMARY_URL}/anime?${queryParams.toString()}`;
 
     try {
       const result = await axios.get(url);
+
       setAnimeList(result.data.data);
       setPageInfo(result.data.pagination);
       setPage(result.data.pagination.current_page);
       setSearching(false);
     } catch (error) {
       console.log(error);
+
       if (retries > 0) {
         setTimeout(() => {
           handleSearch(

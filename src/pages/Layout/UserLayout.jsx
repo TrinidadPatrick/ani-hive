@@ -186,8 +186,8 @@ const UserLayout = () => {
           onClick={() => navigate("/")}
           className="w-full flex ps-5 cursor-pointer relative z-10"
         >
-          <h1 className="text-white text-center text-4xl font-bold">Ani</h1>
-          <h1 className="text-pink-500 text-center text-4xl font-bold">Hive</h1>
+          <h1 className="text-white text-center text-4xl font-bold select-none">Ani</h1>
+          <h1 className="text-pink-500 text-center text-4xl font-bold select-none">Hive</h1>
         </div>
 
         {/* Desktop Links */}

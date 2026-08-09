@@ -73,7 +73,7 @@ const Recommendations = React.memo(({ title }) => {
     };
 
     try {
-      const { data } = await axios.post("https://graphql.anilist.co", { query, variables });
+      const { data } = await axios.post(`${import.meta.env.VITE_SECONDARY_URL}`, { query, variables });
       const media = data?.data?.Media;
 
       if (!media) return;

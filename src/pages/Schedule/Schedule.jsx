@@ -107,7 +107,7 @@ const Schedule = () => {
         end: endTimestamp,
       };
 
-      const response = await axios.post("https://graphql.anilist.co", {
+      const response = await axios.post(`${import.meta.env.VITE_SECONDARY_URL}`, {
         query,
         variables,
       });
@@ -127,7 +127,7 @@ const Schedule = () => {
   const getAiringAnime = async (day, retries = 10) => {
     try {
       const response = await axios.get(
-        `https://api.jikan.moe/v4/schedules?filter=${day}&limit=20&sfw=true`,
+        `${import.meta.env.VITE_PRIMARY_URL}/schedules?filter=${day.toLowerCase()}&limit=20&sfw=true`,
       );
       const uniqueAnimes = response.data.data.filter(
         (obj, index, self) =>

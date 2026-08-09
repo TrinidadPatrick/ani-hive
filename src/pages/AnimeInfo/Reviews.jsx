@@ -13,7 +13,7 @@ const Reviews = ({mal_id}) => {
 
     const getUserReviews = async (mal_id, retries = 10) => {
         try {
-            const result = await axios.get(`https://api.jikan.moe/v4/anime/${mal_id}/reviews`)
+            const result = await axios.get(`${import.meta.env.VITE_PRIMARY_URL}/anime/${mal_id}/reviews`)
                 if(result.status === 200) {
                     const reviews = result.data.data
                     const sortedReviews = reviews.sort((a,b) => new Date(b.date) - new Date(a.date))

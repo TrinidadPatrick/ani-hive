@@ -37,7 +37,7 @@ const ongoingAnimeQuery = `
 
 const fetchOngoingAnime = async (page = 1) => {
   const response = await axios.post(
-    'https://graphql.anilist.co',
+    `${import.meta.env.VITE_SECONDARY_URL}`,
     { query: ongoingAnimeQuery, variables: { page } },
     { headers: { 'Content-Type': 'application/json' } }
   );

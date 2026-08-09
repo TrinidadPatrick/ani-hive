@@ -34,7 +34,7 @@ const Characters = () => {
     const getCharacters = async (page , searchValue, option, retries = 0) => {
         setSearching(true)
         try {
-            const result = await axios.get(`https://api.jikan.moe/v4/characters?q=${searchValue || ''}&page=${page || 1}&order_by=favorites&sort=desc`)
+            const result = await axios.get(`${import.meta.env.VITE_PRIMARY_URL}/characters?q=${searchValue || ''}&page=${page || 1}&order_by=favorites&sort=desc`)
             option == 1 ? setCharacters((prevCharacters) => ([...prevCharacters, ...result.data.data])) : setCharacters(result.data.data)
         } catch (error) {
             setErrorStatus(error.status)

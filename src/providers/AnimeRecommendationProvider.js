@@ -7,7 +7,7 @@ const AnimeRecommendationProvider = () => {
 
   const getAnimeRecommendation = async (page, retries = 10) => {
     try {
-        const result = await axios.get(`https://api.jikan.moe/v4/recommendations/anime?page=${page || 1}&limit=25`)
+        const result = await axios.get(`${import.meta.env.VITE_PRIMARY_URL}/recommendations/anime?page=${page || 1}&limit=25`)
         if(result.status === 200) {
             const animes = result.data.data
             const list = animes.map((anime)=>anime.entry)

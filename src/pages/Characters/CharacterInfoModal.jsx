@@ -14,8 +14,8 @@ const CharacterInfoModal = ({character, setIsOpen}) => {
 
     const getCharacterInfo = async (retries = 10) => {
         try {
-            const response = await axios.get(`https://api.jikan.moe/v4/characters/${mal_id}/full`)
-            const pictures = await axios.get(`https://api.jikan.moe/v4/characters/${mal_id}/pictures`)
+            const response = await axios.get(`${import.meta.env.VITE_PRIMARY_URL}/characters/${mal_id}/full`)
+            const pictures = await axios.get(`${import.meta.env.VITE_PRIMARY_URL}/characters/${mal_id}/pictures`)
             const {data} = response.data
             data.pictures = pictures.data.data
             setCharacterFullInfo(data)

@@ -13,7 +13,7 @@ const AnimeMoviesProvider = () => {
       const cachedList = await localforage.getItem('animeMovies');
       if(cachedList) s_setAnimeMovies(cachedList)
         try {
-            const result = await axios.get(`https://api.jikan.moe/v4/anime?type=movie&order_by=popularity&sort=asc&page=${page || 1}`)
+            const result = await axios.get(`${import.meta.env.VITE_PRIMARY_URL}/anime?type=movie&order_by=popularity&sort=asc&page=${page || 1}`)
             if(result.status === 200) {
                 const animes = result.data.data
                 s_setAnimeMovies(animes)

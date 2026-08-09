@@ -12,7 +12,7 @@ const SeasonNowAnimeProvider = () => {
     const cachedList = await localforage.getItem('seasonNowAnime');
     s_setSeasonNowAnime(cachedList)
     try {
-        const result = await axios.get(`https://api.jikan.moe/v4/seasons/now?page=${page || 1}`)
+        const result = await axios.get(`${import.meta.env.VITE_PRIMARY_URL}/seasons/now?page=${page || 1}`)
         if(result.status === 200) {
             const animes = result.data.data
             s_setSeasonNowAnime(animes)

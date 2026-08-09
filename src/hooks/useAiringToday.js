@@ -4,9 +4,10 @@ import localforage from 'localforage';
 import { useEffect } from 'react';
 
 const fetchAiringToday = async () => {
-    const today = new Date().toLocaleString('en-US', { weekday: 'long' });
+    const today = new Date().toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
     const result = await axios.get(
-        `https://api.jikan.moe/v4/schedules?filter=${today}&limit=20&sfw=true`
+        // `https://api.jikan.moe/v4/schedules?filter=${today}&limit=20&sfw=true`
+        `${import.meta.env.VITE_PRIMARY_URL}/schedules?filter=${today}&limit=20&sfw=true`
     );
     const animes = result.data.data.filter(
         (obj, index, self) =>

@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 const fetchUpcomingAnime = async (page = 1) => {
     const result = await axios.get(
-        `https://api.jikan.moe/v4/seasons/upcoming?page=${page}`
+        `${import.meta.env.VITE_PRIMARY_URL}/seasons/upcoming?page=${page}`
     );
     const animes = result.data;
     await localforage.setItem("upcomingAnimes", animes);

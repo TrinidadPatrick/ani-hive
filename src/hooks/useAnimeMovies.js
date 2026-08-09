@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 const fetchAnimeMovies = async (page = 1) => {
     const result = await axios.get(
-        `https://api.jikan.moe/v4/anime?type=movie&order_by=popularity&sort=asc&page=${page}`
+        `${import.meta.env.VITE_PRIMARY_URL}/anime?type=movie&order_by=popularity&sort=asc&page=${page}`
     );
     const animes = result.data.data;
     await localforage.setItem('animeMovies', animes);

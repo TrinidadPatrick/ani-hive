@@ -15,7 +15,7 @@ const Characters = React.memo(({ mal_id }) => {
 
     const getCharacters = async (mal_id, retries = 10) => {
         try {
-            const result = await axios.get(`https://api.jikan.moe/v4/anime/${mal_id}/characters`)
+            const result = await axios.get(`${import.meta.env.VITE_PRIMARY_URL}/anime/${mal_id}/characters`)
             if (result.status === 200) {
                 const characters = result.data.data
                 const sortedCharacters = characters.sort((a, b) => b.favorites - a.favorites)

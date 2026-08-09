@@ -89,7 +89,7 @@ const AnimeOverView = () => {
     queryKey: ["animeInfo", id],
     queryFn: async () => {
       const { data } = await axios.get(
-        `https://api.jikan.moe/v4/anime/${id}/full`,
+        `${import.meta.env.VITE_PRIMARY_URL}/anime/${id}/full`,
       );
       return data.data;
     },

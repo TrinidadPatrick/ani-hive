@@ -4,7 +4,7 @@ import localforage from 'localforage';
 import { useEffect } from 'react';
 
 const fetchTopAnimes = async (page = 1) => {
-    const { data } = await axios.get(`https://api.jikan.moe/v4/top/anime?page=${page}`);
+    const { data } = await axios.get(`${import.meta.env.VITE_PRIMARY_URL}/top/anime?page=${page}`);
     await localforage.setItem('topAnime', data);
     return data;
 };
