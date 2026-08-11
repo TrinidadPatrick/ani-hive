@@ -7,6 +7,7 @@ import Footer from "../Home/Footer";
 import useExploreAnimeList from "../../stores/ExploreAnimeListStore";
 import ExploreNavbar from "./ExploreNavbar";
 import useScrollPosition from "../../stores/ScrollPositionStore";
+import { Star } from "lucide-react";
 
 const Explore = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Explore = () => {
   const setScrollPosition = useScrollPosition((s) => s.setScrollPosition);
   const animeList = useExploreAnimeList((s) => s.animeList);
   const setAnimeList = useExploreAnimeList((s) => s.setAnimeList);
+  const [hovered, setHovered] = useState(null);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [searchParams, setSearchParams] = useSearchParams();
   const [genres, setGenres] = useState([]);
@@ -357,7 +359,7 @@ const Explore = () => {
       />
 
       {/* List */}
-      <div className="w-[90%] relative mx-auto h-fit gap-5 z-9 grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+      <div className="w-[90%] relative mx-auto h-fit gap-5 z-9 grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
         {/* Results and clear filter for mobile */}
         <div className="absolute right-0 -top-1 flex w-full justify-end">
           <p className=" text-gray-200 text-sm">
@@ -387,6 +389,8 @@ const Explore = () => {
               return (
                 <div
                   key={index}
+                  onMouseEnter={() => setHovered(index)}
+                  onMouseLeave={() => setHovered(-1)}
                   onClick={() => {
                     setScrollPosition({
                       ...scrollPosition,
@@ -396,42 +400,68 @@ const Explore = () => {
                       `/anime/${anime?.mal_id}?title=${slugify(anime.title)}`,
                     );
                   }}
-                  className="w-full h-fit rounded-lg bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center"
+                  className="w-full h-fit rounded-lg group bg-transparent cursor-pointer relative overflow-hidden flex flex-col items-center justify-center"
                 >
-                  <div className="w-fit flex items-center absolute z-[999] text-white top-1 left-2 px-2 py-1 rounded-lg overflow-hidden gap-0">
-                    <div className="w-full h-full bg-black opacity-55 absolute left-0 top-0"></div>
-                    <svg
-                      className="z-[9999]"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="orange"
-                        d="m12 17.275l-4.15 2.5q-.275.175-.575.15t-.525-.2t-.35-.437t-.05-.588l1.1-4.725L3.775 10.8q-.25-.225-.312-.513t.037-.562t.3-.45t.55-.225l4.85-.425l1.875-4.45q.125-.3.388-.45t.537-.15t.537.15t.388.45l1.875 4.45l4.85.425q.35.05.55.225t.3.45t.038.563t-.313.512l-3.675 3.175l1.1 4.725q.075.325-.05.588t-.35.437t-.525.2t-.575-.15z"
-                      />
-                    </svg>
-                    <p className="z-[9999] mt-[1px] text-sm">{anime?.score}</p>
-                  </div>
-                  {/* Image */}
-                  <div className="rounded-lg overflow-hidden">
+                  {/* Image Container */}
+                  <div className="rounded-lg overflow-hidden relative border border-gray-800">
                     <img
                       src={anime?.images?.webp?.image_url}
                       alt={anime?.title_english || anime?.title}
-                      className=" w-full h-full hover:scale-105 object-cover rounded-lg brightness-70 aspect-[2/3]"
+                      className=" w-full h-full hover:scale-105 object-cover rounded-lg aspect-[2/3]"
                     />
+
+                    <div
+                      className={`absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent transition-opacity duration-300 ${
+                        hovered === index ? "opacity-100" : "opacity-90"
+                      }`}
+                    />
+
+                    {/* Year and status */}
+                    <div className="absolute bottom-0 left-0 right-0 px-2 pb-4 sm:p-3 text-white">
+                      <div
+                        className={`transition-all duration-300 ${
+                          hovered === index
+                            ? "translate-y-0 opacity-100"
+                            : "translate-y-2 opacity-90"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 text-gray-300 jakarta">
+                          <span className="text-xs">
+                            {anime?.year || "TBA"}{" "}
+                            <span className="text-pink-600 text-xl"> • </span>
+                            {anime?.status || ""}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
+                  {anime?.score && (
+                    <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-0.5 rounded-full text-xs font-semibold text-white flex items-center gap-1">
+                      <Star
+                        className="fill-amber-500 text-amber-500"
+                        width={13}
+                      />
+                      {anime?.score}
+                    </div>
+                  )}
+
                   {/* Info */}
-                  <div className="w-full px-3 py-1 bottom-0 bg-transparent sm:h-[25%] md:h-[20%] rounded-b-lg flex">
-                    <div className="flex flex-col items-start w-full h-full justify-around">
-                      <h2 className="text-white text-center text-sm md:text-[0.9rem] mt-1 line-clamp-2 w-full">
-                        {anime?.title || ""}
-                      </h2>
-                      <h2 className="text-gray-300 text-center w-full text-sm md:text-sm mt-2">
-                        {/* {anime?.genres.join(', ')} */}
-                      </h2>
+                  <div className="w-full bottom-0 bg-transparent rounded-b-lg flex h-full text-white mt-3">
+                    <div className="flex flex-col items-start w-full h-full justify-between b">
+                      <h3 className="text-white font-medium text-start text-sm md:text-[0.9rem] w-full leading-5 line-clamp-2 overflow-hidden max-h-5 group-hover:max-h-10 transition-[max-height] duration-300 ease-out">
+                              {anime?.title?.english || anime?.title?.romaji}
+                        {anime?.title_english?.replace(/;/g, " ") ||
+                          anime?.title?.replace(/;/g, " ")}
+                      </h3>
+                      <div className=" z-[999] w-full ">
+                        <span className="text-xs text-white/50 font-light jakarta">
+                          {anime?.genres
+                            ?.slice(0, 2)
+                            .map((genre) => genre.name)
+                            .join(" • ")}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>

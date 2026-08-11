@@ -121,9 +121,8 @@ const AiringToday = ({ handleSetScrollPosition }) => {
 
                         {/* Title & Genre */}
                         <div className="flex flex-col mt-3 text-white">
-                          <h3
-                            className={`text-xs xs:text-sm sm:text-[0.9rem] md:text-base 2xl:text-base font-semibold mb-1 ${hovered === index ? "line-clamp-5" : "line-clamp-1"} leading-4 transition-colors`}
-                          >
+                          <h3 className="text-white font-medium text-start text-sm md:text-[0.9rem] mt-1 w-full leading-5 line-clamp-2 overflow-hidden max-h-5 group-hover:max-h-10 transition-[max-height] duration-300 ease-out">
+                              {anime?.title?.english || anime?.title?.romaji}
                             {anime?.title_english?.replace(/;/g, " ") ||
                               anime?.title?.replace(/;/g, " ")}
                           </h3>

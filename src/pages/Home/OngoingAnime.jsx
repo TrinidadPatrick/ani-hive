@@ -103,9 +103,9 @@ const OngoingAnime = ({ handleSetScrollPosition }) => {
                         {/* Info */}
                         <div className="w-full px-1 py-1 bottom-0 bg-transparent rounded-b-lg flex h-full">
                           <div className="flex flex-col items-start w-full h-full justify-between b">
-                            <h2 className="text-white font-medium text-start text-sm md:text-[0.9rem] mt-1 w-full leading-5 line-clamp-2 overflow-hidden max-h-5 group-hover:max-h-10 transition-[max-height] duration-300 ease-out">
+                            <h3 className="text-white font-medium text-start text-sm md:text-[0.9rem] mt-1 w-full leading-5 line-clamp-2 overflow-hidden max-h-5 group-hover:max-h-10 transition-[max-height] duration-300 ease-out">
                               {anime?.title?.english || anime?.title?.romaji}
-                            </h2>
+                            </h3>
                             <div className=" z-[999] w-full py-0.5 mt-1 ">
                               <span className="text-gray-300 text-start gap-2 rounded text-xs line-clamp-1">
                                 {anime?.genres?.slice(0, 2).join(" • ")}
