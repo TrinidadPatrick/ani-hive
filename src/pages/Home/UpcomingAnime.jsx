@@ -61,14 +61,14 @@ const UpcomingAnime = memo(({ handleSetScrollPosition }) => {
           <div className="relative p-2 md:p-0">
             <button
               ref={prevRef}
-              className="cursor-pointer hover:text-gray-400 swiper-button-prev-custom hidden lg:block absolute left-5 z-10 top-1/2 -translate-y-1/2 text-white text-2xl px-2"
+              className="cursor-pointer hover:text-gray-400 swiper-button-prev-custom hidden md:block absolute left-5 z-10 top-1/2 -translate-y-1/2 text-white text-2xl px-2"
             >
               ◀
             </button>
 
             <button
               ref={nextRef}
-              className="cursor-pointer hover:text-gray-400 swiper-button-next-custom hidden lg:block absolute right-5 z-10 top-1/2 -translate-y-1/2 text-white text-2xl px-2"
+              className="cursor-pointer hover:text-gray-400 swiper-button-next-custom hidden md:block absolute right-5 z-10 top-1/2 -translate-y-1/2 text-white text-2xl px-2"
             >
               ▶
             </button>
@@ -113,9 +113,9 @@ const UpcomingAnime = memo(({ handleSetScrollPosition }) => {
                   slidesPerGroup: 6,
                 },
               }}
-                className="w-[95%] md:w-[90%] mx-auto"
-                >
-                { upcomingAnime?.data?.length > 0 &&
+              className="w-[95%] md:w-[90%] mx-auto"
+            >
+              {upcomingAnime?.data?.length > 0 &&
                 upcomingAnime.data.map((anime, index, array) => {
                   if (array[index - 1]?.mal_id !== anime?.mal_id) {
                     return (
@@ -132,11 +132,12 @@ const UpcomingAnime = memo(({ handleSetScrollPosition }) => {
                           transition={{ delay: (index % 10) * 0.05 }}
                         >
                           <div
-                            className="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                            className="group relative overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
                             onMouseEnter={() => setHovered(index)}
                             onMouseLeave={() => setHovered(-1)}
                           >
-                            <div className="aspect-[3/4] overflow-hidden">
+                            {/* Image Container */}
+                            <div className="aspect-[3/4] overflow-hidden rounded-2xl relative border border-gray-800">
                               <img
                                 src={
                                   anime?.images?.jpg?.large_image_url ||
@@ -146,63 +147,31 @@ const UpcomingAnime = memo(({ handleSetScrollPosition }) => {
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                               />
 
+                              {/* Backdrop */}
                               <div
-                                className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-300 ${hovered === index
+                                className={`absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent transition-opacity duration-300 ${
+                                  hovered === index
                                     ? "opacity-100"
-                                    : "opacity-70"
-                                  }`}
+                                    : "opacity-90"
+                                }`}
                               />
-                            </div>
 
-                            <div className="absolute bottom-0 left-0 right-0 px-2 pb-4 sm:p-6 text-white">
-                              <div
-                                className={`transition-all duration-300 ${hovered === index
-                                    ? "translate-y-0 opacity-100"
-                                    : "translate-y-2 opacity-90"
+                              {/* Year and status */}
+                              <div className="absolute bottom-0 left-0 right-0 pb-4 sm:p-3 text-white">
+                                <div
+                                  className={`transition-all duration-300 ${
+                                    hovered === index
+                                      ? "translate-y-0 opacity-100"
+                                      : "translate-y-2 opacity-90"
                                   }`}
-                              >
-                                <h3 className={`text-xs xs:text-sm sm:text-[0.9rem] md:text-base 2xl:text-base font-bold mb-2 ${hovered === index ? 'line-clamp-5' : 'line-clamp-2'} leading-4 group-hover:text-pink-400 transition-colors`}>
-                                  {anime?.title_english?.replace(/;/g, " ") ||
-                                    anime?.title?.replace(/;/g, " ")}
-                                </h3>
-
-                                <div className="flex items-center gap-2 text-sm text-gray-300">
-                                  <svg
-                                    className="h-3 w-3 sm:w-4 sm:h-4"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      clipRule="evenodd"
-                                      d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                    />
-                                  </svg>
-
-                                  <span className="text-xs sm:text-sm lg:text-base">
-                                    {anime?.year || "TBA"}{" "}
-                                    {anime?.genres?.[0]?.name
-                                      ? `- ${anime.genres[0].name}`
-                                      : ""}
-                                  </span>
+                                >
+                                  <div className="flex items-center gap-2 p-1 text-gray-300 jakarta">
+                                    <span className="text-xs">
+                                      {anime?.year || "TBA"}{" "}
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
-
-                              {hovered === index && (
-                                <button
-                                  onClick={() => {
-                                    handleSetScrollPosition();
-                                    navigate(
-                                      `/anime/${anime?.mal_id}?title=${slugify(
-                                        anime?.title || "",
-                                      )}`,
-                                    );
-                                  }}
-                                  className="cursor-pointer mt-4 px-4 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105"
-                                >
-                                  View Details
-                                </button>
-                              )}
                             </div>
 
                             {anime?.score && (
@@ -214,20 +183,34 @@ const UpcomingAnime = memo(({ handleSetScrollPosition }) => {
                                 {anime?.score}
                               </div>
                             )}
+
+                            {/* Title & Genre */}
+                            <div className="flex flex-col mt-3 text-white">
+                              <h3
+                                className={`text-xs xs:text-sm sm:text-[0.9rem] md:text-base 2xl:text-base font-semibold mb-1 ${hovered === index ? "line-clamp-5" : "line-clamp-1"} leading-4 transition-colors`}
+                              >
+                                {anime?.title_english?.replace(/;/g, " ") ||
+                                  anime?.title?.replace(/;/g, " ")}
+                              </h3>
+                              <span className="text-xs text-white/50 font-light jakarta">
+                                {anime?.genres
+                                  ?.slice(0, 2)
+                                  .map((genre) => genre.name)
+                                  .join(" • ")}
+                              </span>
+                            </div>
                           </div>
                         </motion.div>
                       </SwiperSlide>
                     );
                   }
-                })
-              }
-                        </Swiper>
-        </div>
+                })}
+            </Swiper>
+          </div>
         </section>
-  )
-}
-    </main >
+      )}
+    </main>
   );
-})
+});
 
 export default UpcomingAnime;
