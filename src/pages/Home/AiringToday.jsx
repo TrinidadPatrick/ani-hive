@@ -48,7 +48,7 @@ const AiringToday = ({ handleSetScrollPosition }) => {
             </div>
           </div>
 
-          <div className="w-[90%] h-full grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+          <div className="w-[90%] h-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 mt-10">
             {airingToday?.length > 0 &&
               airingToday.map((anime, index) => {
                 if (1 == 1) {
@@ -61,78 +61,70 @@ const AiringToday = ({ handleSetScrollPosition }) => {
                       transition={{ delay: (index % 10) * 0.05 }}
                     >
                       <div
-                        className="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                        className="group relative overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
                         onMouseEnter={() => setHovered(index)}
                         onMouseLeave={() => setHovered(-1)}
                       >
-                        <div className="aspect-[3/4] sm:aspect-[4/3] overflow-hidden">
+                        {/* Image Container */}
+                        <div className="aspect-[3/4] overflow-hidden rounded-2xl relative border border-gray-800">
                           <img
-                            src={anime?.images?.jpg?.large_image_url}
+                            src={
+                              anime?.images?.jpg?.large_image_url ||
+                              anime?.images?.webp?.large_image_url
+                            }
                             alt={anime?.title_english || anime?.title}
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                           />
 
+                          {/* Backdrop */}
                           <div
-                            className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-300 ${hovered === index ? "opacity-100" : "opacity-70"
-                              }`}
+                            className={`absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent transition-opacity duration-300 ${
+                              hovered === index ? "opacity-100" : "opacity-90"
+                            }`}
                           />
-                        </div>
 
-                        <div className="absolute bottom-0 left-0 right-0 px-2 pb-4 sm:p-6 text-white">
-                          <div
-                            className={`transition-all duration-300 ${hovered === index
-                              ? "translate-y-0 opacity-100"
-                              : "translate-y-2 opacity-90"
+                          {/* Year and status */}
+                          <div className="absolute bottom-0 left-0 right-0 pb-4 sm:p-3 text-white">
+                            <div
+                              className={`transition-all duration-300 ${
+                                hovered === index
+                                  ? "translate-y-0 opacity-100"
+                                  : "translate-y-2 opacity-90"
                               }`}
-                          >
-                            <h3 className={`text-xs xs:text-sm sm:text-[0.9rem] md:text-base 2xl:text-base font-bold mb-2 ${hovered === index ? 'line-clamp-5' : 'line-clamp-2'} leading-4 group-hover:text-pink-400 transition-colors`}>
-                              {anime?.title_english?.replace(/;/g, " ") ||
-                                anime?.title?.replace(/;/g, " ")}
-                            </h3>
-
-
-                            <div className="flex items-center gap-2 text-sm text-gray-300">
-                              <svg
-                                className="h-3 w-3 sm:w-4 sm:h-4"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  clipRule="evenodd"
-                                  d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                />
-                              </svg>
-
-                              <span className="text-xs sm:text-sm lg:text-base">
-                                {anime?.aired?.string || "TBA"}
-                              </span>
+                            >
+                              <div className="flex items-center gap-2 p-1 text-gray-300 jakarta">
+                                <span className="text-xs">
+                                  {anime?.aired?.string || "TBA"}
+                                </span>
+                              </div>
                             </div>
                           </div>
-
-                          {hovered === index && (
-                            <button
-                              onClick={() => {
-                                handleSetScrollPosition();
-                                navigate(
-                                  `/anime/${anime?.mal_id}?title=${slugify(
-                                    anime?.title || "",
-                                  )}`,
-                                );
-                              }}
-                              className="cursor-pointer mt-4 px-4 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105"
-                            >
-                              View Details
-                            </button>
-                          )}
                         </div>
 
-                        <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-0.5 rounded-full text-xs font-semibold text-white flex items-center gap-1">
-                          <Star
-                            className="fill-amber-500 text-amber-500"
-                            width={13}
-                          />
-                          {anime?.score || "0"}
+                        {anime?.score && (
+                          <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-0.5 rounded-full text-xs font-semibold text-white flex items-center gap-1">
+                            <Star
+                              className="fill-amber-500 text-amber-500"
+                              width={13}
+                            />
+                            {anime?.score}
+                          </div>
+                        )}
+
+                        {/* Title & Genre */}
+                        <div className="flex flex-col mt-3 text-white">
+                          <h3
+                            className={`text-xs xs:text-sm sm:text-[0.9rem] md:text-base 2xl:text-base font-semibold mb-1 ${hovered === index ? "line-clamp-5" : "line-clamp-1"} leading-4 transition-colors`}
+                          >
+                            {anime?.title_english?.replace(/;/g, " ") ||
+                              anime?.title?.replace(/;/g, " ")}
+                          </h3>
+                          <span className="text-xs text-white/50 font-light jakarta">
+                            {anime?.genres
+                              ?.slice(0, 2)
+                              .map((genre) => genre.name)
+                              .join(" • ")}
+                          </span>
                         </div>
                       </div>
                     </motion.div>
