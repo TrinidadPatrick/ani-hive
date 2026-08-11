@@ -74,9 +74,9 @@ const OngoingAnime = ({ handleSetScrollPosition }) => {
                           );
                           handleSetScrollPosition();
                         }}
-                        className="w-full rounded-lg cursor-pointer relative overflow-hidden flex flex-col items-center "
+                        className="w-full rounded-lg cursor-pointer relative overflow-hidden flex flex-col items-center group"
                       >
-                        {/* Image */}
+                        {/* Image Container*/}
                         <div className="rounded-lg overflow-hidden flex-none relative">
                           {/* badge */}
                           {anime.isHot && anime.isPopular && (
@@ -88,8 +88,10 @@ const OngoingAnime = ({ handleSetScrollPosition }) => {
                           <img
                             src={anime?.coverImage?.large}
                             alt={anime?.title?.romaji}
-                            className=" w-full h-full hover:scale-105 object-cover rounded-lg aspect-[2/2.3]"
+                            className=" w-full h-full transition-transform duration-700 group-hover:scale-110 object-cover rounded-lg aspect-[2/2.3]"
                           />
+
+                          <div className={`absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent transition-opacity duration-300 opacity-60`}/>
                         </div>
 
                         <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-white flex items-center gap-1">
@@ -101,13 +103,13 @@ const OngoingAnime = ({ handleSetScrollPosition }) => {
                         {/* Info */}
                         <div className="w-full px-1 py-1 bottom-0 bg-transparent rounded-b-lg flex h-full">
                           <div className="flex flex-col items-start w-full h-full justify-between b">
-                            <h2 className="text-white font-medium text-start text-sm md:text-[0.9rem] mt-1 line-clamp-2 w-full">
+                            <h2 className="text-white font-medium text-start text-sm md:text-[0.9rem] mt-1 w-full leading-5 line-clamp-2 overflow-hidden max-h-5 group-hover:max-h-10 transition-[max-height] duration-300 ease-out">
                               {anime?.title?.english || anime?.title?.romaji}
                             </h2>
-                            <div className=" z-[999] w-full py-0.5 mt-2 ">
-                              <div className="text-gray-300 text-start gap-2 rounded text-xs md:text-[0.8rem] line-clamp-1">
-                                {anime?.genres?.slice(0, 2).join(", ")}
-                              </div>
+                            <div className=" z-[999] w-full py-0.5 mt-1 ">
+                              <span className="text-gray-300 text-start gap-2 rounded text-xs line-clamp-1">
+                                {anime?.genres?.slice(0, 2).join(" • ")}
+                              </span>
                             </div>
                           </div>
                         </div>
