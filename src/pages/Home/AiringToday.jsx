@@ -61,6 +61,14 @@ const AiringToday = ({ handleSetScrollPosition }) => {
                       transition={{ delay: (index % 10) * 0.05 }}
                     >
                       <div
+                        onClick={() => {
+                          navigate(
+                            `/anime/${anime?.mal_id}?title=${slugify(
+                              anime?.title || "",
+                            )}`,
+                          );
+                          handleSetScrollPosition();
+                        }}
                         className="group relative overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
                         onMouseEnter={() => setHovered(index)}
                         onMouseLeave={() => setHovered(-1)}

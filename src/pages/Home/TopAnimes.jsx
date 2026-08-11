@@ -147,11 +147,18 @@ const TopAnimes = ({ handleSetScrollPosition }) => {
                           transition={{ delay: (index % 10) * 0.05 }}
                         >
                           <div
+                            onClick={() => {
+                              navigate(
+                                `/anime/${anime?.mal_id}?title=${slugify(
+                                  anime?.title || "",
+                                )}`,
+                              );
+                              handleSetScrollPosition();
+                            }}
                             className="group relative overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
                             onMouseEnter={() => setHovered(index)}
                             onMouseLeave={() => setHovered(-1)}
                           >
-
                             {/* Image Container */}
                             <div className="aspect-[3/4] overflow-hidden rounded-2xl relative border border-gray-800">
                               <img
@@ -164,30 +171,34 @@ const TopAnimes = ({ handleSetScrollPosition }) => {
                               />
 
                               {/* Backdrop */}
-                              <div className={`absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent transition-opacity duration-300 ${
+                              <div
+                                className={`absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent transition-opacity duration-300 ${
                                   hovered === index
                                     ? "opacity-100"
-                                    : "opacity-90"}`}/>
+                                    : "opacity-90"
+                                }`}
+                              />
 
                               {/* Year and status */}
                               <div className="absolute bottom-0 left-0 right-0 px-2 pb-4 sm:p-3 text-white">
-                              <div
-                                className={`transition-all duration-300 ${
-                                  hovered === index
-                                    ? "translate-y-0 opacity-100"
-                                    : "translate-y-2 opacity-90"
-                                }`}
-                              >
-
-                                <div className="flex items-center gap-2 text-gray-300 jakarta">
-                                  <span className="text-xs">
-                                    {anime?.year || "TBA"}{" "}
-                                    <span className="text-pink-600 text-xl"> • </span>
-                                    {anime?.status || ""}
-                                  </span>
+                                <div
+                                  className={`transition-all duration-300 ${
+                                    hovered === index
+                                      ? "translate-y-0 opacity-100"
+                                      : "translate-y-2 opacity-90"
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-2 text-gray-300 jakarta">
+                                    <span className="text-xs">
+                                      {anime?.year || "TBA"}{" "}
+                                      <span className="text-pink-600 text-xl">
+                                        {" "}
+                                        •{" "}
+                                      </span>
+                                      {anime?.status || ""}
+                                    </span>
+                                  </div>
                                 </div>
-                              </div>
-
                               </div>
                             </div>
 
@@ -210,10 +221,12 @@ const TopAnimes = ({ handleSetScrollPosition }) => {
                                   anime?.title?.replace(/;/g, " ")}
                               </h3>
                               <span className="text-xs text-white/50 font-light jakarta">
-                                {anime?.genres?.slice(0, 2).map((genre) => genre.name).join(' • ')}
+                                {anime?.genres
+                                  ?.slice(0, 2)
+                                  .map((genre) => genre.name)
+                                  .join(" • ")}
                               </span>
                             </div>
-                            
                           </div>
                         </motion.div>
                       </SwiperSlide>
