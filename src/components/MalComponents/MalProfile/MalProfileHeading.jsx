@@ -69,7 +69,7 @@ const MalProfileDropdown = () => {
   }
 
   return (
-    <div className="relative h-9 flex-1 flex flex-col">
+    <div className="relative h-9 flex-1 flex flex-col z-999999">
       {authenticated === true ? (
         <div
           ref={ref}
@@ -158,7 +158,7 @@ const ProfileDropdown = ({ profile, setOpen, logout }) => {
   ];
 
   return (
-    <main className="bg-themeDarker rounded-lg shadow-xl border border-themeDark absolute top-10 right-0 z-[999999999999999]">
+    <main className="bg-themeDarker rounded-lg shadow-xl border border-themeDark absolute top-10 right-0 z-999999999999999">
       <header className="flex items-center px-4 py-3 gap-3 border-b border-themeDark cursor-default">
         <User className="w-5 h-5 text-slate-400" />
         <h3 className="font-medium whitespace-nowrap text-slate-200">

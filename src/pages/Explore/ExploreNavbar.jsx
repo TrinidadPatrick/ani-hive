@@ -87,7 +87,7 @@ const ExploreNavbar = (props) => {
   }
 
   return (
-    <div onClick={(e)=> e.stopPropagation()} className=" w-[95%]  lg:w-[90%] flex gap-y-7 gap-x-2 py-2 z-[9999]">
+    <div onClick={(e)=> e.stopPropagation()} className=" w-[95%]  lg:w-[90%] flex gap-y-7 gap-x-2 py-2 z-99">
             {/* Search Bar */}
             <div className='flex w-full gap-3 items-center relative'>
               <button onClick={()=>{handleHideDropdowns();setSearching(true);setScrollPosition({...scrollPosition, explore : null});handleSearch(searchValue, selectedGenres, selectedStatus, selectedSeason, selectedYear, selectedType, selectedSortItem.order_by, selectedSortItem.sort_by, 1)}} className="text-gray-400 absolute left-3 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
@@ -176,7 +176,7 @@ const ExploreNavbar = (props) => {
     
             {/* Sort */}
             <div className='flex w-fit px-1 items-center relative bg-themeDark border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
-              <div onClick={()=>{setShowSort(!showSort);setShowState(false);setShowOtherFilter(false)}} className='cursor-pointer z-[99999999999] relative p-1 flex  items-center w-full h-full '>
+              <div onClick={()=>{setShowSort(!showSort);setShowState(false);setShowOtherFilter(false)}} className='cursor-pointer relative p-1 flex  items-center w-full h-full '>
               <button className="text-white right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
               {/* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="lightgray" strokeLinecap="round" strokeMiterlimit="10" strokeWidth="1.5" d="M21.25 12H8.895m-4.361 0H2.75m18.5 6.607h-5.748m-4.361 0H2.75m18.5-13.214h-3.105m-4.361 0H2.75m13.214 2.18a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm-9.25 6.607a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm6.607 6.608a2.18 2.18 0 1 0 0-4.361a2.18 2.18 0 0 0 0 4.36Z"/></svg> */}
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="lightgray" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10 14H2m6-4H2m4-4H2m10 12H2m17 2V4m0 16l3-3m-3 3l-3-3m3-13l3 3m-3-3l-3 3"/></svg>
@@ -197,7 +197,7 @@ const ExploreNavbar = (props) => {
                     {
                       sortItems.map((item, index) => {
                         return (
-                          <div onClick={()=>handleSelectedOrderBy(item.value)} key={index} className={`flex gap-1 z-[999999999] w-full items-center relative py-2 px-2 rounded-lg cursor-pointer`}>
+                          <div onClick={()=>handleSelectedOrderBy(item.value)} key={index} className={`flex gap-1 w-full items-center relative py-2 px-2 rounded-lg cursor-pointer`}>
                             <input readOnly type='checkbox' checked={selectedSortItem.order_by === item.value} />
                             <p className='text-gray-400 text-sm text-start w-full'>{item.key}</p>
                           </div>
@@ -212,7 +212,7 @@ const ExploreNavbar = (props) => {
     
             {/* Other Filter */}
             <div className='flex w-fit px-1 items-center relative bg-themeDark border border-themeDark hover:outline-pink-500 hover:outline rounded-lg cursor-pointer'>
-              <div onClick={()=>{setShowOtherFilter(!showOtherFilter);setShowState(false);setShowSort(false)}} className='cursor-pointer z-[99999999999] relative p-1 flex  items-center w-full h-full '>
+              <div onClick={()=>{setShowOtherFilter(!showOtherFilter);setShowState(false);setShowSort(false)}} className='cursor-pointer relative p-1 flex  items-center w-full h-full '>
               <button className="text-white right-2 cursor-pointer justify-center flex items-center gap-3 hover:text-gray-200">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="lightgray" strokeLinecap="round" strokeMiterlimit="10" strokeWidth="1.5" d="M21.25 12H8.895m-4.361 0H2.75m18.5 6.607h-5.748m-4.361 0H2.75m18.5-13.214h-3.105m-4.361 0H2.75m13.214 2.18a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm-9.25 6.607a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm6.607 6.608a2.18 2.18 0 1 0 0-4.361a2.18 2.18 0 0 0 0 4.36Z"/></svg>
               </button>
@@ -225,14 +225,14 @@ const ExploreNavbar = (props) => {
                       otherFilters.map((filter, index) => {
                         // const isSelected = selectedStatus.includes(stat)
                         return (
-                          <div key={index} onClick={()=>{setShowState(filter.name == showState ? '' : filter.name)}} className='flex z-[999999999] w-full items-center relative bg-themeDark hover:outline hover:outline-pink-600 py-1 px-2 rounded-lg cursor-pointer'>
+                          <div key={index} onClick={()=>{setShowState(filter.name == showState ? '' : filter.name)}} className='flex w-full items-center relative bg-themeDark hover:outline hover:outline-pink-600 py-1 px-2 rounded-lg cursor-pointer'>
                             <p className='text-gray-400 text-sm md:text-base text-start w-full'>{filter.name}</p>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024"><path fill="lightGray" d="M831.872 340.864L512 652.672L192.128 340.864a30.59 30.59 0 0 0-42.752 0a29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728a30.59 30.59 0 0 0-42.752 0z"/></svg>
                             {
                               showState === filter.name &&
-                              <div id={filter.name} ref={(rel) => {otherRefs.current[index] = rel}} className=' w-full h-full absolute z-[99999999999999999999999999999] '>
+                              <div id={filter.name} ref={(rel) => {otherRefs.current[index] = rel}} className=' w-full h-full absolute '>
                               {/* <OtherFilterDropDown_V2 name={filter.name} options={filter.options} /> */}
-                              <div  className='otherFilter z-[9999999999999999999999999999999] w-full max-h-[300px] overflow-auto gap-3 -left-2 absolute bg-themeDark grid grid-cols-1 top-8 md:top-9 p-2 rounded-lg'>
+                              <div  className='otherFilter w-full max-h-[300px] overflow-auto gap-3 -left-2 absolute bg-themeDark grid grid-cols-1 top-8 md:top-9 p-2 rounded-lg'>
                                 {
                                 filter.options?.map((option, index) => {
                                   const isSelected = filter.name === 'Season' ? selectedSeason == option : filter.name === 'Year' ? selectedYear == option : selectedType == option

@@ -138,82 +138,87 @@ const AnimeMovies = ({ handleSetScrollPosition }) => {
                         className="h-full md:h-fit px-0 flex items-center justify-center rounded-lg cursor-pointer"
                       >
                         <motion.div
-                                                  key={anime.mal_id}
-                                                  layout="position"
-                                                  initial={{ opacity: 0, y: 10 }}
-                                                  animate={{ opacity: 1, y: 0 }}
-                                                  transition={{ delay: (index % 10) * 0.05 }}
-                                                >
-                                                  <div
-                                                    className="group relative overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
-                                                    onMouseEnter={() => setHovered(index)}
-                                                    onMouseLeave={() => setHovered(-1)}
-                                                  >
-                        
-                                                    {/* Image Container */}
-                                                    <div className="aspect-[3/4] overflow-hidden rounded-2xl relative border border-gray-800">
-                                                      <img
-                                                        src={
-                                                          anime?.images?.jpg?.large_image_url ||
-                                                          anime?.images?.webp?.large_image_url
-                                                        }
-                                                        alt={anime?.title_english || anime?.title}
-                                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                                      />
-                        
-                                                      {/* Backdrop */}
-                                                      <div className={`absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent transition-opacity duration-300 ${
-                                                          hovered === index
-                                                            ? "opacity-100"
-                                                            : "opacity-90"}`}/>
-                        
-                                                      {/* Year and status */}
-                                                      <div className="absolute bottom-0 left-0 right-0 px-2 pb-4 sm:p-3 text-white">
-                                                      <div
-                                                        className={`transition-all duration-300 ${
-                                                          hovered === index
-                                                            ? "translate-y-0 opacity-100"
-                                                            : "translate-y-2 opacity-90"
-                                                        }`}
-                                                      >
-                        
-                                                        <div className="flex items-center gap-2 text-gray-300 jakarta">
-                                                          <span className="text-xs">
-                                                            {anime?.year || "TBA"}{" "}
-                                                            <span className="text-pink-600 text-xl"> • </span>
-                                                            {anime?.status || ""}
-                                                          </span>
-                                                        </div>
-                                                      </div>
-                        
-                                                      </div>
-                                                    </div>
-                        
-                                                    {anime?.score && (
-                                                      <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-0.5 rounded-full text-xs font-semibold text-white flex items-center gap-1">
-                                                        <Star
-                                                          className="fill-amber-500 text-amber-500"
-                                                          width={13}
-                                                        />
-                                                        {anime?.score}
-                                                      </div>
-                                                    )}
-                        
-                                                    {/* Title & Genre */}
-                                                    <div className="flex flex-col mt-3 text-white">
-                                                      <h3
-                                                        className={`text-xs xs:text-sm sm:text-[0.9rem] md:text-base 2xl:text-base font-semibold mb-1 ${hovered === index ? "line-clamp-5" : "line-clamp-1"} leading-4 transition-colors`}
-                                                      >
-                                                        {anime?.title_english?.replace(/;/g, " ") ||
-                                                          anime?.title?.replace(/;/g, " ")}
-                                                      </h3>
-                                                      <span className="text-xs text-white/50 font-light jakarta">
-                                                        {anime?.genres?.slice(0, 2).map((genre) => genre.name).join(' • ')}
-                                                      </span>
-                                                    </div>
-                                                    
-                                                  </div>
-                                                </motion.div>
+                          key={anime.mal_id}
+                          layout="position"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: (index % 10) * 0.05 }}
+                        >
+                          <div
+                            className="group relative overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                            onMouseEnter={() => setHovered(index)}
+                            onMouseLeave={() => setHovered(-1)}
+                          >
+                            {/* Image Container */}
+                            <div className="aspect-[3/4] overflow-hidden rounded-2xl relative border border-gray-800">
+                              <img
+                                src={
+                                  anime?.images?.jpg?.large_image_url ||
+                                  anime?.images?.webp?.large_image_url
+                                }
+                                alt={anime?.title_english || anime?.title}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                              />
+
+                              {/* Backdrop */}
+                              <div
+                                className={`absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent transition-opacity duration-300 ${
+                                  hovered === index
+                                    ? "opacity-100"
+                                    : "opacity-90"
+                                }`}
+                              />
+
+                              {/* Year and status */}
+                              <div className="absolute bottom-0 left-0 right-0 px-2 pb-4 sm:p-3 text-white">
+                                <div
+                                  className={`transition-all duration-300 ${
+                                    hovered === index
+                                      ? "translate-y-0 opacity-100"
+                                      : "translate-y-2 opacity-90"
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-2 text-gray-300 jakarta">
+                                    <span className="text-xs">
+                                      {anime?.year || "TBA"}{" "}
+                                      <span className="text-pink-600 text-xl">
+                                        {" "}
+                                        •{" "}
+                                      </span>
+                                      {anime?.status || ""}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {anime?.score && (
+                              <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-0.5 rounded-full text-xs font-semibold text-white flex items-center gap-1">
+                                <Star
+                                  className="fill-amber-500 text-amber-500"
+                                  width={13}
+                                />
+                                {anime?.score}
+                              </div>
+                            )}
+
+                            {/* Title & Genre */}
+                            <div className="flex flex-col mt-3 text-white">
+                              <h3
+                                className={`text-xs xs:text-sm sm:text-[0.9rem] md:text-base 2xl:text-base font-semibold mb-1 ${hovered === index ? "line-clamp-5" : "line-clamp-1"} leading-4 transition-colors`}
+                              >
+                                {anime?.title_english?.replace(/;/g, " ") ||
+                                  anime?.title?.replace(/;/g, " ")}
+                              </h3>
+                              <span className="text-xs text-white/50 font-light jakarta">
+                                {anime?.genres
+                                  ?.slice(0, 2)
+                                  .map((genre) => genre.name)
+                                  .join(" • ")}
+                              </span>
+                            </div>
+                          </div>
+                        </motion.div>
                       </SwiperSlide>
                     );
                   }

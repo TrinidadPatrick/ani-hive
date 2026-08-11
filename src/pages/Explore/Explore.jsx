@@ -315,7 +315,7 @@ const Explore = () => {
         setShowSort(false);
         setShowOtherFilter(false);
       }}
-      className="w-full min-h-[100dvh] bg-themeExtraDarkBlue flex flex-col gap-5 items-center pt-20"
+      className="w-full min-h-dvh bg-themeExtraDarkBlue flex flex-col gap-5 items-center pt-20"
     >
       <div className="flex flex-col items-start gap-0  w-[95%] lg:w-[90%] mx-auto">
         <h1 className="text-white text-start text-3xl font-semibold">
@@ -357,7 +357,7 @@ const Explore = () => {
       />
 
       {/* List */}
-      <div className="w-[90%] relative mx-auto h-fit gap-5  grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+      <div className="w-[90%] relative mx-auto h-fit gap-5 z-9 grid py-5 grid-cols-1 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
         {/* Results and clear filter for mobile */}
         <div className="absolute right-0 -top-1 flex w-full justify-end">
           <p className=" text-gray-200 text-sm">
