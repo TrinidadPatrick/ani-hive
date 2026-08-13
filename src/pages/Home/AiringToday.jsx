@@ -69,7 +69,7 @@ const AiringToday = ({ handleSetScrollPosition }) => {
                           );
                           handleSetScrollPosition();
                         }}
-                        className="group relative overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                        className="group relative overflow-hidden cursor-pointer shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
                         onMouseEnter={() => setHovered(index)}
                         onMouseLeave={() => setHovered(-1)}
                       >
@@ -77,8 +77,8 @@ const AiringToday = ({ handleSetScrollPosition }) => {
                         <div className="aspect-[3/4] overflow-hidden rounded-2xl relative border border-gray-800">
                           <img
                             src={
-                              anime?.images?.jpg?.large_image_url ||
-                              anime?.images?.webp?.large_image_url
+                              anime?.images?.webp?.large_image_url ||
+                              anime?.images?.jpg?.large_image_url
                             }
                             alt={anime?.title_english || anime?.title}
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"

@@ -77,7 +77,7 @@ const OngoingAnime = ({ handleSetScrollPosition }) => {
                         className="w-full rounded-lg cursor-pointer relative overflow-hidden flex flex-col items-center group"
                       >
                         {/* Image Container*/}
-                        <div className="rounded-lg overflow-hidden flex-none relative">
+                        <div className="rounded-lg overflow-hidden flex-none relative border border-gray-800">
                           {/* badge */}
                           {anime.isHot && anime.isPopular && (
                             <div className="absolute z-20 bg-gradient-to-br from-orange-500 via-red-600 to-red-700 border border-orange-400/30 w-30 -rotate-45 top-5 -left-7 flex justify-center text-gray-200 items-center gap-2">
