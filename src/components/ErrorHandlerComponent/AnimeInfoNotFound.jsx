@@ -1,6 +1,8 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const AnimeInfoNotFound = () => {
+  const navigate = useNavigate()
   return (
     <div className="min-h-screen bg-neutral-950 flex items-center justify-center p-4">
       <div className="max-w-md w-full text-center">
@@ -29,11 +31,11 @@ const AnimeInfoNotFound = () => {
         </p>
         
         <div className="space-y-3">
-          <button className="w-full px-6 py-3 bg-neutral-800 hover:bg-neutral-700 text-neutral-100 font-medium rounded-lg transition-colors">
+          <button onClick={()=>navigate('/')} className="w-full px-6 py-3 bg-neutral-800 hover:bg-neutral-700 text-neutral-100 font-medium rounded-lg transition-colors">
             Go Back
           </button>
           
-          <button className="w-full px-6 py-3 border border-neutral-700 hover:border-neutral-600 text-neutral-300 font-medium rounded-lg transition-colors">
+          <button onClick={()=>navigate('/explore')} className="w-full px-6 py-3 border border-neutral-700 hover:border-neutral-600 text-neutral-300 font-medium rounded-lg transition-colors">
             Browse Anime
           </button>
         </div>

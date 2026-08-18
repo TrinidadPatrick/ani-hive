@@ -18,7 +18,8 @@ import useErrorHandler from "../../stores/FetchErrorHandler.js";
 import usePublicAnimeInfo from "../../stores/PublicAnimeInfoStore.js";
 import chibi from "../../images/chibiV2.gif";
 import { useWatchOrder } from "./actions/useGetWatchOrder.js";
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from "react-markdown";
+import AnimeForum from "./AnimeForum.jsx";
 
 const AnimeOverView = () => {
   const authenticated = useAuthStore((s) => s.authenticated);
@@ -30,7 +31,7 @@ const AnimeOverView = () => {
   const deleteAnime = useUserAnimeStore((s) => s.deleteAnime);
   const setErrorStatus = useErrorHandler((s) => s.setErrorStatus);
 
-  const {mutate: getWatchOrder, isPending} = useWatchOrder()
+  const { mutate: getWatchOrder, isPending } = useWatchOrder();
 
   const { id } = useParams();
   const [selectedWatchStatus, setSelectedWatchStatus] = useState(null);
@@ -40,10 +41,12 @@ const AnimeOverView = () => {
   const animeRelations = usePublicAnimeInfo((s) => s.animeRelations);
 
   const [chibiMessage, setChibiMessage] = useState({
-    message: '',
-    actionText: '',
-    action: () => {}
-  })
+    message: "",
+    actionText: "",
+    action: () => {},
+  });
+
+  if (!id) return setErrorStatus(404);
 
   const checkAnimeForUser = async (anime_id) => {
     const result = await checkIsSaved(anime_id);
@@ -85,27 +88,33 @@ const AnimeOverView = () => {
     data: animeInfo,
     isLoading,
     isError,
+    error,
   } = useQuery({
     queryKey: ["animeInfo", id],
     queryFn: async () => {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_PRIMARY_URL}/anime/${id}/full`,
-      );
-      return data.data;
-    },
-    enabled: !!id,
-    retry: 3,
-    retryDelay: 1000,
-    onError: (err) => {
-      if (err?.response?.status) {
-        setErrorStatus(err.response.status);
+      try {
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_PRIMARY_URL}/anime/${id}/full`,
+        );
+        return data.data;
+      } catch (err) {
+        if (err?.response?.status) {
+          setErrorStatus(err.response.status);
+        }
+        throw err;
       }
     },
+    enabled: !!id,
+    retry: (failureCount, error) => {
+      if (error?.response?.status === 404) return false;
+      return failureCount < 3;
+    },
+    retryDelay: 1000,
   });
 
   const submitAiAction = () => {
-    chibiMessage.action()
-  }
+    chibiMessage.action();
+  };
 
   const InfoRow = ({ label, children }) => (
     <li className="flex justify-start gap-2">
@@ -280,12 +289,12 @@ const AnimeOverView = () => {
                       to{" "}
                       {animeInfo?.aired?.to
                         ? new Date(
-                          animeInfo?.aired?.to || "",
-                        ).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })
+                            animeInfo?.aired?.to || "",
+                          ).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })
                         : "TBA"}
                     </InfoRow>
 
@@ -311,7 +320,7 @@ const AnimeOverView = () => {
                     <InfoRow label="Premiered:">
                       {animeInfo?.season
                         ? animeInfo.season.charAt(0).toUpperCase() +
-                        animeInfo.season.slice(1)
+                          animeInfo.season.slice(1)
                         : "???"}{" "}
                       {animeInfo?.year || "???"}
                     </InfoRow>
@@ -374,6 +383,10 @@ const AnimeOverView = () => {
             <MobileRecommendations title={animeInfo?.title} />
           </section>
 
+          <section className="">
+            <AnimeForum id={id} />
+          </section>
+
           {/* Reviews */}
           <Reviews mal_id={id} />
         </div>
@@ -428,39 +441,6 @@ const AnimeOverView = () => {
       <section className="col-span-3 ">
         <Recommendations title={animeInfo?.title} />
       </section>
-
-      {/* <div className="fixed z-90 bottom-5 right-5 w-30">
-        <img src={chibi} alt="chibi" className=" w-full h-full object-cover " />
-        {
-          isPending && (
-            <div className="absolute bottom-[100%] left-1/4 transform -translate-x-1/2 mb-4">
-               <div className="relative w-40 bg-themeDark border py-3 border-themeLightDark text-sm flex justify-center items-center text-white px-3 rounded-lg shadow-2xl origin-bottom">
-                 <LoaderV2 color="bg-pink-600" width={6} height={6} />
-                 <div className="absolute left-[70%] -bottom-2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-themeDark"></div>
-               </div>
-            </div>
-          )
-        }
-        {
-          !isPending && chibiMessage.message && (
-            <div className="absolute bottom-[100%] right-[-20%] transform -translate-x-1/4 mb-4">
-              <div className="relative w-[300px] sm:w-[350px] bg-themeDark shadow-2xl border border-themeLightDark rounded-lg origin-bottom z-50">
-                <div className="max-h-[60vh] overflow-y-auto hover-scrollbar p-5 text-sm flex flex-col gap-3 text-white">
-                  <div className="whitespace-pre-wrap leading-relaxed prose prose-invert prose-sm max-w-none prose-p:my-1 prose-ol:my-1 prose-ul:my-1 text-gray-200">
-                    <div>{chibiMessage.message}</div>
-                  </div>
-
-                  { chibiMessage.actionText && (
-                      <button onClick={submitAiAction} className="text-pink-600 font-bold self-end hover:text-pink-500 mt-2">{chibiMessage.actionText}</button>
-                  )}
-                </div>
-                <div className="absolute left-[80%] -bottom-2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-themeLightDark pointer-events-none"></div>
-                <div className="absolute left-[80%] -bottom-[7px] transform -translate-x-1/2 w-0 h-0 border-l-[7px] border-r-[7px] border-t-[7px] border-l-transparent border-r-transparent border-t-themeDark pointer-events-none"></div>
-              </div>
-            </div>
-          )
-        }
-      </div> */}
     </main>
   );
 };
