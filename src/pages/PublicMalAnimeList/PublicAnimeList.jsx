@@ -10,6 +10,7 @@ import PublicAnimeCard from './PublicAnimeCard';
 import AnimeCardV2 from '../MalAnimeList/AnimeCardV2';
 import ProfileNotFound from '../../components/ErrorHandlerComponent/ProfileNotFound';
 import PublicStatusBar from './PublicStatusBar';
+import PublicAnimeCardV2 from './PublicAnimeCardV2';
 
 const PublicAnimeList = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -83,7 +84,7 @@ const PublicAnimeList = () => {
 
   useEffect(() => {
     if(list){
-      fetchAiringData(list.Public, status)
+      fetchAiringData(list.animeList, status)
     }
   },[list])
 
@@ -184,7 +185,7 @@ const PublicAnimeList = () => {
                   >
                   <div className={`overflow-visible h-full ${animeId == anime.id && 'border rounded-lg border-pink-600'}`} key={anime.id}>
                     {
-                      listType === 'grid' ? <PublicAnimeCard anime={anime} animeInfo={animeInfo} status={status} handleSelect={handleSelect} /> : <AnimeCardV2 anime={anime} animeInfo={animeInfo} status={status} />
+                      listType === 'grid' ? <PublicAnimeCard anime={anime} animeInfo={animeInfo} status={status} handleSelect={handleSelect} /> : <PublicAnimeCardV2 anime={anime} animeInfo={animeInfo} status={status} />
                     }
                   </div>
                   </motion.div>

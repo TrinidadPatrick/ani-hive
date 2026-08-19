@@ -16,52 +16,6 @@ const PublicAnimeCardV2 = ({anime, animeInfo}) => {
   const [isOpen, setIsOpen] = useState(false)
   let total_ep = anime.num_episodes || '??'
 
-  const handleUpdate = async () => {
-    const payload = {
-      id: anime.id,
-      num_watched_episodes: epStatus,
-      score,
-      status: selectedWatchStatus
-    }
-
-    try {
-      const response = await http.post(`mal/anime`, payload);
-      console.log(response.data)
-    } catch (error) {
-      console.log(error)
-    }
-
-  }
-
-  const renderStars = (rating) => {
-    const stars = [];
-    const fullStars = Math.floor(rating / 2);
-    const hasHalfStar = rating % 2 >= 1;
-
-    for (let i = 0; i < 5; i++) {
-      if (i < fullStars) {
-        stars.push(
-          <Star
-            key={i}
-            className="w-3.5 h-3.5 fill-amber-400 text-amber-400"
-          />
-        );
-      } else if (i === fullStars && hasHalfStar) {
-        stars.push(
-          <Star
-            key={i}
-            className="w-3.5 h-3.5 fill-amber-400/50 text-amber-400"
-          />
-        );
-      } else {
-        stars.push(
-          <Star key={i} className="w-3.5 h-3.5 text-amber-400" />
-        );
-      }
-    }
-    return stars;
-  };
-
   const formatTimeLeft = (seconds) => {
     if (typeof seconds !== 'number') return "";
     if(seconds === 0) return 'Airing'
@@ -92,7 +46,7 @@ const PublicAnimeCardV2 = ({anime, animeInfo}) => {
   },[anime, animeStatuses])
 
   return (
-    <div onClick={() => setIsOpen(true)} className="anime-card cursor-pointer bg-themeDarker rounded-lg group overflow-hidden relative h-full flex flex-col">
+    <div className="anime-card cursor-pointer bg-themeDarker rounded-lg group overflow-hidden relative h-full flex flex-col">
 
         {/* Image Container */}
         <div className="flex-none relative aspect-[3/4] overflow-hidden">

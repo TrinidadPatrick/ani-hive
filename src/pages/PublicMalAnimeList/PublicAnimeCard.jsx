@@ -45,7 +45,7 @@ const PublicAnimeCard = ({anime, animeInfo}) => {
   },[anime, animeStatuses])
 
   return (
-    <div onClick={() => setIsOpen(true)} className='anime_card cursor-pointer group flex gap-3 relative border border-gray-800/20 justify-start p-2 sm:p-4 bg-themeDarker hover:bg-themeLightDark rounded-lg'>
+    <div className='anime_card cursor-pointer group flex gap-3 relative border border-gray-800/20 justify-start p-2 sm:p-4 bg-themeDarker hover:bg-themeLightDark rounded-lg'>
       {/* Image Contianer */}
       <div className='overflow-hidden flex-none w-20 aspect-[2/2] lg:w-22 bg-white rounded-md'>
         <img src={anime.main_picture.medium} className='w-full h-full object-cover object-center brightness-75 group-hover:scale-105' />
