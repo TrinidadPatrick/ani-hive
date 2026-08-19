@@ -260,7 +260,7 @@ const UserLayout = () => {
 
         <button
           onClick={() => setShowSidebar(!showSidebar)}
-          className="md:hidden h-full bg-pink-500 px-1 py-0.5 rounded z-10"
+          className="md:hidden bg-pink-500 px-1 h-fit py-0.5 rounded z-10"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
