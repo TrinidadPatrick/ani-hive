@@ -50,7 +50,7 @@ const TopSection = () => {
   return (
     <main id="top">
       {topAnime == null ? (
-        <section className="relative lg:h-[100svh] flex flex-col-reverse md:flex-row items-center justify-center px-6 py-12 bg-gradient-to-r from-black via-transparent to-black text-white animate-pulse">
+        <section className="relative min-h-svh flex flex-col-reverse md:flex-row items-center justify-center px-6 py-12 bg-gradient-to-r from-black via-transparent to-black text-white animate-pulse">
           {/* Left content skeleton */}
           <div className="w-full lg:w-1/2 space-y-4">
             <div className="h-4 w-24 bg-gray-700 rounded" />
@@ -82,7 +82,7 @@ const TopSection = () => {
           </div>
         </section>
       ) : (
-        <section className="w-full md:h-[100svh] bg-themeExtraDarkBlue relative overflow-hidden flex items-center justify-center lg:px-6">
+        <section className="w-full min-h-svh bg-themeExtraDarkBlue relative overflow-hidden flex items-center justify-center lg:px-6 pt-20">
           {showTrailer && (
             <TrailerPlayer
               youtubeId={youtubeId}
@@ -93,7 +93,7 @@ const TopSection = () => {
           <img
             src={topAnime?.images?.webp.large_image_url}
             alt={topAnime?.title}
-            className="absolute w-full h-full object-cover brightness-50"
+            className="absolute w-full h-full object-cover brightness-50 top-0"
           />
 
           {/* Overlay (blur + tint) */}

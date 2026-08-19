@@ -10,6 +10,7 @@ import PrivateLayout from './pages/Layout/PrivateLayout.jsx'
 import PageNotFound from './components/ErrorHandlerComponent/PageNotFound.jsx'
 import VoiceActorDetails from './pages/VoiceActor/VoiceActorDetails.jsx'
 import AnimeList from './pages/MalAnimeList/AnimeList.jsx'
+import PublicAnimeList from './pages/PublicMalAnimeList/PublicAnimeList.jsx'
 
 const router = createBrowserRouter([
     {
@@ -39,6 +40,12 @@ const router = createBrowserRouter([
             {
                 path: '/voice-actor/:id',
                 element: <VoiceActorDetails />
+            },
+
+            // Public User Anime List
+            {
+                path: '/user-list/:username/:status',
+                element: <PublicAnimeList />
             },
 
             // Private Route

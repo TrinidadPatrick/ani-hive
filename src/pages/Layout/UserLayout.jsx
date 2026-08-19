@@ -59,7 +59,7 @@ const UserLayout = () => {
   };
 
   return (
-    <main>
+    <main className="">
       {/* Mobile Sidebar */}
       {true && (
         <div
@@ -180,8 +180,8 @@ const UserLayout = () => {
       )}
 
       {/* Main Navbar */}
-      <nav className="w-full fixed backdrop-blur z-[9999] p-4 flex justify-between items-center gap-5">
-        <div className="w-full h-full absolute  bg-black/10" />
+      <nav className="w-full fixed backdrop-blur z-[9999] px-4 h-20 flex justify-between items-center gap-5">
+        <div className="w-full h-full absolute  " />
         <div
           onClick={() => navigate("/")}
           className="w-full flex ps-5 cursor-pointer relative z-10"

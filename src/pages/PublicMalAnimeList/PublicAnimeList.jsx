@@ -3,23 +3,25 @@ import { Navigate, useLocation, useNavigate, useParams, useSearchParams } from '
 import { motion } from "framer-motion";
 import useScrollPosition from '../../stores/ScrollPositionStore';
 import useUserAnimeStore from '../../stores/UserAnimeStore';
-import UserStatistics from './UserStatistics';
-import StatusBar from './StatusBar';
-import AnimeListSearch from './AnimeListSearch';
+import UserStatistics from '../MalAnimeList/UserStatistics';;
+import AnimeListSearch from '../MalAnimeList/AnimeListSearch';
 import AnimeListSkeleton from '../../components/MalComponents/Skeletons/AnimeListSkeleton';
-import AnimeCard from './AnimeCard';
-import AnimeCardV2 from './AnimeCardV2';
+import PublicAnimeCard from './PublicAnimeCard';
+import AnimeCardV2 from '../MalAnimeList/AnimeCardV2';
+import ProfileNotFound from '../../components/ErrorHandlerComponent/ProfileNotFound';
+import PublicStatusBar from './PublicStatusBar';
 
-const AnimeList = () => {
+const PublicAnimeList = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const location = useLocation()
   const navigate = useNavigate()
   const validStatuses = ['watching', 'completed', 'on_hold', 'dropped', 'plan_to_watch'];
-  const {status} = useParams()
+  const {status, username} = useParams()
   const scrollPosition = useScrollPosition((s) => s.scrollPosition)
   const setScrollPosition = useScrollPosition((s) => s.setScrollPosition)
-  const getList = useUserAnimeStore((s) => s.getList)
-  const list = useUserAnimeStore((s) => s[status])
+  const getList = useUserAnimeStore((s) => s.getPublicUserList)
+  const list = useUserAnimeStore((s) => s.publicUserAnimeList)
+  const isError = useUserAnimeStore((s) => s.isError)
   const fetchAiringData = useUserAnimeStore((s) => s.fetchAiringData)
 
   const animeId = searchParams.get('id')
@@ -39,14 +41,16 @@ const AnimeList = () => {
             year: null, month: null, day: null
           }
   });
+  
 
   if (!validStatuses.includes(status)) {
     return <Navigate to="/" replace />;
   }
 
   useEffect(() => {
-    getList(status)
+    getList(username, status)
   }, [status])
+
 
   useEffect(() => {
     if(list && scrollPosition?.userList){
@@ -79,7 +83,7 @@ const AnimeList = () => {
 
   useEffect(() => {
     if(list){
-      fetchAiringData(list.animeList, status)
+      fetchAiringData(list.Public, status)
     }
   },[list])
 
@@ -104,6 +108,7 @@ const AnimeList = () => {
     navigate(url)
   }
 
+  
   const mapAnime = useMemo(()=> {
     if(list !== null){
     const shouldFilterDate = dateValue.startDate.year !== null
@@ -118,6 +123,9 @@ const AnimeList = () => {
     }
   },[searchValue, status, list, genreValue, dateValue])
 
+  if(isError) return <ProfileNotFound />
+  if(!list) return
+
   return (
     <div className='w-full h-full pt-20 flex flex-col max-w-7xl xl:max-w-[90vw] mx-auto'> 
       {/* Title */}
@@ -128,13 +136,29 @@ const AnimeList = () => {
 
       {/* User statistics */}
       <section>
-        <UserStatistics status={status} />
+        <div className=" p-2 sm:p-4 md:space-y-5">
+
+      <div className="bg-themeDarker rounded-xl py-4 border border-themeDark flex flex-col sm:flex-row items-center px-3 gap-5">
+        {/* User Avatar */}
+        <div className='w-30 aspect-square flex-none bg-red-100 rounded-full border-3 border-pink-600 overflow-hidden'>
+          <img src={`https://robohash.org/${username}`} />
+        </div>
+        {/* User statistics */}
+        <div className='w-full flex flex-col'>
+          {/* User name and date join */}
+          <div className='w-full '>
+            <h2 className='text-gray-100 text-4xl font-bold text-center sm:text-start'>{username}</h2>
+          </div>
+
+    </div>
+    </div>
+    </div>
       </section>
 
       {/* Status bar and search input */}
       <section className='w-full flex flex-col lg:flex-row justify-between items-center'>
-        <StatusBar status={status} setScrollPosition={setScrollPosition} scrollPosition={scrollPosition} />
         <AnimeListSearch listType={listType} setListType={setListType} setGenreValue={setGenreValue} setSearchValue={setSearchValue} setDateValue={setDateValue} />
+        <PublicStatusBar status={status} username={username} setScrollPosition={setScrollPosition} scrollPosition={scrollPosition} />
       </section>
       {
         list === null ? ( <> <AnimeListSkeleton /> </> ) :
@@ -160,7 +184,7 @@ const AnimeList = () => {
                   >
                   <div className={`overflow-visible h-full ${animeId == anime.id && 'border rounded-lg border-pink-600'}`} key={anime.id}>
                     {
-                      listType === 'grid' ? <AnimeCard anime={anime} animeInfo={animeInfo} status={status} handleSelect={handleSelect} /> : <AnimeCardV2 anime={anime} animeInfo={animeInfo} status={status} />
+                      listType === 'grid' ? <PublicAnimeCard anime={anime} animeInfo={animeInfo} status={status} handleSelect={handleSelect} /> : <AnimeCardV2 anime={anime} animeInfo={animeInfo} status={status} />
                     }
                   </div>
                   </motion.div>
@@ -176,4 +200,4 @@ const AnimeList = () => {
   )
 }
 
-export default AnimeList
+export default PublicAnimeList

@@ -25,7 +25,10 @@ const useUserAnimeStore = create((set, get) => ({
     plan_to_watch: null,
     animeStatuses: [],
 
+    publicUserAnimeList: null,
+
     isUpdating: false,
+    isError: null,
     isDeleting: false,
     isFetchingSchedule: false,
 
@@ -60,6 +63,31 @@ const useUserAnimeStore = create((set, get) => ({
             await localforage.setItem(status, animeList);
         } catch (error) {
             console.log(error)
+        } finally {
+            set({isFetching: false})
+        }
+    },
+
+    getPublicUserList: async (username, status, offset = 0, isFetching = true) => {
+        try {
+            const cachedList = await localforage.getItem(status);
+            set({[status] : {
+                animeList: cachedList,
+                nextPageLink: ''
+            }})
+            set({isFetching: get()[status] === null})
+            const response = await http.get(`mal/user/${username}?status=${status}&offset=${offset}`)
+            if(response.data.error){
+                return set({isError: true})
+            }
+            const animeList = response.data.data
+            const nextPageLink = response.data.paging.next
+            set({publicUserAnimeList: {
+              animeList: animeList,
+              nextPageLink: nextPageLink || ''
+            }})
+        } catch (error) {
+            console.log("Error", error)
         } finally {
             set({isFetching: false})
         }
