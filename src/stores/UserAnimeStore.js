@@ -70,12 +70,12 @@ const useUserAnimeStore = create((set, get) => ({
 
     getPublicUserList: async (username, status, offset = 0, isFetching = true) => {
         try {
+        set({isFetching: true, isError: null})
             const cachedList = await localforage.getItem(status);
             set({[status] : {
                 animeList: cachedList,
                 nextPageLink: ''
             }})
-            set({isFetching: get()[status] === null})
             const response = await http.get(`mal/user/${username}?status=${status}&offset=${offset}`)
             if(response.data.error){
                 return set({isError: true})

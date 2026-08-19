@@ -22,6 +22,7 @@ const PublicAnimeList = () => {
   const setScrollPosition = useScrollPosition((s) => s.setScrollPosition)
   const getList = useUserAnimeStore((s) => s.getPublicUserList)
   const list = useUserAnimeStore((s) => s.publicUserAnimeList)
+  const isFetching = useUserAnimeStore((s) => s.isFetching)
   const isError = useUserAnimeStore((s) => s.isError)
   const fetchAiringData = useUserAnimeStore((s) => s.fetchAiringData)
 
@@ -125,7 +126,6 @@ const PublicAnimeList = () => {
   },[searchValue, status, list, genreValue, dateValue])
 
   if(isError) return <ProfileNotFound />
-  if(!list) return
 
   return (
     <div className='w-full h-full pt-20 flex flex-col max-w-7xl xl:max-w-[90vw] mx-auto'> 
@@ -162,7 +162,7 @@ const PublicAnimeList = () => {
         <PublicStatusBar status={status} username={username} setScrollPosition={setScrollPosition} scrollPosition={scrollPosition} />
       </section>
       {
-        list === null ? ( <> <AnimeListSkeleton /> </> ) :
+        isFetching || !list ? ( <AnimeListSkeleton listType={listType} /> ) :
         (
         <>
           <section className={`grid ${listType === 'grid' ? ' grid-cols-1 semiMd:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-4 lg:gap-6 ' : 
